@@ -101,10 +101,44 @@ for match in range(len(r)):
     try:
         for team in range(2):
             sheet = sheets[team]
-
+			
             # Add team numbers
             for team_key in range(3):
                 data = r[match]["alliances"][teams[team]]["team_keys"][team_key]
                 sheet.write(current_row + team_key, columns["teams"], int(data.replace("frc", "")))
-
+			
             data = r[match]["score_breakdown"][teams[team]]
+			
+    except TypeError as e:
+        print("Ends at Record " + str(match))
+        print(e)
+	
+    current_row += 3
+	
+    # Add video to message
+    video_message += str(match + 1) + ": "
+    temp = r[match]["videos"]
+	
+    for video in temp:
+        if video["type"] == "youtube":
+            video_message += ("youtube.com/watch?v=" + str(video["key"]) + ", ")
+        else:
+            video_message(str(video["key"] + "(video type is " + video["type"] + ")" + ", "))
+	
+    video_message += "\n"
+
+# Write raw data to file
+try:
+    raw_data_file = open("rawdata.json", "w")
+
+    for entry in r:
+        raw_data_file.write(str(entry))
+        raw_data_file.write("\n \n")
+
+    raw_data_file.close()
+
+except IOError as e:
+    print("WARNING: IOError in writing raw data to file")
+    print(e)
+
+file.save(file_name + ".xls")
