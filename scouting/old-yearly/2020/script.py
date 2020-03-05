@@ -39,29 +39,26 @@ teams = ("red", "blue")
 video_message = ""
 raw_data_message = ""
 
-columns = {"record#": 0, "teams": 1, "starting_level": 2, "sstorm_action": 3, "bonus": 4, "sstorm_total": 5, "cargo": 6,
-           "panels": 7, "comp_NR": 8, "comp_FR": 9, "hatch_pts": 10, "cargo_pts": 11, "endgame": 12, "hab_pts": 13,
-           "teleop_pts": 14, "adjust_pts": 15, "comp_R_RP": 16, "hab_rp": 17, "foul_count": 18, "tech_foul_count": 19,
-           "foul_pts": 20, "total_pts": 21, "winner": 22, "total_rp": 23, "match#": 24, "efficiency": 25}
+columns = {"record#": 0, "teams": 1, "init_line": 2, "init_line_points": 3, "auton_bottom": 4, "auton_top": 5, "auton_inner": 6,
+           "auton_cell": 7, "auton_total": 8, "teleop_bottom": 9, "teleop_top": 10, "teleop_inner": 11, "teleop_cell": 12,
+		   "control_panel_color": 13, "control_panel": 14, "stage_activated": 15, "teleop_total": 16,
+		   "endgame_state": 17, "endgame_shield_energized": 18, "endgame_shield_operational": 19, "endgame_shield_level": 20, "endgame_shield_foul": 21, "endgame_total": 22,
+		   "foul_count": 23, "tech_foul_count": 24, "foul_pts": 25, "total_pts": 26, "winner": 27, "total_rp": 28, "match#": 29, "efficiency": 30}
 
 # List of necessary headings - labels is not used for anything
-labels = ("General", "Sandstorm", "Teleop", "Endgame/Totals", "Fouls", "Final Stats", "Fix Later")
+labels = ("General", "Auton", "Teleop", "Endgame/Totals", "Fouls", "Final Stats", "Fix Later")
 
-labels2 = ("Record #", "Robots", "Starting Spot", "SStorm Action",
+labels2 = ("Record #", "Robots", "Init Line", "Init Line Points",
 
-           "Bonus Points", "Total Auto Pts",
+           "Auton Cells Bottom", "Auton Cells Top", "Auton Cells Inner", "Auton Cells Total", "Auton Total",
 
-           "Total Cargo", "Total Panels",
-                          
-           # N = Near, F = Far
-           "N Rocket Complete", "F Rocket Complete",
-
-           "Hatch Points", "Cargo Points", "Endgame Action", "Total HAB Points",
-           "Total Teleop Points", "Adjust Points",
-
-           "Completed Rocket RP", "HAB RP",
-
-           "Foul Count", "Tech Foul Count", "Foul Points Earned",
+           "Teleop Cells Bottom", "Teleop Cells Top", "Teleop Cells Inner", "Teleop Cells Total",
+		   
+		   "Control Panel Color", "Control Panel Points", "Stage Activated", "Teleop Total",
+		   
+		   "Endgame State", "Shield Energized", "Shield Operational", "Shield Level", "Shield Foul", "Endgame Total",
+		   
+		   "Foul Count", "Tech Foul Count", "Foul Points Earned",
 
            "Total Points", "Win/Lose", "Total RP",
            
@@ -70,9 +67,9 @@ labels2 = ("Record #", "Robots", "Starting Spot", "SStorm Action",
 # Add labels in first row
 for s in sheets:
     s.write(0, columns["record#"], "General")
-    s.write(0, columns["starting_level"], "Sandstorm")
-    s.write(0, columns["cargo"], "Teleop")
-    s.write(0, columns["endgame"], "Endgame/Totals")
+    s.write(0, columns["init_line"], "Auton")
+    s.write(0, columns["teleop_bottom"], "Teleop")
+    s.write(0, columns["endgame_state"], "Endgame/Totals")
     s.write(0, columns["foul_count"], "Fouls")
     s.write(0, columns["total_pts"], "Final Stats")
     s.write(0, columns["match#"], "Fix Later")
