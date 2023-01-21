@@ -37,28 +37,28 @@ public class Robot extends TimedRobot {
   public static final int PDP_CHANNEL = 1;
   public static final int PCM_CHANNEL = 8;
 
-  public static final int SWERVE_FRONT_LEFT_STEER = 31;
-  public static final int SWERVE_FRONT_LEFT_DRIVE = 32;
-  public static final int SWERVE_FRONT_LEFT_ENCODER = 3;
+  public static final int SWERVE_FRONT_LEFT_STEER = 41;
+  public static final int SWERVE_FRONT_LEFT_DRIVE = 42;
+  public static final int SWERVE_FRONT_LEFT_ENCODER = 4;
 
-  public static final int SWERVE_FRONT_RIGHT_STEER = 41;
-  public static final int SWERVE_FRONT_RIGHT_DRIVE = 42;
-  public static final int SWERVE_FRONT_RIGHT_ENCODER = 4;
+  public static final int SWERVE_FRONT_RIGHT_STEER = 21;
+  public static final int SWERVE_FRONT_RIGHT_DRIVE = 22;
+  public static final int SWERVE_FRONT_RIGHT_ENCODER = 2;
 
-  public static final int SWERVE_BACK_LEFT_STEER = 11;
-  public static final int SWERVE_BACK_LEFT_DRIVE = 12;
-  public static final int SWERVE_BACK_LEFT_ENCODER = 1;
+  public static final int SWERVE_BACK_LEFT_STEER = 31;
+  public static final int SWERVE_BACK_LEFT_DRIVE = 32;
+  public static final int SWERVE_BACK_LEFT_ENCODER = 3;
 
-  public static final int SWERVE_BACK_RIGHT_STEER = 21;
-  public static final int SWERVE_BACK_RIGHT_DRIVE = 22;
-  public static final int SWERVE_BACK_RIGHT_ENCODER = 2;
+  public static final int SWERVE_BACK_RIGHT_STEER = 11;
+  public static final int SWERVE_BACK_RIGHT_DRIVE = 12;
+  public static final int SWERVE_BACK_RIGHT_ENCODER = 1;
 
   public static final int SWERVE_PIGEON = 0;
 
-  public static final double BACK_LEFT_ENCODER_OFFSET = 0.0864257812;
-  public static final double BACK_RIGHT_ENCODER_OFFSET = 0.502685547;
-  public static final double FRONT_LEFT_ENCODER_OFFSET = 0.2355957;
-  public static final double FRONT_RIGHT_ENCODER_OFFSET = 0.594970703;
+  public static final double BACK_RIGHT_ENCODER_OFFSET = -0.83740234375;
+  public static final double FRONT_RIGHT_ENCODER_OFFSET = 0.755126953125;
+  public static final double BACK_LEFT_ENCODER_OFFSET = 0.000244140625;
+  public static final double FRONT_LEFT_ENCODER_OFFSET = -0.3359375;
 
   public static final double DEADZONE_THRESHOLD = 0.1;
 
