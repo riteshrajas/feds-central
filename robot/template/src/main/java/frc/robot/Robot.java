@@ -18,6 +18,7 @@ import frc.robot.swerve.RobotPose;
 import frc.robot.swerve.SDSMk4FXModule;
 import frc.robot.swerve.SwerveMode;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to
@@ -55,10 +56,10 @@ public class Robot extends TimedRobot {
 
   public static final int SWERVE_PIGEON = 0;
 
-  public static final double FRONT_LEFT_ENCODER_OFFSET = 0.6586990356445312;
-  public static final double FRONT_RIGHT_ENCODER_OFFSET = 0.745635986328125;
-  public static final double BACK_LEFT_ENCODER_OFFSET = 0.01123046875;
-  public static final double BACK_RIGHT_ENCODER_OFFSET = 0.16309356689453125;
+  public static final double FRONT_LEFT_ENCODER_OFFSET = 0.6527862548828125;
+  public static final double FRONT_RIGHT_ENCODER_OFFSET = 0.759521484375;
+  public static final double BACK_LEFT_ENCODER_OFFSET = 0.01407623291015625;
+  public static final double BACK_RIGHT_ENCODER_OFFSET = 0.16002655029296875;
 
   public static final double DEADZONE_THRESHOLD = 0.1;
 
@@ -140,17 +141,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double forward = -driverController.getLeftY();
-		double strafe = driverController.getLeftX();
-		double rotateX = driverController.getRightX();
-
-		double linearAngle = -Math.atan2(forward, strafe) / Math.PI / 2 + 0.25;
-		linearAngle = (linearAngle % 1 + 1) % 1;
-		double linearSpeed = deadzone(Math.sqrt(forward * forward + strafe * strafe), DEADZONE_THRESHOLD);
-
-    double rotate = deadzone(rotateX, DEADZONE_THRESHOLD) / 2;
-
-    swerveDrive.setTargetVelocity(linearAngle, linearSpeed, rotate);
+    execute();
   }
 
   @Override
@@ -193,5 +184,19 @@ public class Robot extends TimedRobot {
 			return 0;
 		return Math.signum(input) * (Math.abs(input) - threshold) / (1 - threshold);
 	}
+
+  public void execute(){
+    double forward = -driverController.getLeftY();
+		double strafe = driverController.getLeftX();
+		double rotateX = driverController.getRightX();
+
+		double linearAngle = -Math.atan2(forward, strafe) / Math.PI / 2 + 0.25;
+		linearAngle = (linearAngle % 1 + 1) % 1;
+		double linearSpeed = deadzone(Math.sqrt(forward * forward + strafe * strafe), DEADZONE_THRESHOLD);
+
+    double rotate = deadzone(rotateX, DEADZONE_THRESHOLD) / 2;
+
+    swerveDrive.setTargetVelocity(linearAngle, linearSpeed, rotate);
+  }
 
 }
