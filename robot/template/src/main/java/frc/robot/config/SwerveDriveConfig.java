@@ -44,7 +44,7 @@ public class SwerveDriveConfig {
 		length = 25.5;
 		wheelDistance = 12.566;
 
-		maxLinearAccel = 2;
+		maxLinearAccel = 1;
 		maxRotateAccel = 2;
 
 
