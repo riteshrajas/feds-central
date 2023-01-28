@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Controller;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.FieldRelativeDriveControlCommand;
 import frc.robot.commands.SwerveDriveControlCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
    
-    XboxController m_driveController = new XboxController(Controller.kDriveControllerPort);
+    XboxController m_driveController = new XboxController(OIConstants.kDriveControllerPort);
     public RobotContainer() {
 
 
