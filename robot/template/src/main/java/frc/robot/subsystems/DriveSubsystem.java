@@ -25,10 +25,10 @@ public class DriveSubsystem extends SubsystemBase {
     private RobotPose pose;
 
     public DriveSubsystem() {
-        TalonSRX talon1 = new TalonSRX(ModuleConstants.SWERVE_FRONT_LEFT_ENCODER);
-        TalonSRX talon2 = new TalonSRX(ModuleConstants.SWERVE_FRONT_RIGHT_ENCODER);
-        TalonSRX talon3 = new TalonSRX(ModuleConstants.SWERVE_BACK_LEFT_ENCODER);
-        TalonSRX talon4 = new TalonSRX(ModuleConstants.SWERVE_BACK_RIGHT_ENCODER);
+        TalonSRX talon1 = new TalonSRX(ModuleConstants.kSwerveFrontLeftEncoder);
+        TalonSRX talon2 = new TalonSRX(ModuleConstants.kSwerveFrontRightEncoder);
+        TalonSRX talon3 = new TalonSRX(ModuleConstants.kSwerveBackLeftEncoder);
+        TalonSRX talon4 = new TalonSRX(ModuleConstants.kSwerveBackRightEncoder);
         configEncoderTalon(talon1);
         configEncoderTalon(talon2);
         configEncoderTalon(talon3);
@@ -38,20 +38,20 @@ public class DriveSubsystem extends SubsystemBase {
 
         pose = new RobotPose();
 
-        ISwerveModule frontLeft = new SDSMk4FXModule(ModuleConstants.SWERVE_FRONT_LEFT_STEER, ModuleConstants.kSwerveFrontLeftDrive,
-            ModuleConstants.SWERVE_FRONT_LEFT_ENCODER, ModuleConstants.FRONT_LEFT_ENCODER_OFFSET,
+        ISwerveModule frontLeft = new SDSMk4FXModule(ModuleConstants.kSwerveFrontLeftSteer, ModuleConstants.kSwerveFrontLeftDrive,
+            ModuleConstants.kSwerveFrontLeftEncoder, ModuleConstants.kFrontLeftEncoderOffset,
             swerveDriveConfig.moduleConfig);
-        ISwerveModule frontRight = new SDSMk4FXModule(ModuleConstants.SWERVE_FRONT_RIGHT_STEER, ModuleConstants.SWERVE_FRONT_RIGHT_DRIVE,
-            ModuleConstants.SWERVE_FRONT_RIGHT_ENCODER, ModuleConstants.FRONT_RIGHT_ENCODER_OFFSET,
+        ISwerveModule frontRight = new SDSMk4FXModule(ModuleConstants.kSwerveFrontRightSteer, ModuleConstants.kSwerveFrontRightDrive,
+            ModuleConstants.kSwerveFrontRightEncoder, ModuleConstants.kFrontRightEncoderOffset,
             swerveDriveConfig.moduleConfig);
-        ISwerveModule backLeft = new SDSMk4FXModule(ModuleConstants.SWERVE_BACK_LEFT_STEER, ModuleConstants.SWERVE_BACK_LEFT_DRIVE,
-            ModuleConstants.SWERVE_BACK_LEFT_ENCODER, ModuleConstants.BACK_LEFT_ENCODER_OFFSET,
+        ISwerveModule backLeft = new SDSMk4FXModule(ModuleConstants.kSwerveBackLeftSteer, ModuleConstants.kServeBackRightDrive,
+            ModuleConstants.kSwerveBackLeftEncoder, ModuleConstants.kBackLeftEncoderOffset,
             swerveDriveConfig.moduleConfig);
-        ISwerveModule backRight = new SDSMk4FXModule(ModuleConstants.SWERVE_BACK_RIGHT_STEER, ModuleConstants.SWERVE_BACK_RIGHT_DRIVE,
-            ModuleConstants.SWERVE_BACK_RIGHT_ENCODER, ModuleConstants.BACK_RIGHT_ENCODER_OFFSET,
+        ISwerveModule backRight = new SDSMk4FXModule(ModuleConstants.kSwerveBackRightSteer, ModuleConstants.kSwerveFrontRightDrive,
+            ModuleConstants.kSwerveBackRightEncoder, ModuleConstants.kBackRightEncoderOffset,
             swerveDriveConfig.moduleConfig);
         this.swerveDrive = new FourCornerSwerveDrive(frontLeft, frontRight, backLeft, backRight,
-            ModuleConstants.SWERVE_PIGEON, pose, swerveDriveConfig);
+            ModuleConstants.kSwervePigeon, pose, swerveDriveConfig);
     }
 
     private static void configEncoderTalon(TalonSRX talon) {

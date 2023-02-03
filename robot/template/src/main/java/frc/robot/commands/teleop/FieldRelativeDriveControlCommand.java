@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.teleop;
 
 import java.util.function.DoubleSupplier;
 
@@ -15,7 +15,8 @@ public class FieldRelativeDriveControlCommand extends CommandBase {
     private final DoubleSupplier m_rotateX;
     private final DoubleSupplier m_poseAngle;
 
-    public FieldRelativeDriveControlCommand (DriveSubsystem drive, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotateX, DoubleSupplier poseAngle) {
+    public FieldRelativeDriveControlCommand(DriveSubsystem drive, DoubleSupplier forward, DoubleSupplier strafe,
+            DoubleSupplier rotateX, DoubleSupplier poseAngle) {
         m_drive = drive;
         m_forward = forward;
         m_strafe = strafe;
@@ -23,7 +24,7 @@ public class FieldRelativeDriveControlCommand extends CommandBase {
         m_poseAngle = poseAngle;
 
         addRequirements(m_drive);
-    } 
+    }
 
     @Override
     public void execute() {
@@ -35,12 +36,10 @@ public class FieldRelativeDriveControlCommand extends CommandBase {
         double linearAngle = -Math.atan2(forwardValue, strafeValue) / Math.PI / 2 + 0.25;
         linearAngle = (linearAngle % 1 + 1) % 1;
         linearAngle -= poseAngleValue;
-        double linearSpeed = DriveFunctions.deadzone(Math.sqrt(forwardValue * forwardValue + strafeValue * strafeValue), OIConstants.DEADZONE_THRESHOLD);
-        double rotate = DriveFunctions.deadzone(rotateXValue, OIConstants.DEADZONE_THRESHOLD) / 2;
+        double linearSpeed = DriveFunctions.deadzone(Math.sqrt(forwardValue * forwardValue + strafeValue * strafeValue),
+                OIConstants.kDeadzoneThreshold);
+        double rotate = DriveFunctions.deadzone(rotateXValue, OIConstants.kDeadzoneThreshold) / 2;
 
         this.m_drive.setTargetVelocity(linearAngle, linearSpeed, rotate);
     }
 }
-
-
-
