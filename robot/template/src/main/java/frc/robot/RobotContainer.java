@@ -16,7 +16,8 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
    
-    XboxController m_driveController = new XboxController(OIConstants.kDriveControllerPort);
+    XboxController m_driveController = new XboxController(Constants.OIConstants.kDriveControllerPort);
+    XboxController m_operatorController = new XboxController(Constants.OIConstants.kOperatorControllerPort);
 
     private final Command m_basicAuton = new BasicAuton(m_robotDrive);
     private final Command m_deadlineAuton = new BasicDeadlineAuton(m_robotDrive);
@@ -25,7 +26,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         m_robotDrive.setDefaultCommand(
-            // new SwerveDriveControlCommand(m_robotDrive, () -> m_driveController.getLeftY(), () -> m_driveController.getLeftX(), () -> m_driveController.getRightX())
             new FieldRelativeDriveControlCommand(m_robotDrive, () -> -m_driveController.getLeftY(), () -> -m_driveController.getLeftX(), () -> m_driveController.getRightX(), () -> m_robotDrive.getPoseAngle())
         );
 

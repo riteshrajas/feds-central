@@ -36,15 +36,21 @@ public class Constants {
   public static final class OIConstants {
     public static final double kDeadzoneThreshold = 0.1;
     public static final int kDriveControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
   }
 
   public static final class IntakeConstants {
+    // Pheonix IDs
     public static final int kIntakeRightDeployMotor = 52;
     public static final int kIntakeRightWheelMotor = 62;
-    public static final int KrightIntakeControllerChannel = 3232;
+
+    // Speeds
     public static final double kIntakeDeploySpeed = 0.15;
     public static final double kIntakeWheelSpeed = 0.30;
-    public static final double kIntakeEncoderOffset = 1000;
+
+    // Encoder Counts
+    public static final double kIntakeEncoderOffsetDeployed = 1000;
+    public static final double kIntakeEncoderOffsetStored = 0;
   }
 
   public static final class ArmConstants {
