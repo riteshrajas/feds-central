@@ -51,7 +51,7 @@ public class Constants {
 
     // Encoder Counts
     public static final double kIntakeEncoderOffsetDeployed = 1000;
-    public static final double kIntakeEncoderOffsetStored = 0;
+    public static final double kIntakeEncoderOffsetRetracted = 0;
   }
 
   public static final class ArmConstants {

@@ -4,21 +4,21 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class DeployIntake extends CommandBase {
+public class RetractIntake extends CommandBase {
     private final IntakeSubsystem m_intake;
 
-    public DeployIntake(IntakeSubsystem intake) {
+    public RetractIntake(IntakeSubsystem intake) {
         this.m_intake = intake;
     }    
 
     @Override
     public void execute() {
-        // m_intake.runIntakeForward();
+        // m_intake.runIntakeBackwards();
     }
 
     @Override
     public boolean isFinished() {
-        return m_intake.getPositionEncoderCounts() >= Constants.IntakeConstants.kIntakeEncoderOffsetDeployed;
+        return m_intake.getPositionEncoderCounts() <= Constants.IntakeConstants.kIntakeEncoderOffsetRetracted;
     }
 
     @Override
