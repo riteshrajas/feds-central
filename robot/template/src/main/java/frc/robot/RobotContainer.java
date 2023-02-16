@@ -52,9 +52,13 @@ public class RobotContainer {
         m_autonChooser.addOption("basicDeadlineAuton", m_deadlineAuton);
 
         Shuffleboard.getTab("Autonomous Command").add(m_autonChooser);
+
+        configureButtonBindings();
+
+
     }
 
-    public void configureButtonBindings() {
+    private void configureButtonBindings() {
         // driver
 
         // right bumper: claw open close

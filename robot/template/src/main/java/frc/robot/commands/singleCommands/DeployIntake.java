@@ -13,7 +13,7 @@ public class DeployIntake extends CommandBase {
 
     @Override
     public void execute() {
-        // m_intake.runIntakeForward();
+        m_intake.rotateIntakeForwards();
     }
 
     @Override
@@ -23,6 +23,6 @@ public class DeployIntake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // m_intake.stopIntake();
+        m_intake.stopIntakeRotation();
     }
 }

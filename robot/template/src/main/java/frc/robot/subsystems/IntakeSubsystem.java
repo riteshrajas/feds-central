@@ -68,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         if(rotateIntake) {
             intakeDeployMotor.set(ControlMode.PercentOutput, 
-                intakeRotateDirection == IntakeRotateDirection.FORWARD ? Constants.IntakeConstants.kIntakeDeploySpeed : -Constants.IntakeConstants.kIntakeDeploySpeed);
+                intakeRotateDirection == IntakeRotateDirection.FORWARD ? Constants.IntakeConstants.kIntakeDeploySpeed : -Constants.IntakeConstants.kIntakeRetractSpeed);
         }
 
         if(runWheels) {

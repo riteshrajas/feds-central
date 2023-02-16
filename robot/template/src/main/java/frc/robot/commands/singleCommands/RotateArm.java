@@ -8,6 +8,7 @@ import frc.robot.subsystems.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 
 public class RotateArm extends CommandBase{
     private ArmSubsystem armRotation = new ArmSubsystem();
@@ -21,7 +22,7 @@ public class RotateArm extends CommandBase{
     }
 
     public void execute(){
-        armRotation.rotateArm(0);
+        armRotation.rotateArm(ArmConstants.kArmMotorSpeed);
     }
 
     public boolean isFinished(){

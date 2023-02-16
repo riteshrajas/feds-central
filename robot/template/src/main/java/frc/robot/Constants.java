@@ -46,11 +46,12 @@ public class Constants {
     public static final int kIntakeTriggerID = 2;
 
     // Speeds
-    public static final double kIntakeDeploySpeed = -0.15;
+    public static final double kIntakeDeploySpeed = -0.05;
+    public static final double kIntakeRetractSpeed = -0.15;
     public static final double kIntakeWheelSpeed = 0.30;
 
     // Encoder Counts
-    public static final double kIntakeEncoderOffsetDeployed = 1000;
+    public static final double kIntakeEncoderOffsetDeployed = 2640;
     public static final double kIntakeEncoderOffsetRetracted = 0;
   }
 
@@ -59,10 +60,10 @@ public class Constants {
     //Phoenix ID's
     public static final int kArmMotor1 = 57;
     public static final int kArmMotor2 = 58;
-    public static final int kArmPulley = 12;
+    public static final int kArmPulley = 60;
 
     //speeds
-    //public static final double kArmMotorSpeed = 0.06;
+    public static final double kArmMotorSpeed = 0.06;
     public static final double kArmPulleySpeed = 0.1;
   }
 

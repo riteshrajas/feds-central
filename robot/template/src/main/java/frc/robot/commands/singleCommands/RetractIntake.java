@@ -13,7 +13,7 @@ public class RetractIntake extends CommandBase {
 
     @Override
     public void execute() {
-        // m_intake.runIntakeBackwards();
+         m_intake.rotateIntakeBackwards();
     }
 
     @Override
@@ -23,6 +23,6 @@ public class RetractIntake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // m_intake.stopIntake();
+        m_intake.stopIntakeRotation();
     }
 }
