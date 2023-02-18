@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,32 +21,53 @@ public class ArmSubsystem extends SubsystemBase{
     
     private final TalonFX rotateMotor1;
     private final TalonFX rotateMotor2;
-    private boolean rotateArm;
-    private static ArmDirection ARM_DIRECTION;
-
-    private enum ArmDirection{
-        FORWARD,
-        BACKWARD
-    }    
+ 
+    private final int kPIDLoopIdx = 0;
+    private final boolean kSensorPhase = true;
+    private final double kP = 0.15;
+    private final double kI = 0.0;
+    private final double kD = 1.0;
+    private final double kF = 0.0;
+    private final int kIzone = 0;
+    private final double kPeakOutput = 0.06;
+    private final int kTimeoutMs = 30;
 
     public ArmSubsystem(){
         rotateMotor1 = new TalonFX(ArmConstants.kArmMotor1);
         rotateMotor2 = new TalonFX(ArmConstants.kArmMotor2);
+
+        configMotor(rotateMotor1);
+        configMotor(rotateMotor2);
+
+        // rotateMotor1.setNeutralMode(NeutralMode.Brake);
+        // rotateMotor2.setNeutralMode(NeutralMode.Brake);
+
         rotateMotor2.follow(rotateMotor1);
     }
 
-    public void rotateArm(){
-        rotateArm = true;
-        //if(getArmRotationPosition() <= ArmConstants.kArmRotatePreset1){
-        ARM_DIRECTION = ArmDirection.FORWARD;
-       // }
-        //else{
-            //ARM_DIRECTION= ArmDirection.BACKWARD;
-        //}
-    } 
+    public void configMotor(TalonFX motor) {
+        motor.configFactoryDefault();
+        motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
 
-    public void stop(){
-        rotateArm = false;
+        motor.setSensorPhase(kSensorPhase);
+
+        motor.configNominalOutputForward(0, kTimeoutMs);
+        motor.configNominalOutputReverse(0, kTimeoutMs);
+
+        motor.configPeakOutputForward(kPeakOutput, kTimeoutMs);
+        motor.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
+
+        motor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
+
+        motor.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
+        motor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
+        motor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
+        motor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+
+    }
+
+    public void rotateArmTo(double encoderPosition) {
+        rotateMotor1.set(TalonFXControlMode.Position, encoderPosition);
     }
 
     public double getArmRotationPosition(){
@@ -53,16 +76,37 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        if(rotateArm){
-            rotateMotor1.set(ControlMode.PercentOutput,
-            ARM_DIRECTION == ArmDirection.FORWARD ? ArmConstants.kArmMotorSpeed : -ArmConstants.kArmMotorSpeed);
-        }
-        else if(rotateArm = false){
-            rotateMotor1.set(ControlMode.PercentOutput,0);
-            rotateMotor1.setNeutralMode(NeutralMode.Brake);
-            rotateMotor2.setNeutralMode(NeutralMode.Brake);
-        }
-        SmartDashboard.putNumber("Rotate Motor Position", getArmRotationPosition());
-
+       SmartDashboard.putNumber("Sensor Position", rotateMotor1.getSelectedSensorPosition());
+       SmartDashboard.putNumber("Sensor Velocity", rotateMotor1.getSelectedSensorVelocity());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
