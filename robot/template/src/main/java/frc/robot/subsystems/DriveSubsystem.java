@@ -49,10 +49,10 @@ public class DriveSubsystem extends SubsystemBase {
         ISwerveModule frontRight = new SDSMk4FXModule(ModuleConstants.kSwerveFrontRightSteer, ModuleConstants.kSwerveFrontRightDrive,
             ModuleConstants.kSwerveFrontRightEncoder, ModuleConstants.kFrontRightEncoderOffset,
             swerveDriveConfig.moduleConfig);
-        ISwerveModule backLeft = new SDSMk4FXModule(ModuleConstants.kSwerveBackLeftSteer, ModuleConstants.kServeBackRightDrive,
+        ISwerveModule backLeft = new SDSMk4FXModule(ModuleConstants.kSwerveBackLeftSteer, ModuleConstants.kServeBackLeftDrive,
             ModuleConstants.kSwerveBackLeftEncoder, ModuleConstants.kBackLeftEncoderOffset,
             swerveDriveConfig.moduleConfig);
-        ISwerveModule backRight = new SDSMk4FXModule(ModuleConstants.kSwerveBackRightSteer, ModuleConstants.kSwerveFrontRightDrive,
+        ISwerveModule backRight = new SDSMk4FXModule(ModuleConstants.kSwerveBackRightSteer, ModuleConstants.kServeBackRightDrive,
             ModuleConstants.kSwerveBackRightEncoder, ModuleConstants.kBackRightEncoderOffset,
             swerveDriveConfig.moduleConfig);
         this.swerveDrive = new FourCornerSwerveDrive(frontLeft, frontRight, backLeft, backRight,

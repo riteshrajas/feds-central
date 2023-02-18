@@ -19,6 +19,7 @@ import frc.robot.commands.auton.BasicDeadlineAuton;
 import frc.robot.commands.singleCommands.DeployIntake;
 import frc.robot.commands.singleCommands.DriveDuration;
 import frc.robot.commands.singleCommands.RetractIntake;
+import frc.robot.commands.singleCommands.RotateArm1;
 import frc.robot.commands.singleCommands.RunIntakeWheels;
 import frc.robot.commands.teleop.FieldRelativeDriveControlCommand;
 import frc.robot.commands.teleop.SwerveDriveControlCommand;
@@ -34,8 +35,7 @@ public class RobotContainer {
     private final ArmSubsystem m_arm = new ArmSubsystem();
 
     CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
-    CommandXboxController m_operatorController = new CommandXboxController(
-            Constants.OIConstants.kOperatorControllerPort);
+    CommandXboxController m_operatorController = new CommandXboxController(Constants.OIConstants.kOperatorControllerPort);
 
     private final Command m_basicAuton = new BasicAuton(m_robotDrive);
     private final Command m_deadlineAuton = new BasicDeadlineAuton(m_robotDrive);
@@ -78,6 +78,8 @@ public class RobotContainer {
                 .onTrue(new ParallelCommandGroup(
                         new InstantCommand(() -> m_intake.stopIntakeRotation()),
                         new InstantCommand(() -> m_intake.stopIntakeWheels())));
+        m_driveController.povUp()
+                .onTrue(new RotateArm1(m_arm));
         // r-trigger: right intake open TODO: ask if this should be based on field
         // orientation?
 

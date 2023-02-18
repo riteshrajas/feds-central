@@ -10,27 +10,30 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
-public class RotateArm extends CommandBase{
+public class RotateArm1 extends CommandBase{
     private ArmSubsystem armRotation = new ArmSubsystem();
 
-    public RotateArm(ArmSubsystem arm){
+    public RotateArm1(ArmSubsystem arm){
         armRotation = arm;
+
+        addRequirements(armRotation);
     }
 
-    public void initialize(){
+    
 
-    }
-
+    @Override
     public void execute(){
-        armRotation.rotateArm(ArmConstants.kArmMotorSpeed);
+        armRotation.rotateArm();
     }
 
+    @Override
     public boolean isFinished(){
-        return false;
+        return armRotation.getArmRotationPosition() >= (ArmConstants.kArmRotatePreset1 + ArmConstants.kArmOffset);
     }
 
-    public void end(){
-
+    @Override
+    public void end(boolean interrupted){
+        armRotation.stop();
     }
 
     

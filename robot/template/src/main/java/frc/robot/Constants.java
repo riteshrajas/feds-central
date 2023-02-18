@@ -60,15 +60,23 @@ public class Constants {
     //Phoenix ID's
     public static final int kArmMotor1 = 57;
     public static final int kArmMotor2 = 58;
-    public static final int kArmPulley = 60;
+    //public static final int kArmPulley = 60;
 
     //speeds
-    public static final double kArmMotorSpeed = 0.06;
+    public static final double kArmMotorSpeed = 0.075;
     public static final double kArmPulleySpeed = 0.1;
+
+    public static final double kArmOffset = -1025;
+    public static final double kArmRotatePreset1 = 5000;
   }
 
   public static final class TelescopeConstants {
-    public static final int kTelescopeMotor = 0;
+    public static final int kTelescopeMotor = 60;
+
+    public static final double kTelescopeSpeed = 0.05;
+
+    public static final double kTelescopeOffset = 0;
+    public static final double kTelescopePreset1 = 0;
   }
 
   public static final class OrientatorConstants {
