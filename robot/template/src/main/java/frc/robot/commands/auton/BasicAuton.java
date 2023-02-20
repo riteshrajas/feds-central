@@ -1,7 +1,7 @@
 package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.singleCommands.DriveDuration;
+import frc.robot.commands.drive.DriveDuration;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class BasicAuton extends SequentialCommandGroup {

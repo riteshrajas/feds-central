@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.arm.RotateArmToEncoderPosition;
 import frc.robot.commands.auton.BasicAuton;
 import frc.robot.commands.auton.BasicDeadlineAuton;
-import frc.robot.commands.singleCommands.RotateArmToEncoderPosition;
-import frc.robot.commands.teleop.FieldRelativeDriveControlCommand;
+import frc.robot.commands.drive.FieldRelativeDriveControlCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -66,7 +66,7 @@ public class RobotContainer {
                 m_driveController.leftBumper()
                                 .onTrue(new SequentialCommandGroup(
                                                 new InstantCommand(() -> m_intake.rotateIntakeBackwards()),
-                                                new InstantCommand(() -> m_intake.runIntakeOut())));
+                                                new InstantCommand(() -> m_intake.runIntakeWheelsOut())));
 
                 m_driveController.rightBumper()
                                 .onTrue(new ParallelCommandGroup(

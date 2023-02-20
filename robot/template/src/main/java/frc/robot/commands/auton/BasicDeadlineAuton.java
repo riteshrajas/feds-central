@@ -2,9 +2,9 @@ package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.singleCommands.DriveDuration;
-import frc.robot.commands.singleCommands.FieldCentricDriveAuton;
-import frc.robot.commands.singleCommands.TimerDeadline;
+import frc.robot.commands.drive.DriveDuration;
+import frc.robot.commands.drive.FieldCentricDriveAuton;
+import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class BasicDeadlineAuton extends SequentialCommandGroup {
