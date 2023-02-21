@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.nav_input:
-                    //fragment = new RapidReactInput();
+                    fragment = new Input();
                     break;
 
                 case R.id.nav_setup:
