@@ -15,6 +15,7 @@ import frc.robot.swerve.ISwerveModule;
 import frc.robot.swerve.RobotPose;
 import frc.robot.swerve.SDSMk4FXModule;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -80,6 +81,12 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         this.swerveDrive.periodic(); 
+
+
+        SmartDashboard.putNumber("Pigeon Pitch", this.m_pigeon.getPitch());
+        SmartDashboard.putNumber("Pigeon Roll", this.m_pigeon.getRoll());
+        SmartDashboard.putNumber("Pigeon Yaw", this.m_pigeon.getYaw());
+        SmartDashboard.putNumber("Pigeon Compass Heading", this.m_pigeon.getCompassHeading());
 
     }
 

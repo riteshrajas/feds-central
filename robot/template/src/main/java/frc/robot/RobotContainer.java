@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.arm.RotateArmRange;
 import frc.robot.commands.arm.RotateArmToEncoderPosition;
 import frc.robot.commands.auton.BasicAuton;
@@ -52,7 +53,7 @@ public class RobotContainer {
 
                
 
-                m_arm.setDefaultCommand(new RotateArmRange(m_arm, () -> -m_operatorController.getLeftY(), () -> m_arm.getDangerMode(), -5000, 5000)); // TODO: make constants
+                m_arm.setDefaultCommand(new RotateArmRange(m_arm, () -> -m_operatorController.getLeftY(), () -> m_arm.getDangerMode(), ArmConstants.kArmRotateMin, ArmConstants.kArmRotateMax)); // TODO: make constants
 
                 m_autonChooser.setDefaultOption("basicAuton", m_basicAuton);
                 m_autonChooser.addOption("basicDeadlineAuton", m_deadlineAuton);
