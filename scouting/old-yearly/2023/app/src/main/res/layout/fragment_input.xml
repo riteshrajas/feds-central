@@ -9,11 +9,12 @@
     tools:context=".Input">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/coolookingthing"
         android:layout_width="match_parent"
-        android:layout_height="120sp"
+        android:layout_height="80sp"
         android:src="@drawable/dashboard_static"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,8 +22,8 @@
         android:id="@+id/Team_color_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="260dp"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="260sp"
         android:fontFamily="@font/faxsansbeta"
         android:text="Blue"
         android:textColor="@color/FEDS_WHITE"
@@ -48,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="260dp"
-        android:layout_marginTop="70sp"
+        android:layout_marginTop="20sp"
         android:fontFamily="@font/faxsansbeta"
         android:text="201"
         android:textColor="@color/FEDS_WHITE"
@@ -60,22 +61,349 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="300sp"
-        android:layout_marginTop="0sp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="400sp">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                tools:layout_editor_absoluteX="4dp"
-                tools:layout_editor_absoluteY="16dp" />
+            <ImageView
+                android:id="@+id/grid"
+                android:layout_width="980sp"
+                android:layout_height="400sp"
+                android:src="@drawable/thing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/autonbutton1"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginEnd="865sp"
+                android:layout_marginTop="43sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton2"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="43sp"
+                android:layout_marginEnd="646sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton3"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="43sp"
+                android:layout_marginEnd="431sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton4"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="43sp"
+                android:layout_marginEnd="212sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton5"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="43sp"
+                android:layout_marginEnd="0sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton6"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="218sp"
+                android:layout_marginTop="43sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton7"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="438sp"
+                android:layout_marginTop="43sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton8"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="648sp"
+                android:layout_marginTop="43sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton9"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="864sp"
+                android:layout_marginTop="43sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton10"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="147sp"
+                android:layout_marginEnd="864sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton11"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="147sp"
+                android:layout_marginEnd="646sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton12"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="147sp"
+                android:layout_marginEnd="431sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton13"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="147sp"
+                android:layout_marginEnd="212sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton14"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="147sp"
+                android:layout_marginEnd="0sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton15"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="218sp"
+                android:layout_marginTop="147sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton16"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="438sp"
+                android:layout_marginTop="147sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton17"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="648sp"
+                android:layout_marginTop="147sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton18"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="864sp"
+                android:layout_marginTop="147sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton19"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="251sp"
+                android:layout_marginEnd="864sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton20"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="251sp"
+                android:layout_marginEnd="646sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton21"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="251sp"
+                android:layout_marginEnd="431sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton22"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="251sp"
+                android:layout_marginEnd="212sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton23"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginTop="251sp"
+                android:layout_marginEnd="0sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton24"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="218sp"
+                android:layout_marginTop="251sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton25"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="438sp"
+                android:layout_marginTop="251sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton26"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="648sp"
+                android:layout_marginTop="251sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
+            <ImageButton
+                android:id="@+id/autonbutton27"
+                android:layout_width="102sp"
+                android:layout_height="102sp"
+                android:layout_marginStart="864sp"
+                android:layout_marginTop="251sp"
+                android:background="@color/FEDS_WHITE"
+                android:src="@drawable/nothing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/grid" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
