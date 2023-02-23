@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.nav_setup:
-                    //fragment = new Setup();
+                    fragment = new Setup();
                     break;
 
                 case R.id.nav_settings:
