@@ -11,7 +11,7 @@ private final VisionSubsystem VISION_S;
     public StrafeAlign(VisionSubsystem VISION_S, boolean isTargetLow){
         this.VISION_S = new VisionSubsystem(isTargetLow);
 
-        addRequirements(VISION_S);
+        addRequirements(this.VISION_S);
     }
 
     @Override

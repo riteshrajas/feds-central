@@ -11,6 +11,8 @@ public class Constants {
     public static final double highTargetHeight = 2.6;
     public static final double limelightPitchRadians = .67;
 
+    public static final double degreesToEncoderCounts = 175;
+
   }
 
   public static final class ModuleConstants {
@@ -92,6 +94,7 @@ public class Constants {
   public static final class OrientatorConstants {
     public static final int kOrientatorMotor1 = 0;
     public static final int kOrientatorMotor2 = 0;
+    public static final double kOrientatorSpeed = 0.10;
   }
 
   public static final class ClawConstants {

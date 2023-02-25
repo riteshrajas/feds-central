@@ -23,7 +23,6 @@ public class VisionSubsystem extends SubsystemBase{
     private double cameraPitch;
     private boolean isTargetLow;
     private PhotonPipelineResult result;
-    private double objectArea;
     private double distance;
     private double horizontalDistance;
     private PhotonTrackedTarget target;
@@ -131,5 +130,9 @@ public class VisionSubsystem extends SubsystemBase{
 
     public boolean rotateFinished(){
         return false;
+    }
+
+    public double rotateArmValue(){
+        return SensorConstants.degreesToEncoderCounts * (getTargetPitch() + SensorConstants.limelightPitchRadians + 90);
     }
 }

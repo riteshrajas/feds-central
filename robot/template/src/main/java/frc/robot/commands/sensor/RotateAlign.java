@@ -12,7 +12,7 @@ public class RotateAlign extends CommandBase{
         this.VISION_S = VISION_S;
 
 
-        addRequirements(VISION_S);
+        addRequirements(this.VISION_S);
 
     }
 
