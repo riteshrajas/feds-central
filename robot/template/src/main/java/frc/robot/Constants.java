@@ -5,7 +5,12 @@ public class Constants {
   public static final class SensorConstants {
     public static final int kPigeon = 0;
 
-    public static final double limelightOffset = 5.43;
+    public static final double limelightOffset = .13;
+    public static final double limelightheight = 1.2;
+    public static final double lowTargetHeight = 1.5;
+    public static final double highTargetHeight = 2.6;
+    public static final double limelightPitchRadians = .67;
+
   }
 
   public static final class ModuleConstants {
