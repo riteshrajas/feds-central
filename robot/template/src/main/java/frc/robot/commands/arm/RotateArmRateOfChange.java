@@ -30,6 +30,7 @@ public class RotateArmRateOfChange extends CommandBase{
 
 
         addRequirements(m_arm);
+
     }
 
     @Override

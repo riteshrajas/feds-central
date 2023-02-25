@@ -4,6 +4,8 @@ public class Constants {
 
   public static final class SensorConstants {
     public static final int kPigeon = 0;
+
+    public static final double limelightOffset = 5.43;
   }
 
   public static final class ModuleConstants {
@@ -70,7 +72,7 @@ public class Constants {
     public static final double kArmRotatePreset1 = 5000;
     public static final double kArmRotateMin = -5000;
     public static final double kArmRotateMax = 5000;
-    public static final double multiplier = 1;
+    public static final double multiplier = 150;
   }
 
   public static final class TelescopeConstants {
