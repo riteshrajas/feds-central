@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.List;
+
 import javax.xml.transform.Result;
 
 import org.photonvision.*;
@@ -17,9 +19,10 @@ public class Vision extends SubsystemBase{
     private double cameraYaw;
     private double cameraPitch;
     private PhotonPipelineResult result;
-    private double cameraRoll;
+    private double objectArea;
     private double distance;
-    //List<PhotonTrackedTarget> target = result.getTargets();
+    PhotonTrackedTarget target;
+    List<PhotonTrackedTarget> targets;
     public Vision(){
         camera = new PhotonCamera("limelightCamera");
         PhotonTrackedTarget target = new PhotonTrackedTarget();
@@ -33,20 +36,31 @@ public class Vision extends SubsystemBase{
         return result.hasTargets();
     }
 
-    /*public double [] getTarget(){
-        return target;
-    }*/
+    public void setTargets(){
+        if(hasTarget()){
+            targets = result.getTargets();
+        }
+    }
+
+    public void setTarget(){
+        if(hasTarget()){
+            target = result.getBestTarget();
+        }
+    }
 
     public double getYaw(){
+        cameraYaw = target.getYaw();
         return cameraYaw;
     }
 
     public double getPitch(){
+        cameraPitch = target.getPitch();
         return cameraPitch;
     }
 
     public double getDistance(){
-        return distance;
+        objectArea = target.getArea();
+        return objectArea;
     }
 
     public void periodic(){
