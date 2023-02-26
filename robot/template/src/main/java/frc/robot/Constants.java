@@ -52,6 +52,15 @@ public class Constants {
     public static final int angleContinuousCurrentLimit = 25;
     public static final int anglePeakCurrentLimit = 40;
     public static final double anglePeakCurrentDuration = 0.1;
+
+    public static final double limelightOffset = .13;
+    public static final double limelightheight = 1.2;
+    public static final double lowTargetHeight = 1.5;
+    public static final double highTargetHeight = 2.6;
+    public static final double limelightPitchRadians = .67;
+
+    public static final double degreesToEncoderCounts = 175;
+
     public static final boolean angleEnableCurrentLimit = true;
 
     public static final int driveContinuousCurrentLimit = 35;
@@ -207,12 +216,13 @@ public class Constants {
     public static final double kTelescopeSpeed = 0.05;
 
     public static final double kTelescopeOffset = 0;
-    public static final double kTelescopePreset1 = 0;
+    public static final double kTelescopeExtended = 6000;
   }
 
   public static final class OrientatorConstants {
     public static final int kOrientatorMotor1 = 0;
     public static final int kOrientatorMotor2 = 0;
+    public static final double kOrientatorSpeed = 0.10;
   }
 
   public static final class ClawConstants {

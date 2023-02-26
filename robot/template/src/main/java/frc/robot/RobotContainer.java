@@ -15,6 +15,7 @@ import frc.robot.commands.claw.OpenClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -22,6 +23,7 @@ public class RobotContainer {
         private final ClawSubsystem m_claw = new ClawSubsystem();
         private final IntakeSubsystem m_intake = new IntakeSubsystem();
         private final ArmSubsystem m_arm = new ArmSubsystem();
+        private final TelescopeSubsystem m_TelescopeSubsystem = new TelescopeSubsystem();
 
         CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
         CommandXboxController m_operatorController = new CommandXboxController(
