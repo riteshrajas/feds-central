@@ -34,8 +34,18 @@ public class VisionSubsystem extends SubsystemBase{
         this.isTargetLow = isTargetLow;
     }
 
+    public VisionSubsystem(){
+        camera = new PhotonCamera("limelightCamera");
+        target = new PhotonTrackedTarget();
+        isTargetLow = true;
+    }
+
     public void getResult(){
         result = camera.getLatestResult();
+    }
+
+    public void setTargetHeight(boolean isTargetLow){
+        this.isTargetLow = isTargetLow;
     }
 
     public boolean hasTarget(){
@@ -95,7 +105,8 @@ public class VisionSubsystem extends SubsystemBase{
                                                                 VisionConstants.limelightPitchRadians,
                                                                 getTargetPitch());    
         }       
-        return distance; 
+        return Math.sqrt(Math.pow(distance,2) + Math.pow(VisionConstants.limelightToTopArmOffset, 2) - 
+        (2 * distance * VisionConstants.limelightToTopArmOffset * Math.cos((Math.PI / 2) - (getTargetPitch() + VisionConstants.limelightPitchRadians))));
     }
 
     public double getHorizontalDistanceToTarget(){
@@ -110,7 +121,7 @@ public class VisionSubsystem extends SubsystemBase{
         
     }
 
-    public void strafeAlign(){
+    public double strafeAlign(){
         double driveDistance;
         if(getTargetYaw()>=0){
            driveDistance = (Math.cos(90-getTargetYaw()) * getHorizontalDistanceToTarget()) - VisionConstants.limelightOffset;
@@ -118,10 +129,7 @@ public class VisionSubsystem extends SubsystemBase{
         else{
             driveDistance = (Math.cos(90-getTargetYaw()) * getHorizontalDistanceToTarget()) + VisionConstants.limelightOffset;            
         }
-    }
-    
-    public void rotateToTarget(){
-
+        return driveDistance;
     }
 
     public boolean strafeFinished(){
@@ -130,11 +138,6 @@ public class VisionSubsystem extends SubsystemBase{
 
     public boolean rotateFinished(){
         return false;
-    }
-
-    public double armDistanceToTarget(){
-        return Math.sqrt(Math.pow(getTargetDistance(),2) + Math.pow(VisionConstants.limelightToTopArmOffset, 2) - 
-        (2 * getTargetDistance() * VisionConstants.limelightToTopArmOffset * Math.cos((Math.PI / 2) - (getTargetPitch() + VisionConstants.limelightPitchRadians))));
     }
 
     public double rotateArmValue(){
