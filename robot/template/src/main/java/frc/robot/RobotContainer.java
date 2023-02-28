@@ -9,23 +9,21 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.auton.exampleAuto;
 import frc.robot.commands.drive.TeleopSwerve;
 import frc.robot.commands.sensor.StrafeAlign;
-import frc.robot.commands.arm.JointsSetPosition;
 import frc.robot.commands.auton.examplePPAuto;
-import frc.robot.commands.claw.CloseClaw;
-import frc.robot.commands.claw.OpenClaw;
-import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
-        private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
-        private final ClawSubsystem m_claw = new ClawSubsystem();
-        private final IntakeSubsystem m_intake = new IntakeSubsystem();
-        private final ArmSubsystem m_arm = new ArmSubsystem();
-        private final TelescopeSubsystem m_TelescopeSubsystem = new TelescopeSubsystem();
+        private final SwerveSubsystem s_swerve;
+        private final ClawSubsystem s_claw = new ClawSubsystem();
+        private final IntakeSubsystem s_intake = new IntakeSubsystem();
+        private final ArmSubsystem s_arm = new ArmSubsystem();
+        private final TelescopeSubsystem s_telescope = new TelescopeSubsystem();
+        private final VisionSubsystem s_vision = new VisionSubsystem();
 
         CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
         CommandXboxController m_operatorController = new CommandXboxController(
@@ -34,15 +32,16 @@ public class RobotContainer {
         SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
         public RobotContainer() {
+                s_swerve = new SwerveSubsystem(s_vision);
 
-                m_autonChooser.setDefaultOption("Example PP Swerve", new examplePPAuto(s_Swerve));
-                m_autonChooser.addOption("Example Swerve", new exampleAuto(s_Swerve));
+                m_autonChooser.setDefaultOption("Example PP Swerve", new examplePPAuto(s_swerve));
+                m_autonChooser.addOption("Example Swerve", new exampleAuto(s_swerve));
 
                 Shuffleboard.getTab("Autons").add(m_autonChooser);
 
-                s_Swerve.setDefaultCommand(
+                s_swerve.setDefaultCommand(
                                 new TeleopSwerve(
-                                                s_Swerve,
+                                                s_swerve,
                                                 () -> -m_driveController.getLeftY(),
                                                 () -> -m_driveController.getLeftX(),
                                                 () -> -m_driveController.getRightX(),
@@ -55,66 +54,35 @@ public class RobotContainer {
 
         private void configureButtonBindings() {
                 // driver
+                        // right bumper: claw open close
+                        // l-trigger: left intake open
+                        // r-trigger: right intake open TODO: ask if this should be based on field
+                        // orientation?
+                m_driveController.y().onTrue(new InstantCommand(() -> s_swerve.zeroGyro()));
 
-                // right bumper: claw open close
 
-                // l-trigger: left intake open
-                // m_driveController.leftTrigger()
-                // .onTrue(new SequentialCommandGroup(
-                // new InstantCommand(() -> m_intake.rotateIntakeForwards()),
-                // new InstantCommand(() -> m_intake.runIntakeWheelsIn())));
-
-                // m_driveController.leftBumper()
-                // .onTrue(new SequentialCommandGroup(
-                // new InstantCommand(() -> m_intake.rotateIntakeBackwards()),
-                // new InstantCommand(() -> m_intake.runIntakeWheelsOut())));
-
-                // m_driveController.rightBumper()
-                // .onTrue(new ParallelCommandGroup(
-                // new InstantCommand(() -> m_intake.stopIntakeRotation()),
-                // new InstantCommand(() -> m_intake.stopIntakeWheels())));
-                // m_driveController.povUp()
-                // .onTrue(new RotateArmToEncoderPosition(m_arm, 15000));
-                // m_driveController.povLeft()
-                // .onTrue(new RotateArmToEncoderPosition(m_arm, 0));
-
-                // m_driveController.povRight()
-                // .onTrue(new RotateArmToEncoderPosition(m_arm, 0));
-                // m_driveController.povDown()
-                // .onTrue(new RotateArmToEncoderPosition(m_arm, -4000));
-
-                m_driveController.y().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-                // r-trigger: right intake open TODO: ask if this should be based on field
-                // orientation?
 
                 // operator
-                // r-bumper: claw open close
+                        // r-bumper: claw open close
+                        // r-stick: precise rotation of arm
+                        // l-stick press: activate DANGER MODE
+                        // l-stick: nothing normally. DANGER MODE: control telescoping arm
+                        // d-pad: control presents for the telescoping arm
+                        // l-bumper: reverse intake
 
-                // r-stick: precise rotation of arm
+                m_operatorController.povLeft().onTrue(new StrafeAlign(s_swerve, true));
 
-                // l-stick press: activate DANGER MODE
+                m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
 
-                // m_operatorController.leftStick().onTrue(new InstantCommand(() ->
-                // m_arm.toggleDangerMode()));
-                // l-stick: nothing normally. DANGER MODE: control telescoping arm
+                m_operatorController.a().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
 
-                // d-pad: control presents for the telescoping arm
-                // l-bumper: reverse intake
+                m_operatorController.b().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromSIS));
 
-                // m_driveController.b().onTrue(m_arm.setPosition(ArmConstants.kArmHome));
-                m_operatorController.povLeft().onTrue(new StrafeAlign(s_Swerve, true));
+                m_operatorController.x().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
 
-                m_operatorController.povRight().onTrue(new StrafeAlign(s_Swerve, false));
+                m_operatorController.y().onTrue(s_arm.resetSensor());
 
-                m_operatorController.a().onTrue(m_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
-
-                m_operatorController.b().onTrue(m_arm.setPosition(ArmConstants.kArmAcquireFromSIS));
-
-                m_operatorController.x().onTrue(m_arm.setPosition(ArmConstants.kArmHome));
-
-                m_operatorController.y().onTrue(m_arm.resetSensor());
-
-                m_operatorController.povDown().whileTrue(m_arm.slowlyGoDown());
+                m_operatorController.povDown().whileTrue(s_arm.slowlyGoDown());
 
         }
 

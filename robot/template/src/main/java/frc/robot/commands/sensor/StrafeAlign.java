@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class StrafeAlign extends CommandBase{   
 
-private final SwerveSubsystem Swerve_S;
+private final SwerveSubsystem s_swerve;
 private final boolean isTargetLow;
 
-    public StrafeAlign(SwerveSubsystem Swerve_S, boolean isTargetLow){
-        this.Swerve_S = Swerve_S;
+    public StrafeAlign(SwerveSubsystem s_swerve, boolean isTargetLow){
+        this.s_swerve = s_swerve;
         this.isTargetLow = isTargetLow;
 
-        addRequirements(this.Swerve_S);
+        addRequirements(this.s_swerve);
     }
 
     @Override
@@ -22,12 +22,12 @@ private final boolean isTargetLow;
 
     @Override
     public void execute(){
-        Swerve_S.strafeToTarget(isTargetLow);
+        s_swerve.strafeToTarget(isTargetLow);
     }
 
     @Override
     public boolean isFinished(){
-        return Swerve_S.finishedStrafeTarget();
+        return s_swerve.finishedStrafeTarget();
     }
 
     @Override
