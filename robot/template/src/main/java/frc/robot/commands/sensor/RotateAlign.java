@@ -5,14 +5,13 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RotateAlign extends CommandBase{
 
-    private final SwerveSubsystem Swerve_S;
+    private final SwerveSubsystem s_swerve;
 
     public RotateAlign(SwerveSubsystem Swerve_S, boolean isTargetLow){
-        Swerve_S = new SwerveSubsystem();
-        this.Swerve_S = Swerve_S;
+        this.s_swerve = Swerve_S;
 
 
-        addRequirements(this.Swerve_S);
+        addRequirements(this.s_swerve);
 
     }
 

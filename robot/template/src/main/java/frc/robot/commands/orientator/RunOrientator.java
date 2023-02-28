@@ -5,17 +5,17 @@ import frc.robot.subsystems.OrientatorSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RunOrientator extends CommandBase{
-    private OrientatorSubsystem ORIENTATOR_S;
+    private OrientatorSubsystem s_orientator;
 
-    public RunOrientator(OrientatorSubsystem ORIENTATOR_S){
-        this.ORIENTATOR_S = ORIENTATOR_S;
+    public RunOrientator(OrientatorSubsystem s_orientator){
+        this.s_orientator = s_orientator;
 
-        addRequirements(this.ORIENTATOR_S);
+        addRequirements(this.s_orientator);
     }
 
     @Override
     public void execute(){
-        ORIENTATOR_S.rotateOrientatorIn();
+        s_orientator.rotateOrientatorIn();
     }
 
     @Override
@@ -25,6 +25,6 @@ public class RunOrientator extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        ORIENTATOR_S.stopOrientator();
+        s_orientator.stopOrientator();
     }
 }
