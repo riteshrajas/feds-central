@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.swerve.SwerveModule;
 import frc.robot.Constants;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,11 +24,13 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    public VisionSubsystem limelight;
 
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
+        limelight = new VisionSubsystem();
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.SwerveConstants.Mod0.constants),
@@ -112,6 +115,22 @@ public class SwerveSubsystem extends SubsystemBase {
             mod.resetToAbsolute();
         }
     }
+
+    public void strafeToTarget(boolean isTargetLow){
+        if(limelight.hasTarget()){
+            limelight.setTargets();
+            limelight.setTargetHeight(isTargetLow);
+            limelight.getTargetYaw();
+            double strafeTargetDistance = limelight.strafeAlign();
+            Translation2d strafeTranslation2d = new Translation2d(strafeTargetDistance, Math.PI / 2);
+            drive(strafeTranslation2d, 0, false, false);
+        }
+    }
+
+    public boolean finishedStrafeTarget(){
+        return limelight.strafeFinished();
+    }
+
 
     @Override
     public void periodic(){

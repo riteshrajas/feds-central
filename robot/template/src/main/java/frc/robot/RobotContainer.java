@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.auton.exampleAuto;
 import frc.robot.commands.drive.TeleopSwerve;
+import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.arm.JointsSetPosition;
 import frc.robot.commands.auton.examplePPAuto;
 import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
+import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -100,6 +102,9 @@ public class RobotContainer {
                 // l-bumper: reverse intake
 
                 // m_driveController.b().onTrue(m_arm.setPosition(ArmConstants.kArmHome));
+                m_operatorController.povLeft().onTrue(new StrafeAlign(s_Swerve, true));
+
+                m_operatorController.povRight().onTrue(new StrafeAlign(s_Swerve, false));
 
                 m_operatorController.a().onTrue(m_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
 

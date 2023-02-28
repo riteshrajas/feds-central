@@ -1,39 +1,33 @@
 package frc.robot.commands.sensor;
 
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class StrafeAlign extends CommandBase{   
 
-private final VisionSubsystem VISION_S;
+private final SwerveSubsystem Swerve_S;
+private final boolean isTargetLow;
 
-    public StrafeAlign(VisionSubsystem VISION_S, boolean isTargetLow){
-        this.VISION_S = new VisionSubsystem(isTargetLow);
+    public StrafeAlign(SwerveSubsystem Swerve_S, boolean isTargetLow){
+        this.Swerve_S = Swerve_S;
+        this.isTargetLow = isTargetLow;
 
-        addRequirements(this.VISION_S);
+        addRequirements(this.Swerve_S);
     }
 
     @Override
     public void initialize(){
-        VISION_S.getResult();
-        VISION_S.hasTarget();
-        VISION_S.setTargets();
-        VISION_S.setTarget();
-        VISION_S.getTargetDistance();
-        VISION_S.getTargetPitch();
-        VISION_S.getTargetYaw();
-        VISION_S.getHorizontalDistanceToTarget();
     }
 
     @Override
     public void execute(){
-        VISION_S.strafeAlign();
+        Swerve_S.strafeToTarget(isTargetLow);
     }
 
     @Override
     public boolean isFinished(){
-        return VISION_S.strafeFinished();
+        return Swerve_S.finishedStrafeTarget();
     }
 
     @Override
