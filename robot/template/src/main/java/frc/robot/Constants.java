@@ -17,12 +17,14 @@ public class Constants {
   public static final class VisionConstants {
     public static final double limelightOffset = .13;
     public static final double limelightheight = 1.2;
+    public static final double limelightToTopArmOffset = .24;
     public static final double lowTargetHeight = 1.5;
     public static final double highTargetHeight = 2.6;
     public static final double limelightPitchRadians = .67;
 
     public static final double degreesToEncoderCounts = 175;
   }
+  
 
   public static final class SwerveConstants {
     public static final int pigeonID = 0;
@@ -62,14 +64,6 @@ public class Constants {
     public static final int angleContinuousCurrentLimit = 25;
     public static final int anglePeakCurrentLimit = 40;
     public static final double anglePeakCurrentDuration = 0.1;
-
-    public static final double limelightOffset = .13;
-    public static final double limelightheight = 1.2;
-    public static final double lowTargetHeight = 1.5;
-    public static final double highTargetHeight = 2.6;
-    public static final double limelightPitchRadians = .67;
-
-    public static final double degreesToEncoderCounts = 175;
 
     public static final boolean angleEnableCurrentLimit = true;
 
@@ -238,5 +232,8 @@ public class Constants {
   public static final class ClawConstants {
     public static final int kClawMotor = 56;
   }
+
+  
+    
 
 }

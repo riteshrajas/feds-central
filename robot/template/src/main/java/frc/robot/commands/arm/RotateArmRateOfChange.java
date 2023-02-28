@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+/*package frc.robot.commands.arm;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -41,3 +41,4 @@ public class RotateArmRateOfChange extends CommandBase{
         }
     }  
 }
+*/

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.swerve.SwerveModule;
 import frc.robot.Constants;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

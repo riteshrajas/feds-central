@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import frc.robot.subsystems.VisionSubsystem;
+
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
