@@ -19,10 +19,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
         private final SwerveSubsystem s_swerve;
-        private final ClawSubsystem s_claw = new ClawSubsystem();
-        private final IntakeSubsystem s_intake = new IntakeSubsystem();
+     
         private final ArmSubsystem s_arm = new ArmSubsystem();
-        private final TelescopeSubsystem s_telescope = new TelescopeSubsystem();
         private final VisionSubsystem s_vision = new VisionSubsystem();
 
         CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
