@@ -20,7 +20,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
         private final SwerveSubsystem s_swerve;
      
-        private final ArmSubsystem s_arm = new ArmSubsystem();
+        //private final ArmSubsystem s_arm = new ArmSubsystem();
         private final VisionSubsystem s_vision = new VisionSubsystem();
 
         CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
@@ -72,15 +72,15 @@ public class RobotContainer {
 
                 m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
 
-                m_operatorController.a().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
+                //m_operatorController.a().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
 
-                m_operatorController.b().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromSIS));
+                //m_operatorController.b().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromSIS));
 
-                m_operatorController.x().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
+                //m_operatorController.x().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
 
-                m_operatorController.y().onTrue(s_arm.resetSensor());
+                //m_operatorController.y().onTrue(s_arm.resetSensor());
 
-                m_operatorController.povDown().whileTrue(s_arm.slowlyGoDown());
+                //m_operatorController.povDown().whileTrue(s_arm.slowlyGoDown());
 
         }
 

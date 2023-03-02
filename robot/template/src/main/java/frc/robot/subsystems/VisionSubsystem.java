@@ -33,6 +33,8 @@ public class VisionSubsystem extends SubsystemBase {
         m_camera = new PhotonCamera("limelightCamera");
         target = new PhotonTrackedTarget();
         this.isTargetLow = isTargetLow;
+        PhotonCamera.setVersionCheckEnabled(false);
+
     }
 
     /**
@@ -54,7 +56,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public boolean getHasTarget() {
-        return result.hasTargets();
+        if (result != null) {
+            return result.hasTargets();
+        }
+        return false;
     }
 
     /**
@@ -65,6 +70,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void setTarget() {
+        
         double maxArea = 0;
         double minArea = 100;
         for (int i = 1; i < targets.size(); i++) {
@@ -132,10 +138,12 @@ public class VisionSubsystem extends SubsystemBase {
         return horizontalDistance;
     }
 
+    @Override
     public void periodic() {
-        SmartDashboard.putNumber("The Camera Yaw", getTargetYaw());
-        SmartDashboard.putNumber("The Camera Pitch", getTargetYaw());
-        SmartDashboard.putNumber("The Camera Horizontal Distance", getHorizontalDistanceToTarget());
+        {
+            
+        }
+        
 
     }
 
