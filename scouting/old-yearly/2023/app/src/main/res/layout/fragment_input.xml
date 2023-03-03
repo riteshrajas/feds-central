@@ -68,7 +68,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/autonbutton1"
+                android:id="@+id/auton_button_high_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginEnd="865sp"
@@ -80,7 +80,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton2"
+                android:id="@+id/auton_button_high_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -92,7 +92,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton3"
+                android:id="@+id/auton_button_high_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -104,7 +104,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton4"
+                android:id="@+id/auton_button_high_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -116,7 +116,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton5"
+                android:id="@+id/auton_button_high_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -128,7 +128,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton6"
+                android:id="@+id/auton_button_high_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -140,7 +140,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton7"
+                android:id="@+id/auton_button_high_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -152,7 +152,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton8"
+                android:id="@+id/auton_button_high_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -164,7 +164,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton9"
+                android:id="@+id/auton_button_high_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
@@ -176,7 +176,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton10"
+                android:id="@+id/auton_button_middle_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -188,7 +188,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton11"
+                android:id="@+id/auton_button_middle_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -200,7 +200,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton12"
+                android:id="@+id/auton_button_middle_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -212,7 +212,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton13"
+                android:id="@+id/auton_button_middle_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -224,7 +224,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton14"
+                android:id="@+id/auton_button_middle_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -236,7 +236,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton15"
+                android:id="@+id/auton_button_middle_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -248,7 +248,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton16"
+                android:id="@+id/auton_button_middle_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -260,7 +260,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton17"
+                android:id="@+id/auton_button_middle_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -272,7 +272,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton18"
+                android:id="@+id/auton_button_middle_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
@@ -284,7 +284,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton19"
+                android:id="@+id/auton_button_low_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -296,7 +296,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton20"
+                android:id="@+id/auton_button_low_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -308,7 +308,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton21"
+                android:id="@+id/auton_button_low_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -320,7 +320,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton22"
+                android:id="@+id/auton_button_low_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -332,7 +332,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton23"
+                android:id="@+id/auton_button_low_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -344,7 +344,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton24"
+                android:id="@+id/auton_button_low_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -356,7 +356,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton25"
+                android:id="@+id/auton_button_low_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -368,7 +368,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton26"
+                android:id="@+id/auton_button_low_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -380,7 +380,7 @@
                 app:layout_constraintTop_toTopOf="@+id/auton_grid" />
 
             <ImageButton
-                android:id="@+id/autonbutton27"
+                android:id="@+id/auton_button_low_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
@@ -402,7 +402,7 @@
                 android:background="?android:attr/listChoiceIndicatorMultiple"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/autonbutton23" />
+                app:layout_constraintTop_toBottomOf="@+id/auton_button_low_5" />
 
             <TextView
                 android:id="@+id/auton_textView"
@@ -593,7 +593,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/teleopbutton1"
+                android:id="@+id/teleop_button_high_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -605,7 +605,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton2"
+                android:id="@+id/teleop_button_high_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -617,7 +617,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton3"
+                android:id="@+id/teleop_button_high_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -629,7 +629,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton4"
+                android:id="@+id/teleop_button_high_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -641,7 +641,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton5"
+                android:id="@+id/teleop_button_high_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="43sp"
@@ -653,7 +653,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton6"
+                android:id="@+id/teleop_button_high_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -665,7 +665,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton7"
+                android:id="@+id/teleop_button_high_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -677,7 +677,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton8"
+                android:id="@+id/teleop_button_high_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -689,7 +689,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton9"
+                android:id="@+id/teleop_button_high_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
@@ -701,7 +701,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton10"
+                android:id="@+id/teleop_button_middle_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -713,7 +713,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton11"
+                android:id="@+id/teleop_button_middle_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -725,7 +725,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton12"
+                android:id="@+id/teleop_button_middle_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -737,7 +737,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton13"
+                android:id="@+id/teleop_button_middle_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -749,7 +749,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton14"
+                android:id="@+id/teleop_button_middle_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="147sp"
@@ -761,7 +761,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton15"
+                android:id="@+id/teleop_button_middle_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -773,7 +773,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton16"
+                android:id="@+id/teleop_button_middle_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -785,7 +785,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton17"
+                android:id="@+id/teleop_button_middle_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -797,7 +797,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton18"
+                android:id="@+id/teleop_button_middle_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
@@ -809,7 +809,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton19"
+                android:id="@+id/teleop_button_low_1"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -821,7 +821,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton20"
+                android:id="@+id/teleop_button_low_2"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -833,7 +833,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton21"
+                android:id="@+id/teleop_button_low_3"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -845,7 +845,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton22"
+                android:id="@+id/teleop_button_low_4"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -857,7 +857,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton23"
+                android:id="@+id/teleop_button_low_5"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginTop="251sp"
@@ -869,7 +869,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton24"
+                android:id="@+id/teleop_button_low_6"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="218sp"
@@ -881,7 +881,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton25"
+                android:id="@+id/teleop_button_low_7"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="438sp"
@@ -893,7 +893,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton26"
+                android:id="@+id/teleop_button_low_8"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="648sp"
@@ -905,7 +905,7 @@
                 app:layout_constraintTop_toTopOf="@+id/teleop_grid" />
 
             <ImageButton
-                android:id="@+id/teleopbutton27"
+                android:id="@+id/teleop_button_low_9"
                 android:layout_width="102sp"
                 android:layout_height="102sp"
                 android:layout_marginStart="864sp"
