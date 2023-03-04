@@ -63,6 +63,8 @@ public class ArmSubsystem extends SubsystemBase {
         rotateArmMain.setInverted(TalonFXInvertType.CounterClockwise);
         rotateArmMain.setNeutralMode(NeutralMode.Brake);
         rotateArmFollower.setNeutralMode(NeutralMode.Brake);
+        rotateArmMain.enableVoltageCompensation(true);
+        rotateArmFollower.enableVoltageCompensation(true);
         coneDetector = new ConeDetection();
 
     }

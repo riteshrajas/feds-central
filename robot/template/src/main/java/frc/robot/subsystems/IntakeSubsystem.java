@@ -13,9 +13,11 @@ public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeWheelMotor;
 
 
-    public IntakeSubsystem() {
-        intakeDeployMotor = new TalonFX(Constants.IntakeConstants.kIntakeRightDeployMotor);
-        intakeWheelMotor = new TalonFX(Constants.IntakeConstants.kIntakeRightWheelMotor);
+    public IntakeSubsystem(int intakeDeployID, int intakeWheelID) {
+        intakeDeployMotor = new TalonFX(intakeDeployID);
+        intakeWheelMotor = new TalonFX(intakeWheelID);
+        intakeDeployMotor.enableVoltageCompensation(true);
+        intakeWheelMotor.enableVoltageCompensation(true);
     }
 
     public double getPositionEncoderCounts() {

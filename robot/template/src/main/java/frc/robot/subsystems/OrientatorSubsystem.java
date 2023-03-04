@@ -14,6 +14,7 @@ public class OrientatorSubsystem extends SubsystemBase {
     public OrientatorSubsystem(){
         orientatorMotor = new TalonFX(OrientatorConstants.kOrientatorMotor1);
         coneDetector = new ConeDetection();
+        orientatorMotor.enableVoltageCompensation(true);
     }
 
     public void rotateOrientatorIn(){

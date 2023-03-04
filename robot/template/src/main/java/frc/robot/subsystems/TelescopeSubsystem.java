@@ -14,7 +14,8 @@ public class TelescopeSubsystem extends SubsystemBase{
      
     
     public TelescopeSubsystem(){
-        armTelescopeMotor = new TalonFX(TelescopeConstants.kTelescopeMotor);        
+        armTelescopeMotor = new TalonFX(TelescopeConstants.kTelescopeMotor);
+        armTelescopeMotor.enableVoltageCompensation(true);        
     }
 
     public double getTelescopePosition(){
