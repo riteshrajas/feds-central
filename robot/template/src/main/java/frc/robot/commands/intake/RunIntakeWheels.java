@@ -8,6 +8,8 @@ public class RunIntakeWheels extends CommandBase {
 
     public RunIntakeWheels(IntakeSubsystem intake) {
         this.m_intake = intake; 
+
+        addRequirements(m_intake);
     } 
 
     @Override

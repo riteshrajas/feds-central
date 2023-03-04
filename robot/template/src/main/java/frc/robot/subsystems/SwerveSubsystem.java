@@ -116,15 +116,16 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void strafeToTarget(boolean isTargetLow){
+        limelight.updateResultToLatest();
         if(limelight.getHasTarget()){
             limelight.updateTargetsToLatest();
             limelight.setTargetLow(isTargetLow);
             limelight.setTarget();
             limelight.getTargetYaw();
 
-            //double strafeTargetDistance = limelight.strafeAlign();
-            //Translation2d strafeTranslation2d = new Translation2d(strafeTargetDistance, Math.PI / 2);
-            //drive(strafeTranslation2d, 0, false, false);
+            double strafeTargetDistance = limelight.strafeAlign();
+            Translation2d strafeTranslation2d = new Translation2d(strafeTargetDistance, Math.PI / 2);
+            drive(strafeTranslation2d, 0, false, false);
         }
     }
 
@@ -136,6 +137,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
+        limelight.updateResultToLatest();
         if(limelight.getHasTarget()){
             limelight.updateTargetsToLatest();
             //limelight.setTargetLow(isTargetLow);

@@ -10,6 +10,8 @@ public class LockWheels extends CommandBase {
 
     public LockWheels(SwerveSubsystem s_Swerve) {
         this.s_Swerve = s_Swerve;
+
+        addRequirements(s_Swerve);
     }
 
     @Override

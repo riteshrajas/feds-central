@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void rotateIntakeBackwards() {
-        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -Constants.IntakeConstants.kIntakeDeploySpeed);
+        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, Constants.IntakeConstants.kIntakeRetractSpeed);
     }
 
     public void stopIntakeRotation() {

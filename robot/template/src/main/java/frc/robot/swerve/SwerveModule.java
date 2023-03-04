@@ -13,9 +13,8 @@ import frc.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder; 
 
 public class SwerveModule {
     public int moduleNumber;
@@ -24,7 +23,8 @@ public class SwerveModule {
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
-    private TalonSRX angleEncoder;
+    
+    private CANCoder angleEncoder;
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS, Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
 
@@ -33,7 +33,7 @@ public class SwerveModule {
         this.angleOffset = moduleConstants.angleOffset;
         
         /* Angle Encoder Config */
-        angleEncoder = new TalonSRX(moduleConstants.talonSRXID);
+        angleEncoder = new CANCoder(moduleConstants.canCoderID);
         configAngleEncoder();
 
         /* Angle Motor Config */
@@ -76,20 +76,18 @@ public class SwerveModule {
         return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), Constants.SwerveConstants.angleGearRatio));
     }
 
-    public Rotation2d getTalonSRXAngle(){
-        return Rotation2d.fromDegrees(Conversions.CANcoderToDegrees(angleEncoder.getSelectedSensorPosition(), 1));
+    public Rotation2d getCanCoderAngle(){
+        return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
 
     public void resetToAbsolute(){
-        double absolutePosition = Conversions.degreesToFalcon(getTalonSRXAngle().getDegrees() - angleOffset.getDegrees(), Constants.SwerveConstants.angleGearRatio);
+        double absolutePosition = Conversions.degreesToFalcon(getCanCoderAngle().getDegrees() - angleOffset.getDegrees(), Constants.SwerveConstants.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
     private void configAngleEncoder(){        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveTalonSRXConfig);
-        angleEncoder.configFeedbackNotContinuous(true, 0);
-        angleEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor(){
