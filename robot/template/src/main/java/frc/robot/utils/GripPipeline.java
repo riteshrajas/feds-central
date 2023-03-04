@@ -1,4 +1,4 @@
-package frc.robot.GripPipeline;
+package frc.robot.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

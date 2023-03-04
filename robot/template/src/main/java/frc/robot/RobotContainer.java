@@ -13,15 +13,20 @@ import frc.robot.commands.auton.examplePPAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.OrientatorSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
         private final SwerveSubsystem s_swerve;
-     
-        //private final ArmSubsystem s_arm = new ArmSubsystem();
-        private final VisionSubsystem s_vision = new VisionSubsystem();
+        private final VisionSubsystem s_vision;
+        private final ArmSubsystem s_arm;
+        private final OrientatorSubsystem s_orientator;
+        private final TelescopeSubsystem s_telescope;
+        private final IntakeSubsystem s_intake;
+        private final ClawSubsystem s_claw;
+        private final 
 
         CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
         CommandXboxController m_operatorController = new CommandXboxController(
@@ -30,7 +35,13 @@ public class RobotContainer {
         SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
         public RobotContainer() {
+                s_vision = new VisionSubsystem();
+                s_intake = new IntakeSubsystem();
+                s_telescope = new TelescopeSubsystem();
+                s_orientator = new OrientatorSubsystem();
                 s_swerve = new SwerveSubsystem(s_vision);
+                s_arm = new ArmSubsystem();
+                s_claw = new ClawSubsystem();
 
                 m_autonChooser.setDefaultOption("Example PP Swerve", new examplePPAuto(s_swerve));
                 m_autonChooser.addOption("Example Swerve", new exampleAuto(s_swerve));

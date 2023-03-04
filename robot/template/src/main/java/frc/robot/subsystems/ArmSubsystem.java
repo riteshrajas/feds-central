@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.ConeDetection;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -17,13 +18,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
-
 import frc.lib.math.Conversions;
 
 public class ArmSubsystem extends SubsystemBase {
 
     private final TalonFX rotateArmMain = new TalonFX(ArmConstants.kArmMotor1);
     private final TalonFX rotateArmFollower = new TalonFX(ArmConstants.kArmMotor2);
+    private final ConeDetection coneDetector; 
 
     private int peakVelocityUp = 13360;
     private final double percentOfPeakUp = .65;
@@ -62,6 +63,7 @@ public class ArmSubsystem extends SubsystemBase {
         rotateArmMain.setInverted(TalonFXInvertType.CounterClockwise);
         rotateArmMain.setNeutralMode(NeutralMode.Brake);
         rotateArmFollower.setNeutralMode(NeutralMode.Brake);
+        coneDetector = new ConeDetection();
 
     }
 

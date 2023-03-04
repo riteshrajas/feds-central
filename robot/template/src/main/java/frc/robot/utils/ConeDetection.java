@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.utils;
 
 import java.util.ArrayList;
 
@@ -13,11 +13,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.GripPipeline.GripPipeline;
 
-public class ConeDetection extends SubsystemBase{
+public class ConeDetection{
     private GripPipeline findTotePipeline;
     private UsbCamera camera;
     private CvSink cvSink;

@@ -1,4 +1,4 @@
-package frc.robot.config;
+package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
