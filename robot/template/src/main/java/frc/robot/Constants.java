@@ -120,7 +120,7 @@ public class Constants {
       public static final int driveMotorID = 12;
       public static final int angleMotorID = 11;
       public static final int canCoderID = 1;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(122.5);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(270.439);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
     }
@@ -130,7 +130,7 @@ public class Constants {
       public static final int driveMotorID = 32;
       public static final int angleMotorID = 31;
       public static final int canCoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(175.2);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(287.666);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
     }
@@ -140,7 +140,7 @@ public class Constants {
       public static final int driveMotorID = 22;
       public static final int angleMotorID = 21;
       public static final int canCoderID = 2;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(266.4);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(345.850);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
     }
@@ -150,7 +150,7 @@ public class Constants {
       public static final int driveMotorID = 42;
       public static final int angleMotorID = 41;
       public static final int canCoderID = 4;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(304.4);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(226.582);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
     }
@@ -185,18 +185,18 @@ public class Constants {
 
   public static final class IntakeConstants {
     // Pheonix IDs
-    public static final int kIntakeBlueDeployMotor = 52;
-    public static final int kIntakeBlueWheelMotor = 62;
-    public static final int kIntakeRedDeployMotor = 51;
-    public static final int kIntakeRedWheelMotor = 61;
+    public static final int kIntakeBlueDeployMotor = 51;
+    public static final int kIntakeBlueWheelMotor = 61;
+    public static final int kIntakeRedDeployMotor = 52;
+    public static final int kIntakeRedWheelMotor = 62;
     public static final int kIntakeTriggerID = 2;
 
     // Speeds
     public static final double kIntakeDeploySpeed = 0.1;
     public static final double kIntakeRetractSpeed = -0.3;
-    public static final double kIntakeWheelSpeed = 0.30;
+    public static final double kIntakeWheelSpeed = 0.15;
 
-    public static final double kDeployTime = 1;
+    public static final double kDeployTime = 0.7;
     public static final double kRetractTime = 2;
 
     // Encoder Counts
@@ -236,6 +236,7 @@ public class Constants {
     public static final int kOrientatorMotor1 = 0;
     public static final int kOrientatorMotor2 = 0;
     public static final double kOrientatorSpeed = 0.10;
+    public static final double KOrientatorTime =2.5;
   }
 
   public static final class ClawConstants {

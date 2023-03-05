@@ -24,20 +24,6 @@ public class VisionSubsystem extends SubsystemBase {
     List<PhotonTrackedTarget> targets;
 
     /**
-     * Constructor for the PhotonVision Vision Subsystem with a toggle for whether
-     * the target is the lower of the middle or high targets.
-     * 
-     * @param isTargetLow
-     */
-    public VisionSubsystem(boolean isTargetLow) {
-        m_camera = new PhotonCamera("limelightCamera");
-        target = new PhotonTrackedTarget();
-        this.isTargetLow = isTargetLow;
-        PhotonCamera.setVersionCheckEnabled(false);
-
-    }
-
-    /**
      * Constructor for the PhotonVision Vision Subsystem by default looking at the
      * high target
      */
@@ -51,10 +37,6 @@ public class VisionSubsystem extends SubsystemBase {
         result = m_camera.getLatestResult();
     }
 
-    public void setTargetLow(boolean isTargetLow) {
-        this.isTargetLow = isTargetLow;
-    }
-
     public boolean getHasTarget() {
         if (result != null) {
             return result.hasTargets();
@@ -66,15 +48,18 @@ public class VisionSubsystem extends SubsystemBase {
      * Precondition: {@link #getHasTarget()} is true
      */
     public void updateTargetsToLatest() {
-        targets = result.getTargets();
+        if(getHasTarget()){
+            targets = result.getTargets();
+        }
     }
 
-    public void setTarget() {
+    public void setTarget(boolean isTargetLow) {
         
+        this.isTargetLow = isTargetLow;
         double maxArea = 0;
         double minArea = 100;
         for (int i = 1; i < targets.size(); i++) {
-            if (isTargetLow) {
+            if (this.isTargetLow) {
                 target = targets.get(0);
                 if (targets.get(i).getArea() > maxArea) {
                     target = targets.get(i);
@@ -143,8 +128,6 @@ public class VisionSubsystem extends SubsystemBase {
         {
             
         }
-        
-
     }
 
     public double strafeAlign() {

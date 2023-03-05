@@ -17,8 +17,4 @@ public class RunIntakeWheels extends CommandBase {
         m_intake.runIntakeWheelsIn();
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        m_intake.stopIntakeRotation();
-    }
 }

@@ -19,8 +19,8 @@ public class LockWheels extends CommandBase {
         SwerveModuleState[] states = { 
                 new SwerveModuleState(1, Rotation2d.fromDegrees(45)),
                 new SwerveModuleState(1, Rotation2d.fromDegrees(135)),
-                new SwerveModuleState(1, Rotation2d.fromDegrees(45)),
-                new SwerveModuleState(1, Rotation2d.fromDegrees(135))};
+                new SwerveModuleState(1, Rotation2d.fromDegrees(135)),
+                new SwerveModuleState(1, Rotation2d.fromDegrees(45))};
         s_Swerve.setModuleStates(states);
     }
 
@@ -34,8 +34,8 @@ public class LockWheels extends CommandBase {
         SwerveModuleState[] states = { 
             new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
             new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
-            new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
-            new SwerveModuleState(0, Rotation2d.fromDegrees(135))};
+            new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
         s_Swerve.setModuleStates(states);
     }
 }

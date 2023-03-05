@@ -32,50 +32,50 @@ public class SwerveSubsystem extends SubsystemBase {
         this.limelight = limelight;
 
         mSwerveMods = new SwerveModule[] {
-            new SwerveModule(0, Constants.SwerveConstants.Mod0.constants),
-            new SwerveModule(1, Constants.SwerveConstants.Mod1.constants),
-            new SwerveModule(2, Constants.SwerveConstants.Mod2.constants),
-            new SwerveModule(3, Constants.SwerveConstants.Mod3.constants)
+                new SwerveModule(0, Constants.SwerveConstants.Mod0.constants),
+                new SwerveModule(1, Constants.SwerveConstants.Mod1.constants),
+                new SwerveModule(2, Constants.SwerveConstants.Mod2.constants),
+                new SwerveModule(3, Constants.SwerveConstants.Mod3.constants)
         };
 
-        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+        /*
+         * By pausing init for a second before setting module offsets, we avoid a bug
+         * with inverting motors.
          * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
          */
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getYaw(), getModulePositions());
+        swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getYaw(),
+                getModulePositions());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
+        SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
-                                    getYaw()
-                                )
-                                : new ChassisSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation)
-                                );
+                        translation.getX(),
+                        translation.getY(),
+                        rotation,
+                        getYaw())
+                        : new ChassisSpeeds(
+                                translation.getX(),
+                                translation.getY(),
+                                rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
-        
-        for(SwerveModule mod : mSwerveMods){
+
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
-    }    
+    }
 
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
@@ -85,42 +85,42 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    public SwerveModuleState[] getModuleStates(){
+    public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
         }
         return states;
     }
 
-    public SwerveModulePosition[] getModulePositions(){
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
     }
 
-    public void zeroGyro(){
+    public void zeroGyro() {
         gyro.setYaw(0);
     }
 
     public Rotation2d getYaw() {
-        return (Constants.SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+        return (Constants.SwerveConstants.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw())
+                : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
-    public void resetModulesToAbsolute(){
-        for(SwerveModule mod : mSwerveMods){
+    public void resetModulesToAbsolute() {
+        for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
     }
 
-    public void strafeToTarget(boolean isTargetLow){
+    public void strafeToTarget(boolean isTargetLow) {
         limelight.updateResultToLatest();
-        if(limelight.getHasTarget()){
+        if (limelight.getHasTarget()) {
             limelight.updateTargetsToLatest();
-            limelight.setTargetLow(isTargetLow);
-            limelight.setTarget();
+            limelight.setTarget(isTargetLow);
             limelight.getTargetYaw();
 
             double strafeTargetDistance = limelight.strafeAlign();
@@ -129,28 +129,28 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
-    public boolean finishedStrafeTarget(){
+    public boolean finishedStrafeTarget() {
         return limelight.strafeFinished();
     }
 
-
     @Override
-    public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
+    public void periodic() {
+        swerveOdometry.update(getYaw(), getModulePositions());
         limelight.updateResultToLatest();
-        if(limelight.getHasTarget()){
+        if (limelight.getHasTarget()) {
             limelight.updateTargetsToLatest();
-            //limelight.setTargetLow(isTargetLow);
-            limelight.setTarget();
+            // limelight.setTargetLow(isTargetLow);
+            limelight.setTarget(true);
             limelight.getTargetYaw();
-        SmartDashboard.putNumber("The Camera Yaw", limelight.getTargetYaw());
-        SmartDashboard.putNumber("The Camera Pitch", limelight.getTargetPitch());
+            SmartDashboard.putNumber("The Camera Yaw", limelight.getTargetYaw());
+            SmartDashboard.putNumber("The Camera Pitch", limelight.getTargetPitch());
 
-        // for(SwerveModule mod : mSwerveMods){
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getTalonSRXAngle().getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-        // }
+            for (SwerveModule mod : mSwerveMods) {
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
+                        mod.getPosition().angle.getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            }
         }
     }
 }

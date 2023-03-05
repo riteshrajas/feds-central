@@ -19,13 +19,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.lib.math.Conversions;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class ArmSubsystem extends SubsystemBase {
 
     private final TalonFX rotateArmMain = new TalonFX(ArmConstants.kArmMotor1);
     private final TalonFX rotateArmFollower = new TalonFX(ArmConstants.kArmMotor2);
     private final ConeDetection coneDetector; 
-
+    
     private int peakVelocityUp = 13360;
     private final double percentOfPeakUp = .65;
     private final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
@@ -66,7 +67,6 @@ public class ArmSubsystem extends SubsystemBase {
         rotateArmMain.enableVoltageCompensation(true);
         rotateArmFollower.enableVoltageCompensation(true);
         coneDetector = new ConeDetection();
-
     }
 
     public Command goToHome() {

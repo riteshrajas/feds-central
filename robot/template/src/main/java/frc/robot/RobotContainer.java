@@ -4,11 +4,17 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.auton.exampleAuto;
 import frc.robot.commands.drive.TeleopSwerve;
+import frc.robot.commands.intake.DeployIntake;
+import frc.robot.commands.intake.RetractIntake;
+import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.orientator.RunOrientator;
 import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.auton.examplePPAuto;
 import frc.robot.subsystems.ArmSubsystem;
@@ -69,6 +75,18 @@ public class RobotContainer {
         // orientation?
         m_driveController.y().onTrue(new InstantCommand(() -> s_swerve.zeroGyro()));
 
+        m_driveController.rightBumper().onTrue(new SequentialCommandGroup(
+            new DeployIntake(s_intakeRed), new ParallelCommandGroup(new RunIntakeWheels(s_intakeRed), new RunOrientator(s_orientator))));
+
+        m_driveController.rightTrigger().onTrue(new ParallelCommandGroup (new RetractIntake(s_intakeRed), new RunOrientator(s_orientator)));
+
+        m_driveController.leftBumper().onTrue(new SequentialCommandGroup(
+            new DeployIntake(s_intakeRed), new ParallelCommandGroup(new RunIntakeWheels(s_intakeRed), new RunOrientator(s_orientator))));
+
+        m_driveController.leftTrigger().onTrue(new ParallelCommandGroup (new RetractIntake(s_intakeBlue), new RunOrientator(s_orientator)));
+
+
+
         // operator
         // r-bumper: claw open close
         // r-stick: precise rotation of arm
@@ -77,9 +95,9 @@ public class RobotContainer {
         // d-pad: control presents for the telescoping arm
         // l-bumper: reverse intake
 
-        m_operatorController.povLeft().onTrue(new StrafeAlign(s_swerve, true));
+        //m_operatorController.povLeft().onTrue(new StrafeAlign(s_swerve, true));
 
-        m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
+        //m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
 
         // m_operatorController.a().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
 
