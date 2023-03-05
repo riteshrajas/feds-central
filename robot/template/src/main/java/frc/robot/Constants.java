@@ -12,7 +12,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 public class Constants {
 
-  public static final double stickDeadband = 0.1;
+  public static final double stickDeadbandTurn = 0.05;
+  public static final double stickDeadbandDrive = 0.025;
 
   public static final class VisionConstants {
     public static final double limelightOffset = .13;
@@ -106,13 +107,13 @@ public class Constants {
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
+    public static final double maxSpeed = 3; // TODO: This must be tuned to specific robot
     /** Radians per Second */
-    public static final double maxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 3; // TODO: This must be tuned to specific robot
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-    public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+    public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
     /* Module Specific Constants */
     /* Front Left Module - Module 0 */
@@ -178,7 +179,7 @@ public class Constants {
   }
 
   public static final class OIConstants {
-    public static final double kDeadzoneThreshold = stickDeadband;
+    //public static final double kDeadzoneThreshold = stickDeadband;
     public static final int kDriveControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
@@ -212,17 +213,20 @@ public class Constants {
     // public static final int kArmPulley = 60;
 
     // setpoints
-    public static final int kArmHome = 0;
+    public static final int kArmHome = -500;
     public static final int kArmPutHigh = 10_000;
     public static final int kArmPutMiddle = 10_000; // TODO: tune these
     public static final int kArmPutLow = 10_000;
+
+
+    public static final double kArmGearRatio = 38.75;
 
   }
 
   public static final class TelescopeConstants {
     public static final int kTelescopeMotor = 60;
 
-    public static final double kTelescopeSpeed = 0.05;
+    public static final double kTelescopeSpeed = 0.5;
 
     public static final double kTelescopeOffset = 0;
     public static final double kTelescopeExtended = 6000;

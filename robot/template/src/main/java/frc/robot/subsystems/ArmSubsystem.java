@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final ConeDetection coneDetector;
 
     private int peakVelocityUp = 13360;
-    private final double percentOfPeakUp = .65;
+    private final double percentOfPeakUp = .1;
     private final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
 
     private int peakVelocityDown = 8090;
@@ -39,8 +39,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     private ArmFeedforward armFeedforward;
     private final double kS = 0;
-    private final double kG = 0.1;
-    private final double kV = 0;
+    private final double kG = 0.044835;
+    private final double kV = 0.5;
     private final double kA = 0;
 
     public ArmSubsystem() {
@@ -50,25 +50,20 @@ public class ArmSubsystem extends SubsystemBase {
         rotateArmMain.configFactoryDefault();
         rotateArmFollower.configFactoryDefault();
 
-        rotateArmMain.configForwardSoftLimitThreshold(Conversions.degreesToCANcoder(110, 38.75), 0);
-        rotateArmMain.configReverseSoftLimitThreshold(Conversions.degreesToCANcoder(-110, 0), 0);
+        rotateArmMain.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(130, ArmConstants.kArmGearRatio),
+                0);
+        rotateArmMain.configReverseSoftLimitThreshold(Conversions.degreesToFalcon(-130, ArmConstants.kArmGearRatio), 0);
         rotateArmMain.configForwardSoftLimitEnable(true, 0);
         rotateArmMain.configReverseSoftLimitEnable(true, 0);
 
-
-        rotateArmFollower.configForwardSoftLimitThreshold(Conversions.degreesToCANcoder(110, 38.75), 0);
-        rotateArmFollower.configReverseSoftLimitThreshold(Conversions.degreesToCANcoder(-110, 0), 0);
-        rotateArmFollower.configForwardSoftLimitEnable(true, 0);
-        rotateArmFollower.configReverseSoftLimitEnable(true, 0);
-
         rotateArmMain.setSelectedSensorPosition(0);
 
-        rotateArmMain.config_kF(0, 0, 0);
-        rotateArmMain.config_kP(0, 0, 0); // TUNE THIS
+
+        rotateArmMain.config_kP(0, 0.1, 0); // TUNE THIS
         rotateArmMain.config_kI(0, 0, 0);
         rotateArmMain.config_kD(0, 0, 0);
 
-        rotateArmMain.config_kF(1, 0, 0);
+
         rotateArmMain.config_kP(1, 0, 0); // TUNE THIS
         rotateArmMain.config_kI(1, 0, 0);
         rotateArmMain.config_kD(1, 0, 0);
@@ -130,33 +125,43 @@ public class ArmSubsystem extends SubsystemBase {
         return runOnce(
                 () -> {
                     manageMotion(position);
+                    double aff = armFeedforward.calculate(
+                            Units.degreesToRadians(Conversions.falconToDegrees(position, ArmConstants.kArmGearRatio))
+                                    - 90,
+                            0);
+
                     SmartDashboard.putNumber("Target Position Encoder Counts", position);
-                    SmartDashboard.putNumber("Target Degrees for motor", Conversions.falconToDegrees(position, 38.75));
-                    SmartDashboard.putNumber("Target Degrees for feedforward", Conversions.falconToDegrees(position, 38.75)-90);
-                    rotateArmMain.set(TalonFXControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward,
-                            armFeedforward.calculate(
-                                    Units.degreesToRadians(Conversions.falconToDegrees(position, 38.75)) - 90, 0));
+                    SmartDashboard.putNumber("Target Degrees for motor",
+                            Conversions.falconToDegrees(position, ArmConstants.kArmGearRatio));
+                    SmartDashboard.putNumber("Target Degrees for feedforward",
+                            Conversions.falconToDegrees(position, ArmConstants.kArmGearRatio) - 90);
+                    SmartDashboard.putNumber("Feedfoward with that amount",
+                            aff);
+
+                    rotateArmMain.set(TalonFXControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, aff);
+
                     rotateArmFollower.follow(rotateArmMain);
                     // rotateArmFollower.setInverted(InvertType.OpposeMaster);
+
                 });
     }
 
     public void manageMotion(double targetPosition) {
         double currentPosition = rotateArmMain.getSelectedSensorPosition();
 
-        if (currentPosition < targetPosition) {
+        // if (currentPosition > targetPosition) {
             rotateArmMain.configMotionAcceleration(cruiseVelocityAccelUp, 0);
             rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelUp, 0);
 
             rotateArmMain.selectProfileSlot(0, 0);
-            SmartDashboard.putBoolean("Going Up or Down", true);
-        } else {
-            rotateArmMain.configMotionAcceleration(cruiseVelocityAccelDown, 0);
-            rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelDown, 0);
+            SmartDashboard.putBoolean("Towards Front", true);
+        // } else {
+        //     rotateArmMain.configMotionAcceleration(cruiseVelocityAccelDown, 0);
+        //     rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelDown, 0);
 
-            rotateArmMain.selectProfileSlot(1, 0);
-            SmartDashboard.putBoolean("Going Up or Down", false);
-        }
+        //     rotateArmMain.selectProfileSlot(1, 0);
+        //     SmartDashboard.putBoolean("Towards Front", false);
+        // }
     }
 
     @Override
@@ -164,11 +169,9 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Sensor Position main", rotateArmMain.getSelectedSensorPosition());
 
         SmartDashboard.putNumber("Sensor Position degrees",
-                Conversions.CANcoderToDegrees(rotateArmMain.getSelectedSensorPosition(), 38.75));
+                Conversions.CANcoderToDegrees(rotateArmMain.getSelectedSensorPosition(), ArmConstants.kArmGearRatio));
         SmartDashboard.putNumber("Sensor Voltage main", rotateArmMain.getMotorOutputVoltage());
         SmartDashboard.putNumber("Sensor Voltage follower", rotateArmFollower.getMotorOutputVoltage());
-        SmartDashboard.putNumber("arm up cruise velo + acceleration", cruiseVelocityAccelUp);
-        SmartDashboard.putNumber("arm down cruise velo + acceleration", cruiseVelocityAccelDown);
         // SmartDashboard.putBoolean("Danger Mode", getDangerMode());
     }
 }

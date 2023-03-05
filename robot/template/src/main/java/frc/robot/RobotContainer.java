@@ -19,6 +19,9 @@ import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.StopIntakeWheels;
 import frc.robot.commands.orientator.RunOrientator;
 import frc.robot.commands.sensor.StrafeAlign;
+import frc.robot.commands.telescope.ExtendTelescope;
+import frc.robot.commands.telescope.RetractTelescope;
+import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.commands.auton.examplePPAuto;
 import frc.robot.commands.claw.OpenClaw;
 import frc.robot.subsystems.ArmSubsystem;
@@ -47,7 +50,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         s_vision = new VisionSubsystem();
-        s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor, IntakeConstants.kIntakeRedRightDeployMotor);
+        s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor,
+                IntakeConstants.kIntakeRedRightDeployMotor);
         s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
                 IntakeConstants.kIntakeBlueLeftWheelMotor);
         s_telescope = new TelescopeSubsystem();
@@ -84,32 +88,32 @@ public class RobotContainer {
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
         // m_driveController.rightBumper().onTrue(
-        //     new SequentialCommandGroup(
-        //         new DeployIntake(s_intakeRed),
-        //         new ParallelCommandGroup(
-        //             new RunIntakeWheels(s_intakeRed), 
-        //             new RunOrientator(s_orientator))));
+        // new SequentialCommandGroup(
+        // new DeployIntake(s_intakeRed),
+        // new ParallelCommandGroup(
+        // new RunIntakeWheels(s_intakeRed),
+        // new RunOrientator(s_orientator))));
 
         // m_driveController.rightTrigger().onTrue(
-        //     new SequentialCommandGroup(
-        //         new StopIntakeWheels(s_intakeRed),
-        //         new ParallelCommandGroup(
-        //             new RetractIntake(s_intakeRed), 
-        //             new RunOrientator(s_orientator))));
+        // new SequentialCommandGroup(
+        // new StopIntakeWheels(s_intakeRed),
+        // new ParallelCommandGroup(
+        // new RetractIntake(s_intakeRed),
+        // new RunOrientator(s_orientator))));
 
         // m_driveController.leftBumper().onTrue(
-        //     new SequentialCommandGroup(
-        //         new DeployIntake(s_intakeBlue),
-        //         new ParallelCommandGroup(
-        //             new RunIntakeWheels(s_intakeBlue), 
-        //             new RunOrientator(s_orientator))));
+        // new SequentialCommandGroup(
+        // new DeployIntake(s_intakeBlue),
+        // new ParallelCommandGroup(
+        // new RunIntakeWheels(s_intakeBlue),
+        // new RunOrientator(s_orientator))));
 
         // m_driveController.leftTrigger().onTrue(
-        //     new SequentialCommandGroup(
-        //         new StopIntakeWheels(s_intakeBlue),
-        //         new ParallelCommandGroup(
-        //             new RetractIntake(s_intakeBlue), 
-        //             new RunOrientator(s_orientator))));
+        // new SequentialCommandGroup(
+        // new StopIntakeWheels(s_intakeBlue),
+        // new ParallelCommandGroup(
+        // new RetractIntake(s_intakeBlue),
+        // new RunOrientator(s_orientator))));
 
         // operator
         // r-bumper: claw open close
@@ -123,21 +127,28 @@ public class RobotContainer {
 
         // m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
 
-        m_operatorController.povUp().onTrue(s_arm.setPosition(-Conversions.degreesToFalcon(90, 38.75)));
+        m_operatorController.povUp()
+                .onTrue(new ParallelCommandGroup(
+                            s_arm.setPosition(Conversions.degreesToFalcon(-115, ArmConstants.kArmGearRatio)),
+                            new SequentialCommandGroup(
+                                new TimerDeadline(2), 
+                                new ExtendTelescope(s_telescope))));
 
-        m_operatorController.povRight().onTrue(s_arm.setPosition(ArmConstants.kArmPutMiddle));
+        m_operatorController.povRight()
+                .onTrue(s_arm.setPosition(Conversions.degreesToFalcon(-60, ArmConstants.kArmGearRatio)));
 
-        m_operatorController.povDown().onTrue(s_arm.setPosition(ArmConstants.kArmPutLow));
+        m_operatorController.povDown()
+                .onTrue(s_arm.setPosition(Conversions.degreesToFalcon(-40, ArmConstants.kArmGearRatio)));
 
-        m_operatorController.povLeft().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
+        m_operatorController.povLeft().onTrue(new SequentialCommandGroup(new RetractTelescope(s_telescope), s_arm.setPosition(ArmConstants.kArmHome)));
 
-        //m_operatorController.rightBumper().onTrue(new ClawCone(s_claw)); //Create new Commands
+        // m_operatorController.rightBumper().onTrue(new ClawCone(s_claw)); //Create new
+        // Commands
 
-        //m_operatorController.leftBumper().onTrue(new ClawCube(s_claw)); //Create new Commands
+        // m_operatorController.leftBumper().onTrue(new ClawCube(s_claw)); //Create new
+        // Commands
 
         m_operatorController.b().onTrue(new OpenClaw(s_claw));
-
-
 
     }
 
