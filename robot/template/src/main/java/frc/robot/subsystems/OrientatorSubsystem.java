@@ -12,7 +12,7 @@ public class OrientatorSubsystem extends SubsystemBase {
     private final ConeDetection coneDetector;
     
     public OrientatorSubsystem(){
-        orientatorMotor = new TalonFX(OrientatorConstants.kOrientatorMotor1);
+        orientatorMotor = new TalonFX(OrientatorConstants.kOrientatorMotorID);
         coneDetector = new ConeDetection();
         orientatorMotor.enableVoltageCompensation(true);
     }

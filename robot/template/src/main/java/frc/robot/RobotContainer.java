@@ -7,16 +7,20 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.math.Conversions;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.auton.exampleAuto;
+import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
 import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.intake.StopIntakeWheels;
 import frc.robot.commands.orientator.RunOrientator;
 import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.auton.examplePPAuto;
+import frc.robot.commands.claw.OpenClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -36,14 +40,16 @@ public class RobotContainer {
     private final ClawSubsystem s_claw;
 
     CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
-    CommandXboxController m_operatorController = new CommandXboxController(Constants.OIConstants.kOperatorControllerPort);
+    CommandXboxController m_operatorController = new CommandXboxController(
+            Constants.OIConstants.kOperatorControllerPort);
 
     SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
     public RobotContainer() {
         s_vision = new VisionSubsystem();
-        s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedDeployMotor,IntakeConstants.kIntakeRedWheelMotor);
-        s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueDeployMotor, IntakeConstants.kIntakeBlueWheelMotor);
+        s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor, IntakeConstants.kIntakeRedRightDeployMotor);
+        s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
+                IntakeConstants.kIntakeBlueLeftWheelMotor);
         s_telescope = new TelescopeSubsystem();
         s_orientator = new OrientatorSubsystem();
         s_swerve = new SwerveSubsystem(s_vision);
@@ -75,17 +81,35 @@ public class RobotContainer {
         // orientation?
         m_driveController.y().onTrue(new InstantCommand(() -> s_swerve.zeroGyro()));
 
-        m_driveController.rightBumper().onTrue(new SequentialCommandGroup(
-            new DeployIntake(s_intakeRed), new ParallelCommandGroup(new RunIntakeWheels(s_intakeRed), new RunOrientator(s_orientator))));
+        m_driveController.start().onTrue(new LockWheels(s_swerve));
 
-        m_driveController.rightTrigger().onTrue(new ParallelCommandGroup (new RetractIntake(s_intakeRed), new RunOrientator(s_orientator)));
+        // m_driveController.rightBumper().onTrue(
+        //     new SequentialCommandGroup(
+        //         new DeployIntake(s_intakeRed),
+        //         new ParallelCommandGroup(
+        //             new RunIntakeWheels(s_intakeRed), 
+        //             new RunOrientator(s_orientator))));
 
-        m_driveController.leftBumper().onTrue(new SequentialCommandGroup(
-            new DeployIntake(s_intakeRed), new ParallelCommandGroup(new RunIntakeWheels(s_intakeRed), new RunOrientator(s_orientator))));
+        // m_driveController.rightTrigger().onTrue(
+        //     new SequentialCommandGroup(
+        //         new StopIntakeWheels(s_intakeRed),
+        //         new ParallelCommandGroup(
+        //             new RetractIntake(s_intakeRed), 
+        //             new RunOrientator(s_orientator))));
 
-        m_driveController.leftTrigger().onTrue(new ParallelCommandGroup (new RetractIntake(s_intakeBlue), new RunOrientator(s_orientator)));
+        // m_driveController.leftBumper().onTrue(
+        //     new SequentialCommandGroup(
+        //         new DeployIntake(s_intakeBlue),
+        //         new ParallelCommandGroup(
+        //             new RunIntakeWheels(s_intakeBlue), 
+        //             new RunOrientator(s_orientator))));
 
-
+        // m_driveController.leftTrigger().onTrue(
+        //     new SequentialCommandGroup(
+        //         new StopIntakeWheels(s_intakeBlue),
+        //         new ParallelCommandGroup(
+        //             new RetractIntake(s_intakeBlue), 
+        //             new RunOrientator(s_orientator))));
 
         // operator
         // r-bumper: claw open close
@@ -95,19 +119,25 @@ public class RobotContainer {
         // d-pad: control presents for the telescoping arm
         // l-bumper: reverse intake
 
-        //m_operatorController.povLeft().onTrue(new StrafeAlign(s_swerve, true));
+        // m_operatorController.povLeft().onTrue(new StrafeAlign(s_swerve, true));
 
-        //m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
+        // m_operatorController.povRight().onTrue(new StrafeAlign(s_swerve, false));
 
-        // m_operatorController.a().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromFloor));
+        m_operatorController.povUp().onTrue(s_arm.setPosition(-Conversions.degreesToFalcon(90, 38.75)));
 
-        // m_operatorController.b().onTrue(s_arm.setPosition(ArmConstants.kArmAcquireFromSIS));
+        m_operatorController.povRight().onTrue(s_arm.setPosition(ArmConstants.kArmPutMiddle));
 
-        // m_operatorController.x().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
+        m_operatorController.povDown().onTrue(s_arm.setPosition(ArmConstants.kArmPutLow));
 
-        // m_operatorController.y().onTrue(s_arm.resetSensor());
+        m_operatorController.povLeft().onTrue(s_arm.setPosition(ArmConstants.kArmHome));
 
-        // m_operatorController.povDown().whileTrue(s_arm.slowlyGoDown());
+        //m_operatorController.rightBumper().onTrue(new ClawCone(s_claw)); //Create new Commands
+
+        //m_operatorController.leftBumper().onTrue(new ClawCube(s_claw)); //Create new Commands
+
+        m_operatorController.b().onTrue(new OpenClaw(s_claw));
+
+
 
     }
 

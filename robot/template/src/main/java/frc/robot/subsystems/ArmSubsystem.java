@@ -25,8 +25,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final TalonFX rotateArmMain = new TalonFX(ArmConstants.kArmMotor1);
     private final TalonFX rotateArmFollower = new TalonFX(ArmConstants.kArmMotor2);
-    private final ConeDetection coneDetector; 
-    
+    private final ConeDetection coneDetector;
+
     private int peakVelocityUp = 13360;
     private final double percentOfPeakUp = .65;
     private final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
@@ -49,15 +49,27 @@ public class ArmSubsystem extends SubsystemBase {
 
         rotateArmMain.configFactoryDefault();
         rotateArmFollower.configFactoryDefault();
+
+        rotateArmMain.configForwardSoftLimitThreshold(Conversions.degreesToCANcoder(110, 38.75), 0);
+        rotateArmMain.configReverseSoftLimitThreshold(Conversions.degreesToCANcoder(-110, 0), 0);
+        rotateArmMain.configForwardSoftLimitEnable(true, 0);
+        rotateArmMain.configReverseSoftLimitEnable(true, 0);
+
+
+        rotateArmFollower.configForwardSoftLimitThreshold(Conversions.degreesToCANcoder(110, 38.75), 0);
+        rotateArmFollower.configReverseSoftLimitThreshold(Conversions.degreesToCANcoder(-110, 0), 0);
+        rotateArmFollower.configForwardSoftLimitEnable(true, 0);
+        rotateArmFollower.configReverseSoftLimitEnable(true, 0);
+
         rotateArmMain.setSelectedSensorPosition(0);
 
         rotateArmMain.config_kF(0, 0, 0);
-        rotateArmMain.config_kP(0, 0.06031, 0); // TUNE THIS
+        rotateArmMain.config_kP(0, 0, 0); // TUNE THIS
         rotateArmMain.config_kI(0, 0, 0);
-        rotateArmMain.config_kD(0, 0.1, 0);
+        rotateArmMain.config_kD(0, 0, 0);
 
         rotateArmMain.config_kF(1, 0, 0);
-        rotateArmMain.config_kP(1, 0.12657, 0); // TUNE THIS
+        rotateArmMain.config_kP(1, 0, 0); // TUNE THIS
         rotateArmMain.config_kI(1, 0, 0);
         rotateArmMain.config_kD(1, 0, 0);
 
@@ -110,14 +122,20 @@ public class ArmSubsystem extends SubsystemBase {
                 });
     }
 
+    /*
+     * 8
+     * 
+     */
     public Command setPosition(double position) {
         return runOnce(
                 () -> {
                     manageMotion(position);
-
+                    SmartDashboard.putNumber("Target Position Encoder Counts", position);
+                    SmartDashboard.putNumber("Target Degrees for motor", Conversions.falconToDegrees(position, 38.75));
+                    SmartDashboard.putNumber("Target Degrees for feedforward", Conversions.falconToDegrees(position, 38.75)-90);
                     rotateArmMain.set(TalonFXControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward,
                             armFeedforward.calculate(
-                                    Units.degreesToRadians(Conversions.CANcoderToDegrees(position, 38.75)), 0));
+                                    Units.degreesToRadians(Conversions.falconToDegrees(position, 38.75)) - 90, 0));
                     rotateArmFollower.follow(rotateArmMain);
                     // rotateArmFollower.setInverted(InvertType.OpposeMaster);
                 });
@@ -144,7 +162,9 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Sensor Position main", rotateArmMain.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Sensor Position follower", rotateArmMain.getSelectedSensorPosition());
+
+        SmartDashboard.putNumber("Sensor Position degrees",
+                Conversions.CANcoderToDegrees(rotateArmMain.getSelectedSensorPosition(), 38.75));
         SmartDashboard.putNumber("Sensor Voltage main", rotateArmMain.getMotorOutputVoltage());
         SmartDashboard.putNumber("Sensor Voltage follower", rotateArmFollower.getMotorOutputVoltage());
         SmartDashboard.putNumber("arm up cruise velo + acceleration", cruiseVelocityAccelUp);

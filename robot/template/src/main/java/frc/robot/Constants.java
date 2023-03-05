@@ -185,10 +185,10 @@ public class Constants {
 
   public static final class IntakeConstants {
     // Pheonix IDs
-    public static final int kIntakeBlueDeployMotor = 51;
-    public static final int kIntakeBlueWheelMotor = 61;
-    public static final int kIntakeRedDeployMotor = 52;
-    public static final int kIntakeRedWheelMotor = 62;
+    public static final int kIntakeBlueLeftDeployMotor = 51;
+    public static final int kIntakeBlueLeftWheelMotor = 61;
+    public static final int kIntakeRedRightDeployMotor = 52;
+    public static final int kIntakeRedRightWheelMotor = 62;
     public static final int kIntakeTriggerID = 2;
 
     // Speeds
@@ -213,13 +213,9 @@ public class Constants {
 
     // setpoints
     public static final int kArmHome = 0;
-    public static final int kArmAcquireFromFloor = 10_000;
-    public static final int kArmAcquireFromDOS = 10_000;
-    public static final int kArmAcquireFromSIS = 20_000;
-
-    public static final int kArmScoreInHighCone = 20_000;
-    public static final int kArmScoreInHighCube = 10_000;
-    public static final int kArmScoreInMid = 10_000;
+    public static final int kArmPutHigh = 10_000;
+    public static final int kArmPutMiddle = 10_000; // TODO: tune these
+    public static final int kArmPutLow = 10_000;
 
   }
 
@@ -233,8 +229,7 @@ public class Constants {
   }
 
   public static final class OrientatorConstants {
-    public static final int kOrientatorMotor1 = 0;
-    public static final int kOrientatorMotor2 = 0;
+    public static final int kOrientatorMotorID = 29;
     public static final double kOrientatorSpeed = 0.10;
     public static final double KOrientatorTime =2.5;
   }

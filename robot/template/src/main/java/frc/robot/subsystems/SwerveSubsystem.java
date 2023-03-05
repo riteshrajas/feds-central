@@ -25,6 +25,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public VisionSubsystem limelight;
 
+    private boolean gyroPitchChanged = false;
+    private double previousGyroPitch = 0;
+
     public SwerveSubsystem(VisionSubsystem limelight) {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.configFactoryDefault();
@@ -133,9 +136,21 @@ public class SwerveSubsystem extends SubsystemBase {
         return limelight.strafeFinished();
     }
 
-    @Override
-    public void periodic() {
-        swerveOdometry.update(getYaw(), getModulePositions());
+
+    public double getGyroPitch() {
+        return gyro.getPitch();
+    }
+
+    public double getGyroRoll() {
+        return gyro.getRoll();
+    }
+
+    public double getGyroYaw() {
+        return gyro.getYaw();
+    }
+
+
+    public void refreshVision() {
         limelight.updateResultToLatest();
         if (limelight.getHasTarget()) {
             limelight.updateTargetsToLatest();
@@ -144,13 +159,33 @@ public class SwerveSubsystem extends SubsystemBase {
             limelight.getTargetYaw();
             SmartDashboard.putNumber("The Camera Yaw", limelight.getTargetYaw());
             SmartDashboard.putNumber("The Camera Pitch", limelight.getTargetPitch());
+        }
+    }
 
-            for (SwerveModule mod : mSwerveMods) {
-                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
-                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
-                        mod.getPosition().angle.getDegrees());
-                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-            }
+
+    public boolean gyroPitchHasChanged() {
+        return gyroPitchChanged;
+    }
+
+    @Override
+    public void periodic() {
+        swerveOdometry.update(getYaw(), getModulePositions());
+        refreshVision();
+
+        // if(previousGyroPitch != getGyroPitch()) {
+        //     gyroPitchChanged = true;
+        // } else {
+        //     gyroPitchChanged = false;
+        // }
+
+        // previousGyroPitch = getGyroPitch();
+        
+
+        for (SwerveModule mod : mSwerveMods) {
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
+                    mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
     }
 }
