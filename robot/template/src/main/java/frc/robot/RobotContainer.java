@@ -7,9 +7,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.math.Conversions;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.arm.WaitUntilFullyRotate;
 import frc.robot.commands.auton.exampleAuto;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
@@ -129,18 +131,28 @@ public class RobotContainer {
 
         m_operatorController.povUp()
                 .onTrue(new ParallelCommandGroup(
-                            s_arm.setPosition(Conversions.degreesToFalcon(-115, ArmConstants.kArmGearRatio)),
-                            new SequentialCommandGroup(
-                                new TimerDeadline(2), 
+                        s_arm.setPosition(ArmConstants.kArmPutHigh),
+                        new SequentialCommandGroup(
+                                new WaitUntilFullyRotate(s_arm),
                                 new ExtendTelescope(s_telescope))));
 
         m_operatorController.povRight()
-                .onTrue(s_arm.setPosition(Conversions.degreesToFalcon(-60, ArmConstants.kArmGearRatio)));
+                .onTrue(new ParallelCommandGroup(
+                        s_arm.setPosition(ArmConstants.kArmPutMiddle),
+                        new SequentialCommandGroup(
+                                new WaitUntilFullyRotate(s_arm),
+                                new ExtendTelescope(s_telescope))));
 
         m_operatorController.povDown()
-                .onTrue(s_arm.setPosition(Conversions.degreesToFalcon(-40, ArmConstants.kArmGearRatio)));
+                .onTrue(new ParallelCommandGroup(s_arm.setPosition(ArmConstants.kArmPutLow),
+                        new SequentialCommandGroup(
+                                new WaitUntilFullyRotate(s_arm),
+                                new ExtendTelescope(s_telescope))));
 
-        m_operatorController.povLeft().onTrue(new SequentialCommandGroup(new RetractTelescope(s_telescope), s_arm.setPosition(ArmConstants.kArmHome)));
+        m_operatorController.povLeft()
+                .onTrue(new SequentialCommandGroup(
+                        new RetractTelescope(s_telescope),
+                        s_arm.setPosition(ArmConstants.kArmHome)));
 
         // m_operatorController.rightBumper().onTrue(new ClawCone(s_claw)); //Create new
         // Commands

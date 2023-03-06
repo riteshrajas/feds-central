@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final ConeDetection coneDetector;
 
     private int peakVelocityUp = 13360;
-    private final double percentOfPeakUp = .1;
+    private final double percentOfPeakUp = .15;
     private final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
 
     private int peakVelocityDown = 8090;
@@ -42,6 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
     private final double kG = 0.044835;
     private final double kV = 0.5;
     private final double kA = 0;
+
+    private boolean settingArmPositionUp = false;
+    private boolean armDoneRotating = false;
+    private double  targetArmPosition = ArmConstants.kArmHome;
 
     public ArmSubsystem() {
 
@@ -122,6 +126,17 @@ public class ArmSubsystem extends SubsystemBase {
      * 
      */
     public Command setPosition(double position) {
+
+        targetArmPosition = position;              // set the target arm position
+        armDoneRotating = false;                   // the arm either is at the target, in which case this will quickly
+                                                   // set to be true, or the arm is truely not done rotating
+
+        if(position != ArmConstants.kArmHome) {
+            settingArmPositionUp = true;           // you don't want to extend into the robot.
+        } else {
+            settingArmPositionUp = false;
+        }
+
         return runOnce(
                 () -> {
                     manageMotion(position);
@@ -164,14 +179,25 @@ public class ArmSubsystem extends SubsystemBase {
         // }
     }
 
+    public boolean getArmDoneRotating() {
+        return armDoneRotating;
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Sensor Position main", rotateArmMain.getSelectedSensorPosition());
+        
+        if(settingArmPositionUp) { // if you are outside the limits of the robot
+            if(Math.abs(targetArmPosition - rotateArmMain.getSelectedSensorPosition()) < ArmConstants.kArmGoalThreshold) {
+                // and the arm is very close to the target position 
+                armDoneRotating = true; // then you can extend
+            } else {
+                armDoneRotating = false; // else DO NOT EXTEND
+            }
+        }
 
+        SmartDashboard.putNumber("Sensor Position main", rotateArmMain.getSelectedSensorPosition());
         SmartDashboard.putNumber("Sensor Position degrees",
                 Conversions.CANcoderToDegrees(rotateArmMain.getSelectedSensorPosition(), ArmConstants.kArmGearRatio));
         SmartDashboard.putNumber("Sensor Voltage main", rotateArmMain.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Sensor Voltage follower", rotateArmFollower.getMotorOutputVoltage());
-        // SmartDashboard.putBoolean("Danger Mode", getDangerMode());
     }
 }

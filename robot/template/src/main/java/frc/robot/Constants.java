@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.lib.math.Conversions;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -210,18 +211,18 @@ public class Constants {
     // Phoenix ID's
     public static final int kArmMotor1 = 57;
     public static final int kArmMotor2 = 58;
-    // public static final int kArmPulley = 60;
-
-    // setpoints
-    public static final int kArmHome = -500;
-    public static final int kArmPutHigh = 10_000;
-    public static final int kArmPutMiddle = 10_000; // TODO: tune these
-    public static final int kArmPutLow = 10_000;
-
 
     public static final double kArmGearRatio = 38.75;
 
     public static final double kSetRobotToTarget = .56;
+    
+    // setpoints
+    public static final double kArmHome = -500;
+    public static final double kArmPutHigh = Conversions.degreesToFalcon(-110.0, ArmConstants.kArmGearRatio);
+    public static final double kArmPutMiddle = Conversions.degreesToFalcon(-60.0, ArmConstants.kArmGearRatio); // TODO: tune these
+    public static final double kArmPutLow = Conversions.degreesToFalcon(-40, kArmGearRatio);
+
+    public static final double kArmGoalThreshold = Conversions.degreesToCANcoder(5, ArmConstants.kArmGearRatio);
 
   }
 
