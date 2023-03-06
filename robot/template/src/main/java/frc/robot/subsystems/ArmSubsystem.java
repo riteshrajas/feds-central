@@ -22,35 +22,15 @@ import frc.lib.math.Conversions;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class ArmSubsystem extends SubsystemBase {
-
     private final TalonFX rotateArmMain = new TalonFX(ArmConstants.kArmMotor1);
     private final TalonFX rotateArmFollower = new TalonFX(ArmConstants.kArmMotor2);
     private final ConeDetection coneDetector;
 
-    private int peakVelocityUp = 13360;
-    private final double percentOfPeakUp = .15;
-    private final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
-
-    private int peakVelocityDown = 8090;
-    private final double percentOfPeakDown = .65;
-    private final double cruiseVelocityAccelDown = peakVelocityDown * percentOfPeakDown;
-
-    private boolean m_dangerMode = false;
-
-    private ArmFeedforward armFeedforward;
-    private final double kS = 0;
-    private final double kG = 0.044835;
-    private final double kV = 0.5;
-    private final double kA = 0;
-
     private boolean settingArmPositionUp = false;
     private boolean armDoneRotating = false;
-    private double  targetArmPosition = ArmConstants.kArmHome;
+    private double targetArmPosition = ArmConstants.kArmHome;
 
     public ArmSubsystem() {
-
-        armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
-
         rotateArmMain.configFactoryDefault();
         rotateArmFollower.configFactoryDefault();
 
@@ -62,15 +42,13 @@ public class ArmSubsystem extends SubsystemBase {
 
         rotateArmMain.setSelectedSensorPosition(0);
 
+        rotateArmMain.config_kP(0, ArmConstants.kPUp, 0); // TUNE THIS
+        rotateArmMain.config_kI(0, ArmConstants.kIUp, 0);
+        rotateArmMain.config_kD(0, ArmConstants.kDUp, 0);
 
-        rotateArmMain.config_kP(0, 0.1, 0); // TUNE THIS
-        rotateArmMain.config_kI(0, 0, 0);
-        rotateArmMain.config_kD(0, 0, 0);
-
-
-        rotateArmMain.config_kP(1, 0, 0); // TUNE THIS
-        rotateArmMain.config_kI(1, 0, 0);
-        rotateArmMain.config_kD(1, 0, 0);
+        rotateArmMain.config_kP(1, ArmConstants.kPDown, 0); // TUNE THIS
+        rotateArmMain.config_kI(1, ArmConstants.kIDown, 0);
+        rotateArmMain.config_kD(1, ArmConstants.kDDown, 0);
 
         rotateArmMain.setInverted(TalonFXInvertType.CounterClockwise);
         rotateArmMain.setNeutralMode(NeutralMode.Brake);
@@ -121,18 +99,14 @@ public class ArmSubsystem extends SubsystemBase {
                 });
     }
 
-    /*
-     * 8
-     * 
-     */
     public Command setPosition(double position) {
 
-        targetArmPosition = position;              // set the target arm position
-        armDoneRotating = false;                   // the arm either is at the target, in which case this will quickly
-                                                   // set to be true, or the arm is truely not done rotating
+        targetArmPosition = position; // set the target arm position
+        armDoneRotating = false; // the arm either is at the target, in which case this will quickly
+                                 // set to be true, or the arm is truely not done rotating
 
-        if(position != ArmConstants.kArmHome) {
-            settingArmPositionUp = true;           // you don't want to extend into the robot.
+        if (position != ArmConstants.kArmHome) {
+            settingArmPositionUp = true; // you don't want to extend into the robot.
         } else {
             settingArmPositionUp = false;
         }
@@ -140,7 +114,7 @@ public class ArmSubsystem extends SubsystemBase {
         return runOnce(
                 () -> {
                     manageMotion(position);
-                    double aff = armFeedforward.calculate(
+                    double aff = ArmConstants.armFeedforward.calculate(
                             Units.degreesToRadians(Conversions.falconToDegrees(position, ArmConstants.kArmGearRatio))
                                     - 90,
                             0);
@@ -162,20 +136,20 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void manageMotion(double targetPosition) {
-        double currentPosition = rotateArmMain.getSelectedSensorPosition();
+        // double currentPosition = rotateArmMain.getSelectedSensorPosition();
 
         // if (currentPosition > targetPosition) {
-            rotateArmMain.configMotionAcceleration(cruiseVelocityAccelUp, 0);
-            rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelUp, 0);
+        rotateArmMain.configMotionAcceleration(ArmConstants.cruiseVelocityAccelUp, 0);
+        rotateArmMain.configMotionCruiseVelocity(ArmConstants.cruiseVelocityAccelUp, 0);
 
-            rotateArmMain.selectProfileSlot(0, 0);
-            SmartDashboard.putBoolean("Towards Front", true);
+        rotateArmMain.selectProfileSlot(0, 0);
+        // SmartDashboard.putBoolean("Towards Front", true);
         // } else {
-        //     rotateArmMain.configMotionAcceleration(cruiseVelocityAccelDown, 0);
-        //     rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelDown, 0);
+        // rotateArmMain.configMotionAcceleration(cruiseVelocityAccelDown, 0);
+        // rotateArmMain.configMotionCruiseVelocity(cruiseVelocityAccelDown, 0);
 
-        //     rotateArmMain.selectProfileSlot(1, 0);
-        //     SmartDashboard.putBoolean("Towards Front", false);
+        // rotateArmMain.selectProfileSlot(1, 0);
+        // SmartDashboard.putBoolean("Towards Front", false);
         // }
     }
 
@@ -185,10 +159,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
-        if(settingArmPositionUp) { // if you are outside the limits of the robot
-            if(Math.abs(targetArmPosition - rotateArmMain.getSelectedSensorPosition()) < ArmConstants.kArmGoalThreshold) {
-                // and the arm is very close to the target position 
+
+        if (settingArmPositionUp) { // if you are outside the limits of the robot
+            if (Math.abs(
+                    targetArmPosition - rotateArmMain.getSelectedSensorPosition()) < ArmConstants.kArmGoalThreshold) {
+                // and the arm is very close to the target position
                 armDoneRotating = true; // then you can extend
             } else {
                 armDoneRotating = false; // else DO NOT EXTEND

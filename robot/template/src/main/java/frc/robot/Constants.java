@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -213,16 +214,39 @@ public class Constants {
     public static final int kArmMotor2 = 58;
 
     public static final double kArmGearRatio = 38.75;
-
     public static final double kSetRobotToTarget = .56;
+   
+    // Feedforward
+    public static final double kS = 0;
+    public static final double kG = 0.044835;
+    public static final double kV = 0.5;
+    public static final double kA = 0;
+    public static final ArmFeedforward armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+    
+    public static final int    peakVelocityUp        = 13360;
+    public static final double percentOfPeakUp       = .15;
+    public static final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
+
+    public static final int    peakVelocityDown        = 8090;
+    public static final double percentOfPeakDown       = .65;
+    public static final double cruiseVelocityAccelDown = peakVelocityDown * percentOfPeakDown;
+
+    // PID (Feedback)
+    public static final double kPUp   = 0.1;
+    public static final double kIUp   = 0;
+    public static final double kDUp   = 0;
+
+    public static final double kPDown = 0.1;
+    public static final double kIDown = 0;
+    public static final double kDDown = 0;
     
     // setpoints
     public static final double kArmHome = -500;
     public static final double kArmPutHigh = Conversions.degreesToFalcon(-110.0, ArmConstants.kArmGearRatio);
     public static final double kArmPutMiddle = Conversions.degreesToFalcon(-60.0, ArmConstants.kArmGearRatio); // TODO: tune these
     public static final double kArmPutLow = Conversions.degreesToFalcon(-40, kArmGearRatio);
-
     public static final double kArmGoalThreshold = Conversions.degreesToCANcoder(5, ArmConstants.kArmGearRatio);
+
 
   }
 
