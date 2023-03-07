@@ -41,7 +41,7 @@ public class RobotContainer {
     private final OrientatorSubsystem s_orientator;
     private final TelescopeSubsystem s_telescope;
     private final IntakeSubsystem s_intakeRed;
-    private final IntakeSubsystem s_intakeBlue;
+    // private final IntakeSubsystem s_intakeBlue;
     private final ClawSubsystem s_claw;
 
     CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
@@ -53,9 +53,10 @@ public class RobotContainer {
     public RobotContainer() {
         s_vision = new VisionSubsystem();
         s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor,
-                IntakeConstants.kIntakeRedRightDeployMotor);
-        s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
-                IntakeConstants.kIntakeBlueLeftWheelMotor);
+                IntakeConstants.kIntakeRedRightDeployMotor, true);
+        // s_intakeBlue = new
+        // IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
+        // IntakeConstants.kIntakeBlueLeftWheelMotor, false);
         s_telescope = new TelescopeSubsystem();
         s_orientator = new OrientatorSubsystem();
         s_swerve = new SwerveSubsystem(s_vision);
@@ -89,16 +90,10 @@ public class RobotContainer {
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
-        // m_driveController.rightBumper().onTrue(
-        // new SequentialCommandGroup(
-        // new DeployIntake(s_intakeRed),
-        // new ParallelCommandGroup(
-        // new RunIntakeWheels(s_intakeRed),
-        // new RunOrientator(s_orientator))));
-
-        // m_driveController.rightTrigger().onTrue(
-        // new SequentialCommandGroup(
-        // new StopIntakeWheels(s_intakeRed),
+        m_driveController.rightBumper().onTrue(new DeployIntakeGroup(s_intakeRed, s_orientator));
+        
+        m_driveController.rightTrigger().onTrue(new RetractIntakeGroup(s_intakeRed, s_orientator));
+        // new StopIntakeWheels(s_intakeRed)));
         // new ParallelCommandGroup(
         // new RetractIntake(s_intakeRed),
         // new RunOrientator(s_orientator))));
@@ -106,6 +101,7 @@ public class RobotContainer {
         // m_driveController.leftBumper().onTrue(
         // new SequentialCommandGroup(
         // new DeployIntake(s_intakeBlue),
+        // new RunIntakeWheels(s_intakeBlue)));
         // new ParallelCommandGroup(
         // new RunIntakeWheels(s_intakeBlue),
         // new RunOrientator(s_orientator))));
@@ -113,8 +109,8 @@ public class RobotContainer {
         // m_driveController.leftTrigger().onTrue(
         // new SequentialCommandGroup(
         // new StopIntakeWheels(s_intakeBlue),
-        // new ParallelCommandGroup(
-        // new RetractIntake(s_intakeBlue),
+        // // new ParallelCommandGroup(
+        // new RetractIntake(s_intakeBlue)));
         // new RunOrientator(s_orientator))));
 
         // operator
@@ -160,7 +156,7 @@ public class RobotContainer {
         // m_operatorController.leftBumper().onTrue(new ClawCube(s_claw)); //Create new
         // Commands
 
-        m_operatorController.b().onTrue(new OpenClaw(s_claw));
+        // m_operatorController.b().onTrue(new OpenClaw(s_claw));
 
     }
 
