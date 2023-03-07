@@ -140,13 +140,31 @@ public class ArmSubsystem extends SubsystemBase {
                 });
     }
 
-    /*public Command grabCone(){
+    public Command grabCone(){
         double targetArmPosition;
         if(getGripResult().equals("left")){
-
+            targetArmPosition = ArmConstants.kArmPickConeLeft;
         }
+        else if(getGripResult().equals("right")){
+            targetArmPosition = ArmConstants.kArmPickConeRight;
+        }
+        else{
+            targetArmPosition = ArmConstants.kArmPickCube;
+        }
+        return runOnce(
+                () -> {
+                    manageMotion(targetArmPosition);
+                    double aff = ArmConstants.armFeedforward.calculate(
+                            Units.degreesToRadians(Conversions.falconToDegrees(targetArmPosition, ArmConstants.kArmGearRatio))
+                                    - 90,
+                            0);
+                            rotateArmMain.set(TalonFXControlMode.MotionMagic, targetArmPosition, DemandType.ArbitraryFeedForward, aff);
 
-    }*/
+                            rotateArmFollower.follow(rotateArmMain);
+                            // rotateArmFollower.setInverted(InvertType.OpposeMaster);
+        
+                        });        
+    }
 
     public void manageMotion(double targetPosition) {
         // double currentPosition = rotateArmMain.getSelectedSensorPosition();
