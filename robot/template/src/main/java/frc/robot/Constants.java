@@ -246,6 +246,7 @@ public class Constants {
     public static final double kArmPutMiddle = Conversions.degreesToFalcon(-60.0, ArmConstants.kArmGearRatio); // TODO: tune these
     public static final double kArmPutLow = Conversions.degreesToFalcon(-40, kArmGearRatio);
     public static final double kArmGoalThreshold = Conversions.degreesToCANcoder(5, ArmConstants.kArmGearRatio);
+    public static final double kArmPickConeLeft = Conversions.degreesToFalcon(-20, ArmConstants.kArmGearRatio);
 
 
   }

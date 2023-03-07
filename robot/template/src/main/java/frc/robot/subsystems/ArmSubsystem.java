@@ -58,6 +58,11 @@ public class ArmSubsystem extends SubsystemBase {
         coneDetector = new ConeDetection();
     }
 
+    public String getGripResult(){ 
+        coneDetector.startVisionThread();
+        return coneDetector.getResult();
+    }
+
     public Command goToHome() {
         return runOnce(
                 () -> {
@@ -134,6 +139,14 @@ public class ArmSubsystem extends SubsystemBase {
 
                 });
     }
+
+    /*public Command grabCone(){
+        double targetArmPosition;
+        if(getGripResult().equals("left")){
+
+        }
+
+    }*/
 
     public void manageMotion(double targetPosition) {
         // double currentPosition = rotateArmMain.getSelectedSensorPosition();
