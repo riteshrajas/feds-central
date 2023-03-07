@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.util.ArrayList;
+
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +38,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.OrientatorSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.GripPipeline;
+import frc.robot.utils.VisionUtils;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -42,9 +48,11 @@ public class RobotContainer {
     private final ArmSubsystem s_arm;
     private final OrientatorSubsystem s_orientator;
     private final TelescopeSubsystem s_telescope;
-    private final IntakeSubsystem s_intakeRed;
-    // private final IntakeSubsystem s_intakeBlue;
+    // private final IntakeSubsystem s_intakeRed;
+    private final IntakeSubsystem s_intakeBlue;
     private final ClawSubsystem s_claw;
+
+    private final Thread gripThread;
 
     CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
     CommandXboxController m_operatorController = new CommandXboxController(
@@ -53,12 +61,15 @@ public class RobotContainer {
     SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
     public RobotContainer() {
+        gripThread = VisionUtils.makeGripThread(1);
+        gripThread.setDaemon(true);
+        gripThread.start();
+
         s_vision = new VisionSubsystem();
-        s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor,
-                IntakeConstants.kIntakeRedRightDeployMotor, true);
-        // s_intakeBlue = new
-        // IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
-        // IntakeConstants.kIntakeBlueLeftWheelMotor, false);
+        // s_intakeRed = new IntakeSubsystem(IntakeConstants.kIntakeRedRightDeployMotor,
+        // IntakeConstants.kIntakeRedRightDeployMotor, true);
+        s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
+                IntakeConstants.kIntakeBlueLeftWheelMotor, false);
         s_telescope = new TelescopeSubsystem();
         s_orientator = new OrientatorSubsystem();
         s_swerve = new SwerveSubsystem(s_vision);
@@ -90,9 +101,9 @@ public class RobotContainer {
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
-        m_driveController.rightTrigger().onTrue(new DeployIntakeGroup(s_intakeRed, s_orientator));
-        m_driveController.rightBumper().onTrue(new RetractIntakeGroup(s_intakeRed, s_orientator));
-        
+        m_driveController.rightTrigger().onTrue(new DeployIntakeGroup(s_intakeBlue, s_orientator));
+        m_driveController.rightBumper().onTrue(new RetractIntakeGroup(s_intakeBlue, s_orientator));
+
         // new StopIntakeWheels(s_intakeRed)));
         // new ParallelCommandGroup(
         // new RetractIntake(s_intakeRed),
