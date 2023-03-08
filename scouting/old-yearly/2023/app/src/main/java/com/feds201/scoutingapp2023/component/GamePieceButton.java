@@ -15,10 +15,12 @@ public class GamePieceButton implements Component {
     public int imageState = 0;
     private final int buttonId;
     private final String type;
-    public GamePieceButton(int buttonId, View view, String type) {
+    private final boolean cycleAll;
+    public GamePieceButton(int buttonId, View view, String type, boolean cycleAll) {
         this.button = view.findViewById(buttonId);
         this.buttonId = buttonId;
         this.type = type;
+        this.cycleAll = cycleAll;
     }
 
     public static ArrayList<GamePieceButton> generateCyclingButtonsFromPrefix(Class resClass, String prefix, View view) {
@@ -29,7 +31,8 @@ public class GamePieceButton implements Component {
             if (field.getName().contains(prefix)) {
                 try {
                     int id = field.getInt(resClass);
-                    GamePieceButton button = new GamePieceButton(id, view, prefix);
+                    boolean cycleAll = checkIfCanCycleAll(field.getName());
+                    GamePieceButton button = new GamePieceButton(id, view, prefix, cycleAll);
                     buttons.add(button);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
@@ -68,6 +71,15 @@ public class GamePieceButton implements Component {
                 break;
         }
     }
+
+    public boolean getCycleAll() { return this.cycleAll; }
+
+    public static boolean checkIfCanCycleAll(String fieldName) {
+        String lastChar = fieldName.substring(fieldName.length()-1);
+        int lastNum = Integer.parseInt(lastChar);
+        return fieldName.contains("low") || lastNum % 2 == 1;
+    }
+
 
     @NonNull
     public String toString() {
