@@ -40,7 +40,7 @@ public class GamePieceButton implements Component {
         return buttons;
     }
 
-    public void cycleImage() {
+    public void cycleImageAll() {
         this.imageState++;
         switch(this.imageState) {
             case 1:
@@ -50,6 +50,19 @@ public class GamePieceButton implements Component {
                 this.button.setImageResource(R.drawable.cube);
                 break;
             case 3:
+                this.button.setImageResource(R.drawable.nothing);
+                this.imageState = 0;
+                break;
+        }
+    }
+
+    public void cycleImage() {
+        this.imageState++;
+        switch(this.imageState) {
+            case 1:
+                this.button.setImageResource(R.drawable.cube);
+                break;
+            case 2:
                 this.button.setImageResource(R.drawable.nothing);
                 this.imageState = 0;
                 break;

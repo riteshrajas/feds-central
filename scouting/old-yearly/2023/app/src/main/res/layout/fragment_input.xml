@@ -433,7 +433,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/auton_grid" />
 
             <Button
-                android:id="@+id/auton_button_minus"
+                android:id="@+id/auton_minus"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginTop="-32sp"
@@ -448,7 +448,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/auton_grid" />
 
             <Button
-                android:id="@+id/auton_button_minus2"
+                android:id="@+id/auton_minus2"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginTop="-32sp"
@@ -472,8 +472,8 @@
                 android:textColor="@color/FEDS_WHITE"
                 android:textSize="50sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/auton_button_minus"
-                app:layout_constraintTop_toTopOf="@+id/auton_button_minus" />
+                app:layout_constraintStart_toEndOf="@+id/auton_minus"
+                app:layout_constraintTop_toTopOf="@+id/auton_minus" />
 
             <TextView
                 android:id="@+id/auton_tally2"
@@ -485,11 +485,11 @@
                 android:textColor="@color/FEDS_WHITE"
                 android:textSize="50sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/auton_button_minus"
-                app:layout_constraintTop_toTopOf="@+id/auton_button_minus" />
+                app:layout_constraintStart_toEndOf="@+id/auton_minus"
+                app:layout_constraintTop_toTopOf="@+id/auton_minus" />
 
             <Button
-                android:id="@+id/auton_button_plus"
+                android:id="@+id/auton_plus"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:backgroundTint="@color/FEDS_WHITE"
@@ -504,7 +504,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/auton_button_plus2"
+                android:id="@+id/auton_plus2"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginStart="345sp"
@@ -529,7 +529,7 @@
                 android:textColor="@color/FEDS_WHITE"
                 android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/auton_button_plus"
+                app:layout_constraintStart_toEndOf="@+id/auton_plus"
                 app:layout_constraintTop_toBottomOf="@+id/auton_grid" />
 
             <ImageButton
@@ -1121,7 +1121,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/endgame_button_minus"
+                android:id="@+id/endgame_minus"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginTop="142sp"
@@ -1145,11 +1145,11 @@
                 android:textColor="@color/FEDS_WHITE"
                 android:textSize="50sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/endgame_button_minus"
-                app:layout_constraintTop_toTopOf="@+id/endgame_button_minus" />
+                app:layout_constraintStart_toEndOf="@+id/endgame_minus"
+                app:layout_constraintTop_toTopOf="@+id/endgame_minus" />
 
             <Button
-                android:id="@+id/endgame_button_plus"
+                android:id="@+id/endgame_plus"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginEnd="450sp"

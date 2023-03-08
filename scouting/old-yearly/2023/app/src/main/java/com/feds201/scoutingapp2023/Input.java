@@ -38,13 +38,21 @@ public class Input extends Fragment {
         ImageButton endgametab = inputView.findViewById(R.id.endgametab);
 
         //EVERYTHING ON AUTON PAGE
-        ArrayList<GamePieceButton> autonButtons = GamePieceButton.generateCyclingButtonsFromPrefix(R.id.class, "autonbutton", inputView);
+        ArrayList<GamePieceButton> autonButtons = GamePieceButton.generateCyclingButtonsFromPrefix(R.id.class, "auton_button", inputView);
         ImageButton autonGreen = inputView.findViewById(R.id.auton_green);
         ImageButton autonYellow = inputView.findViewById(R.id.auton_yellow);
         ImageButton autonRed = inputView.findViewById(R.id.auton_red);
 
+        Button autonminus = inputView.findViewById(R.id.auton_minus);
+        Button autonminus2 = inputView.findViewById(R.id.auton_minus2);
+        Button autonplus = inputView.findViewById(R.id.auton_plus);
+        Button autonplus2 = inputView.findViewById(R.id.auton_plus2);
+
+        TextView tally = inputView.findViewById(R.id.auton_tally);
+        TextView tally2 = inputView.findViewById(R.id.auton_tally2);
+
         //EVERYTHING ON TELEOP PAGE
-        ArrayList<GamePieceButton> teleopButtons = GamePieceButton.generateCyclingButtonsFromPrefix(R.id.class, "teleopbutton", inputView);
+        ArrayList<GamePieceButton> teleopButtons = GamePieceButton.generateCyclingButtonsFromPrefix(R.id.class, "teleop_button", inputView);
         SeekBar teleopstrategyseekbar = inputView.findViewById(R.id.teleop_strategybar);
         CheckBox coopertitioncheckbox = inputView.findViewById(R.id.teleop_coopertition);
         RadioButton team1 = inputView.findViewById(R.id.radioButton1);
@@ -57,6 +65,48 @@ public class Input extends Fragment {
         ImageButton endgameGreen = inputView.findViewById(R.id.endgame_green);
         ImageButton endgameYellow = inputView.findViewById(R.id.endgame_yellow);
         ImageButton endgameRed = inputView.findViewById(R.id.endgame_red);
+
+        Button endgameminus = inputView.findViewById(R.id.endgame_minus);
+        Button endgameplus = inputView.findViewById(R.id.endgame_plus);
+        TextView endtally = inputView.findViewById(R.id.endgame_tally);
+
+
+        autonminus.setOnClickListener(v -> {
+            int x = Integer.parseInt((tally.getText().toString()));
+            x--;
+            tally.setText(Integer.toString(x));
+        });
+
+        autonplus.setOnClickListener(v -> {
+            int x = Integer.parseInt((tally.getText().toString()));
+            x++;
+            tally.setText(Integer.toString(x));
+        });
+
+        autonminus2.setOnClickListener(v -> {
+            int x = Integer.parseInt((tally2.getText().toString()));
+            x--;
+            tally2.setText(Integer.toString(x));
+        });
+
+        autonplus2.setOnClickListener(v -> {
+            int x = Integer.parseInt((tally2.getText().toString()));
+            x++;
+            tally2.setText(Integer.toString(x));
+        });
+
+        endgameminus.setOnClickListener(v -> {
+            int x = Integer.parseInt((endtally.getText().toString()));
+            x--;
+            endtally.setText(Integer.toString(x));
+        });
+
+        endgameplus.setOnClickListener(v -> {
+            int x = Integer.parseInt((endtally.getText().toString()));
+            x++;
+            endtally.setText(Integer.toString(x));
+        });
+
 
         teleopstrategyseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -189,9 +239,9 @@ public class Input extends Fragment {
         //AUTON BUTTON ON CLICK LISTENERS
         for(GamePieceButton gamePieceButton : autonButtons) {
             Log.d("DEBUG", gamePieceButton.toString());
-            gamePieceButton.button.setOnClickListener(view -> {
-                gamePieceButton.cycleImage();
-            });
+                gamePieceButton.button.setOnClickListener(view -> {
+                    gamePieceButton.cycleImageAll();
+               });
         }
 
         for(GamePieceButton gamePieceButton : teleopButtons) {
