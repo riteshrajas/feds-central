@@ -18,16 +18,22 @@ import android.widget.TextView;
 
 import com.feds201.scoutingapp2023.component.GamePieceButton;
 import com.feds201.scoutingapp2023.component.Tally;
+import com.feds201.scoutingapp2023.sql.Match;
+import com.feds201.scoutingapp2023.sql.MatchDao;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 
 public class Input extends Fragment {
+
+    public static Match currentMatch = null;
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inputView = inflater.inflate(R.layout.fragment_input, container, false);
+
         /*
             Table of Contents
             ---------------------------------------------------
@@ -57,6 +63,21 @@ public class Input extends Fragment {
           */
 
         //READ QR PAGE BEFORE WORKING!!!!!!!!!!!!!!!!!!!!!!!!
+
+        MatchDao matchDao = MainActivity.app_db.matchDao();
+        if (currentMatch == null) {
+            currentMatch = new Match();
+            currentMatch.matchType = "ERROR";
+            currentMatch.color = "NONE";
+        }
+
+        TextView colorText = inputView.findViewById(R.id.Team_color_title);
+        TextView matchText = inputView.findViewById(R.id.Match_title);
+        TextView teamNumberText = inputView.findViewById(R.id.Team_number_title);
+
+        colorText.setText(currentMatch.color + " " + currentMatch.colorNumber);
+        matchText.setText(currentMatch.matchType + " " + currentMatch.matchNumber);
+        teamNumberText.setText("" + currentMatch.teamNumber);
 
         // 1. Initialize all objects
         // 1a. tabs
@@ -99,6 +120,7 @@ public class Input extends Fragment {
         Button endgameplus = inputView.findViewById(R.id.endgame_plus);
         TextView endtally = inputView.findViewById(R.id.endgame_tally);
         Tally linksTally = new Tally(endgameplus, endgameminus, endtally);
+        CheckBox parkedcheckbox = inputView.findViewById(R.id.endgame_parked);
 
 
         // 2. Find all objects with certain prefixes
@@ -211,10 +233,90 @@ public class Input extends Fragment {
         // 4a. auton grid button listeners
         for(GamePieceButton gamePieceButton : autonButtons) {
                 gamePieceButton.button.setOnClickListener(view -> {
+                    Log.d("score", "auton: " + currentMatch.autonLow + " " + currentMatch.autonMiddle + " " + currentMatch.autonHigh);
                     if(gamePieceButton.getCycleAll()) {
-                        gamePieceButton.cycleImageAll();
+                        gamePieceButton.imageState++;
+                        switch(gamePieceButton.imageState) {
+                            case 1:
+                                gamePieceButton.button.setImageResource(R.drawable.cone);
+                                Log.d("score", gamePieceButton.getScoreType().toString());
+                                switch(gamePieceButton.getScoreType()) {
+                                    case AUTON_LOW:
+                                        currentMatch.autonLow++;
+                                        matchDao.update(currentMatch);
+
+                                        break;
+                                    case AUTON_MIDDLE:
+                                        currentMatch.autonMiddle++;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_HIGH:
+                                        currentMatch.autonHigh++;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                }
+                                break;
+                            case 2:
+                                gamePieceButton.button.setImageResource(R.drawable.cube);
+                                break;
+                            case 3:
+                                gamePieceButton.button.setImageResource(R.drawable.nothing);
+                                gamePieceButton.imageState = 0;
+                                switch(gamePieceButton.getScoreType()) {
+                                    case AUTON_LOW:
+                                        currentMatch.autonLow--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_MIDDLE:
+                                        currentMatch.autonMiddle--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_HIGH:
+                                        currentMatch.autonHigh--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                }
+                                break;
+                        }
                     } else {
-                        gamePieceButton.cycleImage();
+                        gamePieceButton.imageState++;
+                        switch(gamePieceButton.imageState) {
+                            case 1:
+                                gamePieceButton.button.setImageResource(R.drawable.cube);
+                                switch(gamePieceButton.getScoreType()) {
+                                    case AUTON_LOW:
+                                        currentMatch.autonLow++;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_MIDDLE:
+                                        currentMatch.autonMiddle++;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_HIGH:
+                                        currentMatch.autonHigh++;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                }
+                                break;
+                            case 2:
+                                gamePieceButton.button.setImageResource(R.drawable.nothing);
+                                gamePieceButton.imageState = 0;
+                                switch(gamePieceButton.getScoreType()) {
+                                    case AUTON_LOW:
+                                        currentMatch.autonLow--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_MIDDLE:
+                                        currentMatch.autonMiddle--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                    case AUTON_HIGH:
+                                        currentMatch.autonHigh--;
+                                        matchDao.update(currentMatch);
+                                        break;
+                                }
+                                break;
+                        }
                     }
                });
         }
@@ -222,33 +324,138 @@ public class Input extends Fragment {
         // 4b. teleop grid button listeners
         for(GamePieceButton gamePieceButton : teleopButtons) {
             gamePieceButton.button.setOnClickListener(view -> {
-                if(gamePieceButton.getCycleAll()) {
-                    gamePieceButton.cycleImageAll();
+                Log.d("score", "teleop: " + currentMatch.teleopLow + " " + currentMatch.teleopMiddle + " " + currentMatch.teleopHigh);
+                if (gamePieceButton.getCycleAll()) {
+                    gamePieceButton.imageState++;
+                    switch(gamePieceButton.imageState) {
+                        case 1:
+                            gamePieceButton.button.setImageResource(R.drawable.cone);
+                            switch(gamePieceButton.getScoreType()) {
+                                case TELEOP_LOW:
+                                    currentMatch.teleopLow++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_MIDDLE:
+                                    currentMatch.teleopMiddle++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_HIGH:
+                                    currentMatch.teleopHigh++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            gamePieceButton.button.setImageResource(R.drawable.cube);
+                            break;
+                        case 3:
+                            gamePieceButton.button.setImageResource(R.drawable.nothing);
+                            gamePieceButton.imageState = 0;
+                            switch(gamePieceButton.getScoreType()) {
+                                case TELEOP_LOW:
+                                    currentMatch.teleopLow--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_MIDDLE:
+                                    currentMatch.teleopMiddle--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_HIGH:
+                                    currentMatch.teleopHigh--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                            }
+                            break;
+                    }
                 } else {
-                    gamePieceButton.cycleImage();
+                    gamePieceButton.imageState++;
+                    switch (gamePieceButton.imageState) {
+                        case 1:
+                            gamePieceButton.button.setImageResource(R.drawable.cube);
+                            switch(gamePieceButton.getScoreType()) {
+                                case TELEOP_LOW:
+                                    currentMatch.teleopLow++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_MIDDLE:
+                                    currentMatch.teleopMiddle++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_HIGH:
+                                    currentMatch.teleopHigh++;
+                                    matchDao.update(currentMatch);
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            gamePieceButton.button.setImageResource(R.drawable.nothing);
+                            gamePieceButton.imageState = 0;
+                            switch(gamePieceButton.getScoreType()) {
+                                case TELEOP_LOW:
+                                    currentMatch.teleopLow--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_MIDDLE:
+                                    currentMatch.teleopMiddle--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                                case TELEOP_HIGH:
+                                    currentMatch.teleopHigh--;
+                                    matchDao.update(currentMatch);
+                                    break;
+                            }
+                            break;
+                    }
                 }
             });
         }
 
         // 4c. tally event listeners
-        ArrayList<Tally> tallyList = new ArrayList<>();
-        tallyList.add(linksTally);
-        tallyList.add(droppedTally);
-        tallyList.add(acquiredTally);
+        linksTally.minus.setOnClickListener(v -> {
+            int x = Integer.parseInt((linksTally.text.getText().toString()));
+            x--;
+            if (x < 0) { x = 0; }
+            linksTally.text.setText(Integer.toString(x));
+            currentMatch.links = x;
+            matchDao.update(currentMatch);
+        });
+        linksTally.plus.setOnClickListener(v -> {
+            int x = Integer.parseInt((linksTally.text.getText().toString()));
+            x++;
+            linksTally.text.setText(Integer.toString(x));
+            currentMatch.links = x;
+            matchDao.update(currentMatch);
+        });
 
-        for(Tally t : tallyList) {
-            t.minus.setOnClickListener(v -> {
-                int x = Integer.parseInt((t.text.getText().toString()));
-                x--;
-                if (x < 0) { x = 0; }
-                t.text.setText(Integer.toString(x));
-            });
-            t.plus.setOnClickListener(v -> {
-                int x = Integer.parseInt((t.text.getText().toString()));
-                x++;
-                t.text.setText(Integer.toString(x));
-            });
-        }
+        droppedTally.minus.setOnClickListener(v -> {
+            int x = Integer.parseInt((droppedTally.text.getText().toString()));
+            x--;
+            if (x < 0) { x = 0; }
+            droppedTally.text.setText(Integer.toString(x));
+            currentMatch.autonDropped = x;
+            matchDao.update(currentMatch);
+        });
+        droppedTally.plus.setOnClickListener(v -> {
+            int x = Integer.parseInt((droppedTally.text.getText().toString()));
+            x++;
+            droppedTally.text.setText(Integer.toString(x));
+            currentMatch.autonDropped = x;
+            matchDao.update(currentMatch);
+        });
+
+        acquiredTally.minus.setOnClickListener(v -> {
+            int x = Integer.parseInt((acquiredTally.text.getText().toString()));
+            x--;
+            if (x < 0) { x = 0; }
+            acquiredTally.text.setText(Integer.toString(x));
+            matchDao.update(currentMatch);
+        });
+        acquiredTally.plus.setOnClickListener(v -> {
+            int x = Integer.parseInt((acquiredTally.text.getText().toString()));
+            x++;
+            acquiredTally.text.setText(Integer.toString(x));
+            matchDao.update(currentMatch);
+        });
 
         // 4d. teleop seek bar event listeners
         teleopstrategyseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -258,10 +465,16 @@ public class Input extends Fragment {
                     strategyTitle.setText("Please Select An Option!");
                 } else if(i == 1) {
                     strategyTitle.setText("Feeding");
+                    currentMatch.feedPlaceBoth = 0;
+                    matchDao.update(currentMatch);
                 } else if(i == 2) {
                     strategyTitle.setText("Placing");
+                    matchDao.update(currentMatch);
+                    currentMatch.feedPlaceBoth = 1;
                 } else if (i == 3){
                     strategyTitle.setText("Both");
+                    matchDao.update(currentMatch);
+                    currentMatch.feedPlaceBoth = 2;
                 }
             }
 
@@ -278,18 +491,24 @@ public class Input extends Fragment {
 
         // 4e. auton stop light event listeners
         autonRed.setOnClickListener(view -> {
+            currentMatch.autonCharge = 0;
+            matchDao.update(currentMatch);
             autonRed.setImageResource(R.drawable.red);
             autonYellow.setImageResource(R.drawable.yellow_trans);
             autonGreen.setImageResource(R.drawable.green_trans);
         });
 
         autonYellow.setOnClickListener(view -> {
+            currentMatch.autonCharge = 1;
+            matchDao.update(currentMatch);
             autonRed.setImageResource(R.drawable.red_trans);
             autonYellow.setImageResource(R.drawable.yellow);
             autonGreen.setImageResource(R.drawable.green_trans);
         });
 
         autonGreen.setOnClickListener(view -> {
+            currentMatch.autonCharge = 2;
+            matchDao.update(currentMatch);
             autonRed.setImageResource(R.drawable.red_trans);
             autonYellow.setImageResource(R.drawable.yellow_trans);
             autonGreen.setImageResource(R.drawable.green);
@@ -297,21 +516,48 @@ public class Input extends Fragment {
 
         // 4f. endgame stop light event listeners
         endgameRed.setOnClickListener(view -> {
+            currentMatch.teleopCharge = 0;
+            matchDao.update(currentMatch);
             endgameRed.setImageResource(R.drawable.red);
             endgameYellow.setImageResource(R.drawable.yellow_trans);
             endgameGreen.setImageResource(R.drawable.green_trans);
         });
 
         endgameYellow.setOnClickListener(view -> {
+            currentMatch.teleopCharge = 1;
+            matchDao.update(currentMatch);
             endgameRed.setImageResource(R.drawable.red_trans);
             endgameYellow.setImageResource(R.drawable.yellow);
             endgameGreen.setImageResource(R.drawable.green_trans);
         });
 
         endgameGreen.setOnClickListener(view -> {
+            currentMatch.teleopCharge = 2;
+            matchDao.update(currentMatch);
             endgameRed.setImageResource(R.drawable.red_trans);
             endgameYellow.setImageResource(R.drawable.yellow_trans);
             endgameGreen.setImageResource(R.drawable.green);
+        });
+
+       coopertitioncheckbox.setOnClickListener(view -> {
+           if(coopertitioncheckbox.isChecked()) {
+               currentMatch.coop = 1;
+           }
+           else {
+               currentMatch.coop = 0;
+           }
+           matchDao.update(currentMatch);
+       });
+
+
+        parkedcheckbox.setOnClickListener(view -> {
+            if(parkedcheckbox.isChecked()) {
+                currentMatch.teleopPark = 1;
+            }
+            else {
+                currentMatch.teleopPark = 0;
+            }
+            matchDao.update(currentMatch);
         });
 
         // 4g. advance to QRPage on finish button press

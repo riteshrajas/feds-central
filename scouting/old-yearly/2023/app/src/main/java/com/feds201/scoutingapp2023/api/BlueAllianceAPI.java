@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BlueAllianceAPI {
@@ -26,8 +27,9 @@ public class BlueAllianceAPI {
         params.put("X-TBA-Auth-Key", TBAAuthKey);
         String paramsStr = getParamsString(params);
         String getURL = BLUE_ALLIANCE_API_URI + "event/" + eventCode + "/matches?" + paramsStr;
+//        Log.d("json", getURL);
         String getRequest = sendGetRequest(getURL);
-        Log.d("json", "REQUEST SENT");
+//        Log.d("json", "REQUEST SENT");
         return getRequest;
     }
 
@@ -63,6 +65,48 @@ public class BlueAllianceAPI {
         }
         return qualsString;
     }
+
+    public static ArrayList<String[]> TeamNumberMatchNumberMatchType(String json, String colorCode) {
+        Log.d("json", colorCode);
+        String allianceColor = colorCode.contains("R") ? "red" : "blue";
+        int allianceNumber = Integer.parseInt(colorCode.substring(1));
+        ArrayList<String[]> allStringsList = new ArrayList<>();
+
+        // TODO: man do i hate how much code is in between the try-catch
+        try
+        {
+            JSONArray ja = new JSONArray(json);
+            int numberOfMatches = ja.length();
+
+            for(int i = 0; i < numberOfMatches; i++) {
+
+                String[] sArr = new String[3];
+
+                JSONObject jo = new JSONArray(json).getJSONObject(i);
+                String matchType = jo.getString("comp_level");
+                String matchNumber = String.valueOf(jo.getInt("match_number"));
+                String teamCode = jo.getJSONObject("alliances")
+                        .getJSONObject(allianceColor)
+                        .getJSONArray("team_keys")
+                        .getString(allianceNumber-1);
+                String teamNumber = teamCode.substring(3);
+
+                sArr[0] = teamNumber;
+                sArr[1] = matchNumber;
+                sArr[2] = matchType;
+
+                allStringsList.add(sArr);
+            }
+            return allStringsList;
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
     /**
      * Helper function to convert the TBA match type, see <a href="https://www.thebluealliance.com/apidocs/v3">the api docs under match at the bottom</a> to my type.

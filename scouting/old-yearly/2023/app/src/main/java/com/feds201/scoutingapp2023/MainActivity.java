@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,20 +16,26 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.feds201.scoutingapp2023.sql.AppDatabase;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
+    public static AppDatabase app_db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        app_db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "matches-database").allowMainThreadQueries().build();
+
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 600) {
             setTheme(R.style.Theme_Tablet);
         } else {
             setTheme(R.style.Theme_Phone);
         }
+
         super.onCreate(savedInstanceState);
         hideSystemBars();
         setContentView(R.layout.activity_main);

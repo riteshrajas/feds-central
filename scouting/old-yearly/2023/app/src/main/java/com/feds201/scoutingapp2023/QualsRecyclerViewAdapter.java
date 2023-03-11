@@ -51,7 +51,7 @@ public class QualsRecyclerViewAdapter extends RecyclerView.Adapter<QualsRecycler
 
         @Override
         public void onClick(View view) {
-            //if (mClickListener != null) mClickListener.onItemClick(getBindingAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(getAdapterPosition());
         }
     }
 
