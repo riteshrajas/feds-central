@@ -3,6 +3,7 @@ package frc.robot.commands.telescope;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class TelescopeManualArm extends CommandBase {
@@ -22,6 +23,12 @@ public class TelescopeManualArm extends CommandBase {
 
     @Override
     public void execute() {
-        m_telescopingSubsystem.manuallyMove(-m_input.getAsDouble());  // negative makes up go out and down go in for the left stick y value
+        double plant = m_input.getAsDouble();
+        if(plant > 0) {
+            m_telescopingSubsystem.manuallyMove(-plant * TelescopeConstants.kManualSpeedOut);  // negative makes up go out and down go in for the left stick y value
+        } else {
+            m_telescopingSubsystem.manuallyMove(-plant * TelescopeConstants.kManualSpeedIn);
+        }
+        
     }
 }

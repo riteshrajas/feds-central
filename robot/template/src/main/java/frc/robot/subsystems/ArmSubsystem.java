@@ -38,12 +38,14 @@ public class ArmSubsystem extends SubsystemBase {
         rotateArmMain.configFactoryDefault();
         rotateArmFollower.configFactoryDefault();
 
+        
+        rotateArmMain.setSelectedSensorPosition(0);
+
         rotateArmMain.configForwardSoftLimitThreshold(ArmConstants.kForwardSoftLimit, 0);
         rotateArmMain.configReverseSoftLimitThreshold(ArmConstants.kReverseSoftLimit, 0);
         rotateArmMain.configForwardSoftLimitEnable(true, 0);
         rotateArmMain.configReverseSoftLimitEnable(true, 0);
 
-        rotateArmMain.setSelectedSensorPosition(0);
 
         rotateArmMain.config_kP(0, ArmConstants.kPUp, 0); // TUNE THIS
         rotateArmMain.config_kI(0, ArmConstants.kIUp, 0);

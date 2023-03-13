@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -20,11 +21,13 @@ import frc.lib.math.Conversions;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PowerConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.arm.WaitUntilFullyRotate;
 
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
+import frc.robot.commands.drive.preciseSwerve;
 import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.DeployIntakeGroup;
 import frc.robot.commands.intake.RetractIntake;
@@ -44,6 +47,7 @@ import frc.robot.commands.auton.placeConeAndCharge;
 import frc.robot.commands.auton.placeConeAuton;
 import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
+import frc.robot.commands.claw.kickOutPiece;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystemWithPID;
@@ -76,6 +80,8 @@ public class RobotContainer {
     SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
     public RobotContainer() {
+        CameraServer.startAutomaticCapture();
+
         s_vision = new VisionSubsystem();
         s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
                           IntakeConstants.kIntakeBlueLeftWheelMotor, false);
@@ -86,7 +92,7 @@ public class RobotContainer {
         s_claw = new ClawSubsystemWithPID();
 
         m_autonChooser.setDefaultOption("Example PP Swerve", new placeConeAndCharge(s_swerve, s_claw, s_telescope, s_arm));
-        m_autonChooser.addOption("Example Swerve", new placeConeAuton(s_swerve, s_claw, s_telescope, s_arm));
+        m_autonChooser.addOption("Example Swerve", new placeConeAuton(s_claw, s_telescope, s_arm));
         // m_autonChooser.addOption("GetOnBridge", new GetOnBridge(s_swerve));
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
@@ -166,11 +172,20 @@ public class RobotContainer {
         m_operatorController.povLeft()
                 .onTrue(new ParallelCommandGroup(
                         new RetractTelescope(s_telescope),
-                        new SequentialCommandGroup(new WaitCommand(3.3),
+                        new SequentialCommandGroup(new WaitCommand(2.0),
                                 s_arm.setPosition(ArmConstants.kArmHome))));
 
         m_operatorController.rightTrigger().onTrue(new OpenClaw(s_claw));
         m_operatorController.rightBumper().onTrue(new CloseClaw(s_claw));
+        //m_driveController.rightTrigger().onTrue(new OpenClaw(s_claw));
+        //m_driveController.rightBumper().onTrue(new CloseClaw( s_claw));
+        m_operatorController.leftTrigger().onTrue(new kickOutPiece(s_claw));
+
+        m_driveController.povUp().whileTrue(new TeleopSwerve(s_swerve, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        m_driveController.povDown().whileTrue(new TeleopSwerve(s_swerve, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        m_driveController.povLeft().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
+        m_driveController.povRight().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
+        //m_driveController.leftBumper().onTrue(new RetractIntake(s_intakeBlue));*/
 
         /*m_operatorController.leftTrigger().onTrue(
             new RunOrientator(s_orientator)
@@ -183,8 +198,8 @@ public class RobotContainer {
             .andThen(new StopOrientator(s_orientator)));*/
 
 
-        m_operatorController.a().onTrue(s_arm.slowlyGoUp());
-        m_operatorController.b().onTrue(s_arm.slowlyGoDown());
+        //m_operatorController.a().onTrue(s_arm.slowlyGoUp());
+        //m_operatorController.b().onTrue(s_arm.slowlyGoDown());
 
     }
 

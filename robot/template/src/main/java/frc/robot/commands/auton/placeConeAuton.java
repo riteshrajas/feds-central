@@ -7,6 +7,7 @@ import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
 import frc.robot.commands.telescope.ExtendTelescope;
 import frc.robot.commands.telescope.RetractTelescope;
+import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystemWithPID;
@@ -25,12 +26,13 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class placeConeAuton extends SequentialCommandGroup {
-    public placeConeAuton(SwerveSubsystem s_Swerve, ClawSubsystemWithPID s_claw, TelescopeSubsystem s_telescope, ArmSubsystem s_arm){
+    public placeConeAuton(ClawSubsystemWithPID s_claw, TelescopeSubsystem s_telescope, ArmSubsystem s_arm){
         // TrajectoryConfig config =
         //     new TrajectoryConfig(
         //             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -65,22 +67,16 @@ public class placeConeAuton extends SequentialCommandGroup {
         //         s_Swerve);
 
 
-        addCommands(new ParallelCommandGroup(new ParallelCommandGroup(
-            s_arm.setPosition(ArmConstants.kArmPutHigh),
-            new SequentialCommandGroup(
-                            new WaitCommand(1),
-                            new ExtendTelescope(s_telescope,
-                                            TelescopeConstants.kTelescopeExtendedMax)),
+        addCommands
+        (new ParallelCommandGroup
+                (s_arm.setPosition(ArmConstants.kArmAutonPosition),
+                    new SequentialCommandGroup(
+                        new WaitCommand(1),
+                        new ExtendTelescope(s_telescope,TelescopeConstants.kTelescopeExtendedMax), 
+                        new ParallelDeadlineGroup(new TimerDeadline(0.5), new OpenClaw(s_claw)))
                             // wait time for opening claw
-                            new OpenClaw(s_claw)), new SequentialCommandGroup(new WaitCommand(6),new SequentialCommandGroup(
-                                new RetractTelescope(s_telescope),
-                                new ParallelCommandGroup(
-                                                new WaitCommand(1),s_arm.setPosition(ArmConstants.kArmHome)
-                                                ),
-                                                // wait time for opening claw
-                                                new CloseClaw(s_claw)))
-
-
-        ));
+                            
+                )
+        );
     }
 }

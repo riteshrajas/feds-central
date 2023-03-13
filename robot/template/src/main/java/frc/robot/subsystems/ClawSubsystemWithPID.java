@@ -15,14 +15,14 @@ public class ClawSubsystemWithPID extends SubsystemBase{
     private final double kP = 0.0;
     private final double kI = 0;
     private final double kD = 0.0;
-    private final double kF = 0.5;
+    private final double kF = 0.4;
     private final int kIzone = 0;
     private final double kPeakOutput = 0.40;
     private final int kTimeoutMs = 30;
 
     private final TalonFX m_clawMotor;
 
-    private final double kOpenClawPosition = -Conversions.degreesToFalcon(30, 25);
+    private final double kOpenClawPosition = -Conversions.degreesToFalcon(40, 25);
     private final double kBallClawPosition = 254;
     private final double kConeClawPosition = 100;
 
@@ -50,8 +50,8 @@ public class ClawSubsystemWithPID extends SubsystemBase{
         motor.configVoltageCompSaturation(12);
         motor.enableVoltageCompensation(true);
         
-        motor.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(50, 25));
-        motor.configReverseSoftLimitThreshold(-Conversions.degreesToFalcon(50, 25));
+        motor.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(70, 25));
+        motor.configReverseSoftLimitThreshold(-Conversions.degreesToFalcon(70, 25));
         motor.configForwardSoftLimitEnable(true, 0);
         motor.configReverseSoftLimitEnable(true, 0);
 
@@ -70,6 +70,10 @@ public class ClawSubsystemWithPID extends SubsystemBase{
         m_clawMotor.set(TalonFXControlMode.Position, kOpenClawPosition);
     }
 
+    public void kickOutClaw(){
+        m_clawMotor.set(TalonFXControlMode.Position, ClawConstants.kKickOutPosition);
+    }
+
     public void holdBall() {
         m_clawMotor.set(TalonFXControlMode.Position, kBallClawPosition);
     }
@@ -80,6 +84,10 @@ public class ClawSubsystemWithPID extends SubsystemBase{
 
     public void stopClaw() {
         m_clawMotor.set(TalonFXControlMode.PercentOutput, 0);
+    }
+
+    public void closeClaw() {
+        m_clawMotor.set(TalonFXControlMode.PercentOutput, ClawConstants.kClosePower);
     }
 
     public double getClawPosition(){

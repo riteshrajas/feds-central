@@ -80,8 +80,8 @@ public class TelescopeSubsystem extends SubsystemBase{
         armTelescopeMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
 
-    public void manuallyMove(double scalar) {
-        armTelescopeMotor.set(ControlMode.PercentOutput, TelescopeConstants.kManualSpeed * scalar);
+    public void manuallyMove(double suppliedPower) {
+        armTelescopeMotor.set(ControlMode.PercentOutput, suppliedPower);
     }
     
     public void periodic(){

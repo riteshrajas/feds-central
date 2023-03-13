@@ -20,13 +20,12 @@ public class Constants {
 
 
   public static final class VisionConstants {
-    public static final double limelightOffset = .13;
+    public static final double limelightOffset = .279;
     public static final double limelightheight = 1.2;
-    public static final double limelightToTopArmOffset = .24;
-    public static final double lowTargetHeight = 1.5;
-    public static final double highTargetHeight = 2.6;
-    public static final double limelightPitchRadians = .67;
-
+    //public static final double limelightToTopArmOffset = .24;
+    public static final double lowTargetHeight = 0.585;
+    public static final double highTargetHeight = 1.10;
+    public static final double limelightPitchRadians = 1.09;
     public static final double degreesToEncoderCounts = 175;
 
     public static final int kIMG_HEIGHT = 640;
@@ -122,7 +121,9 @@ public class Constants {
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
     public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
-    public static final double kChargingStationTime = 2; // seconds
+    public static final double kChargingStationTime = 3.05; // seconds
+
+    public static final double kpreciseSwerveSpeed = 0.2;
 
     /* Module Specific Constants */
     /* Front Left Module - Module 0 */
@@ -176,6 +177,8 @@ public class Constants {
     public static final double kPXController = 1;
     public static final double kPYController = 1;
     public static final double kPThetaController = 1;
+
+    public static final double kArmAutonPos = 79;
 
     /* Constraint for the motion profilied robot angle controller */
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
@@ -251,19 +254,21 @@ public class Constants {
     
     // setpoints
     public static final double kArmHome = 0;
-    public static final double kArmPutHigh = Conversions.degreesToFalcon(90.0, ArmConstants.kArmGearRatio);
-    public static final double kArmPutMiddle = Conversions.degreesToFalcon(73.0, ArmConstants.kArmGearRatio); // TODO: tune these
+    public static final double kArmPutHigh = Conversions.degreesToFalcon(84.0, ArmConstants.kArmGearRatio);
+    public static final double kArmPutMiddle = Conversions.degreesToFalcon(69.0, ArmConstants.kArmGearRatio); // TODO: tune these
     public static final double kArmPutLow = Conversions.degreesToFalcon(40, kArmGearRatio);
-    public static final double kArmGrabCone = Conversions.degreesToFalcon(15, kArmGearRatio);
+    public static final double kArmGrabCone = Conversions.degreesToFalcon(25, kArmGearRatio);
+    public static final double kArmAutonPosition = Conversions.degreesToFalcon(77.0, ArmConstants.kArmGearRatio);
+
 
 
     public static final double kArmGoalThreshold = Conversions.degreesToFalcon(5, ArmConstants.kArmGearRatio);
-    public static final double kArmPickConeLeft = Conversions.degreesToFalcon(20, ArmConstants.kArmGearRatio);
-    public static final double kArmPickConeRight = Conversions.degreesToFalcon(25, ArmConstants.kArmGearRatio);
-    public static final double kArmPickCube = Conversions.degreesToFalcon(22.5, ArmConstants.kArmGearRatio);
+    //public static final double kArmPickConeLeft = Conversions.degreesToFalcon(20, ArmConstants.kArmGearRatio);
+    //public static final double kArmPickConeRight = Conversions.degreesToFalcon(25, ArmConstants.kArmGearRatio);
+    //public static final double kArmPickCube = Conversions.degreesToFalcon(22.5, ArmConstants.kArmGearRatio);
 
     public static final double kForwardSoftLimit = Conversions.degreesToFalcon(100, ArmConstants.kArmGearRatio);
-    public static final double kReverseSoftLimit = 0;
+    public static final double kReverseSoftLimit = Conversions.degreesToFalcon(-1, kArmGearRatio);
   }
 
   public static final class TelescopeConstants {
@@ -281,12 +286,13 @@ public class Constants {
     public static final double kTelescopeOffset = 0;
     public static final double kTelescopeExtendedMax = 900_000; // FIXME: CONFIG THIS
     public static final double kTelescopeExtendedMiddle = 400_000; // FIXME: CONFIG THIS
-    public static final double kTelescopeGrabCone = 200_000;
+    public static final double kTelescopeGrabCone = 275_000;
     public static final double kTelescopeThreshold = 1000;
     public static final double kForwardTelescopeSoftLimit = 1_000_000;
     public static final double kReverseTelescopeSoftLimit = -1;
 
-    public static final double kManualSpeed = 0.40;
+    public static final double kManualSpeedOut = 0.93;
+    public static final double kManualSpeedIn = 0.93;
 
     public static final Rotation2d kThreshold = Rotation2d.fromDegrees(3);
   }
@@ -303,12 +309,15 @@ public class Constants {
 
     // set points
     public static final double kOpenClawPosition = 480;
-    public static final double kBallClawPosition = 254;
+    public static final double kKickOutPosition = 254;
     public static final double kConeClawPosition = 100;
 
     public static final double kHoldBallSpeed = -0.1; // tune these
     public static final double kHoldConeSpeed = -0.1;
     public static final double kExtendSpeed = 0.35;
+    public static final double kClosePower  = 0.1;
+
+    public static final double kCloseSeconds = 0.2;
   }
 
   public enum coneOrientation{
