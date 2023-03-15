@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
-import frc.robot.Constants.ClawConstants;
+import frc.robot.constants.ClawConstants;
 
 public class ClawSubsystemWithPID extends SubsystemBase{
     private final int kPIDLoopIdx = 0;

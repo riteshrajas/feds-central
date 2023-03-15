@@ -3,7 +3,7 @@ package frc.robot.commands.telescope;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.TelescopeConstants;
+import frc.robot.constants.TelescopeConstants;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class TelescopeManualArm extends CommandBase {

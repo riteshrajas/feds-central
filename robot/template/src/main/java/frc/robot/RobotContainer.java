@@ -18,16 +18,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.math.Conversions;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PowerConstants;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.TelescopeConstants;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.PowerConstants;
+import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.TelescopeConstants;
+import frc.robot.constants.OIConstants;
 import frc.robot.commands.arm.WaitUntilFullyRotate;
 
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
-import frc.robot.commands.drive.preciseSwerve;
+import frc.robot.commands.drive.PreciseSwerve;
 import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.DeployIntakeGroup;
 import frc.robot.commands.intake.RetractIntake;
@@ -73,9 +74,8 @@ public class RobotContainer {
     public final static PowerDistribution m_PowerDistribution = new PowerDistribution(PowerConstants.kPCMChannel,
             ModuleType.kRev);
 
-    CommandXboxController m_driveController = new CommandXboxController(Constants.OIConstants.kDriveControllerPort);
-    CommandXboxController m_operatorController = new CommandXboxController(
-            Constants.OIConstants.kOperatorControllerPort);
+    CommandXboxController m_driveController = new CommandXboxController(OIConstants.kDriveControllerPort);
+    CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
     SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 

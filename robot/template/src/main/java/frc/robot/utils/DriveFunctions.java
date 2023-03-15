@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.SwerveConstants;
+import frc.robot.constants.SwerveConstants;
 
 public class DriveFunctions {
 	public final static double deadzone(double input, double threshold) {

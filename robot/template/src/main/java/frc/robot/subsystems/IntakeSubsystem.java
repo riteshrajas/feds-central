@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.IntakeConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -57,17 +57,17 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void rotateIntakeForwards() {
         if(invert) {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -Constants.IntakeConstants.kIntakeDeploySpeed);
+            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeDeploySpeed);
         } else {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, Constants.IntakeConstants.kIntakeDeploySpeed);
+            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeDeploySpeed);
         }
     }
 
     public void rotateIntakeBackwards() {
         if(invert) {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -Constants.IntakeConstants.kIntakeRetractSpeed);
+            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeRetractSpeed);
         } else {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, Constants.IntakeConstants.kIntakeRetractSpeed);
+            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeRetractSpeed);
         }
     }
 
@@ -76,11 +76,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runIntakeWheelsIn() {
-        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, Constants.IntakeConstants.kIntakeWheelSpeed);
+        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeWheelSpeed);
     }
 
     public void runIntakeWheelsOut() {
-        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, -Constants.IntakeConstants.kIntakeWheelSpeed);
+        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeWheelSpeed);
     }
 
     public void stopIntakeWheels() {

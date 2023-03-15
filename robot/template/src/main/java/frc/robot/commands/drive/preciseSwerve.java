@@ -1,6 +1,6 @@
 package frc.robot.commands.drive;
 
-import frc.robot.Constants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -14,14 +14,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
-public class preciseSwerve extends CommandBase {    
+public class PreciseSwerve extends CommandBase {    
     private SwerveSubsystem s_Swerve;    
     private double translationSup;
     //private double strafeSup;
     private double rotationSup;
     private BooleanSupplier robotCentricSup;
 
-    public preciseSwerve(SwerveSubsystem s_Swerve, double translationSup,double rotationSup, BooleanSupplier robotCentricSup) {
+    public PreciseSwerve(SwerveSubsystem s_Swerve, double translationSup,double rotationSup, BooleanSupplier robotCentricSup) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -47,3 +47,5 @@ public class preciseSwerve extends CommandBase {
                       });
     }
 }
+
+

@@ -2,7 +2,7 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class DeployIntake extends CommandBase {

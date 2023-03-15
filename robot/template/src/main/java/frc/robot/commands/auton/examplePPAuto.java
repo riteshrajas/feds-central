@@ -1,6 +1,6 @@
 package frc.robot.commands.auton;
 
-import frc.robot.Constants;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -37,10 +37,10 @@ public class examplePPAuto extends SequentialCommandGroup {
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
                 s_Swerve::getPose, // Pose2d supplier
                 s_Swerve::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-                Constants.SwerveConstants.swerveKinematics, // SwerveDriveKinematics
-                new PIDConstants(Constants.SwerveConstants.driveKP, Constants.SwerveConstants.driveKI, Constants.SwerveConstants.driveKD), // PID constants to correct for translation error (used to create the X
+                SwerveConstants.swerveKinematics, // SwerveDriveKinematics
+                new PIDConstants(SwerveConstants.driveKP, SwerveConstants.driveKI, SwerveConstants.driveKD), // PID constants to correct for translation error (used to create the X
                                                  // and Y PID controllers)
-                new PIDConstants(Constants.SwerveConstants.angleKP, Constants.SwerveConstants.angleKI, Constants.SwerveConstants.angleKD), // PID constants to correct for rotation error (used to create the
+                new PIDConstants(SwerveConstants.angleKP, SwerveConstants.angleKI, SwerveConstants.angleKD), // PID constants to correct for rotation error (used to create the
                                                  // rotation controller)
                 s_Swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
                 eventMap,

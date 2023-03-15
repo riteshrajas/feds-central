@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.TelescopeConstants;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.TelescopeConstants;
 import frc.robot.utils.DriveFunctions;
 import frc.robot.RobotContainer;
 

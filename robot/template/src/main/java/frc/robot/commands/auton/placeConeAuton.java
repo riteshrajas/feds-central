@@ -1,8 +1,7 @@
 package frc.robot.commands.auton;
 
-import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.TelescopeConstants;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.TelescopeConstants;
 import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
 import frc.robot.commands.telescope.ExtendTelescope;

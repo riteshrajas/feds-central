@@ -9,8 +9,8 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmControl extends CommandBase {
@@ -59,7 +59,7 @@ public class ArmControl extends CommandBase {
 
     private static double modifyAxis(double value, int exponent) {
         // Deadband
-        value = MathUtil.applyDeadband(value, Constants.stickDeadbandDrive);
+        value = MathUtil.applyDeadband(value, OIConstants.kDriverDeadzone);
 
         value = Math.copySign(Math.pow(value, exponent), value);
 

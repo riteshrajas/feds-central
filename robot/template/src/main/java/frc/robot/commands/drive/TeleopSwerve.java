@@ -1,6 +1,8 @@
 package frc.robot.commands.drive;
 
-import frc.robot.Constants;
+import frc.robot.constants.OIConstants;
+import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -36,14 +38,14 @@ public class TeleopSwerve extends CommandBase {
         //SlewRateLimiter translationLimiter = new SlewRateLimiter(0.5);
         //SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
         
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadbandDrive);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadbandDrive);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadbandTurn);
+        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), OIConstants.kDriverDeadzone);
+        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), OIConstants.kDriverDeadzone);
+        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), OIConstants.kTurnDeadzone);
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxSpeed), 
-            rotationVal * Constants.SwerveConstants.maxAngularVelocity, 
+            new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxSpeed), 
+            rotationVal * SwerveConstants.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true
         );

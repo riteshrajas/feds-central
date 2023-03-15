@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.subsystems.VisionSubsystem;
 // import frc.robot.utils.ConeDetection;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -20,8 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.coneOrientation;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ArmConstants.ConeOrientation;
 import frc.lib.math.Conversions;
 import frc.robot.subsystems.VisionSubsystem;
 

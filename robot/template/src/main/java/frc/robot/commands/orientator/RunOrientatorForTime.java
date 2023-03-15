@@ -1,6 +1,6 @@
 package frc.robot.commands.orientator;
 
-import frc.robot.Constants.OrientatorConstants;
+import frc.robot.constants.OrientatorConstants;
 import frc.robot.subsystems.OrientatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
