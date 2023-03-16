@@ -124,9 +124,18 @@ public class RobotContainer {
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
+        m_driveController.povUp().whileTrue(new TeleopSwerve(s_swerve, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        m_driveController.povDown().whileTrue(new TeleopSwerve(s_swerve, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        m_driveController.povLeft().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
+        m_driveController.povRight().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
+
         //m_driveController.leftTrigger().onTrue(new DeployIntakeGroup(s_intakeBlue, s_orientator));
         //m_driveController.leftBumper().onTrue(new RetractIntake(s_intakeBlue));
+        //m_driveController.leftBumper().onTrue(new RetractIntake(s_intakeBlue));*/
+        //m_driveController.rightTrigger().onTrue(new OpenClaw(s_claw));
+        //m_driveController.rightBumper().onTrue(new CloseClaw( s_claw));
 
+        
 
         // operator
         // r-bumper: claw open close
@@ -177,15 +186,7 @@ public class RobotContainer {
 
         m_operatorController.rightTrigger().onTrue(new OpenClaw(s_claw));
         m_operatorController.rightBumper().onTrue(new CloseClaw(s_claw));
-        //m_driveController.rightTrigger().onTrue(new OpenClaw(s_claw));
-        //m_driveController.rightBumper().onTrue(new CloseClaw( s_claw));
         m_operatorController.leftTrigger().onTrue(new kickOutPiece(s_claw));
-
-        m_driveController.povUp().whileTrue(new TeleopSwerve(s_swerve, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
-        m_driveController.povDown().whileTrue(new TeleopSwerve(s_swerve, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
-        m_driveController.povLeft().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
-        m_driveController.povRight().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kpreciseSwerveSpeed, () -> 0, () -> true));
-        //m_driveController.leftBumper().onTrue(new RetractIntake(s_intakeBlue));*/
 
         /*m_operatorController.leftTrigger().onTrue(
             new RunOrientator(s_orientator)
