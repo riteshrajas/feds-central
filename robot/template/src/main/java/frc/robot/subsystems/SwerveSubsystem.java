@@ -26,11 +26,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public VisionSubsystem limelight;
 
-    private boolean gyroPitchChanged = false;
-    private double previousGyroPitch = 0;
-
-    private Pose2d currentTargetVelocity;
-
     public SwerveSubsystem(VisionSubsystem limelight) {
         gyro = new Pigeon2(SwerveConstants.pigeonID);
         gyro.configFactoryDefault();
@@ -57,17 +52,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        //Pose2d pose = getPose();
-
         double x = translation.getX();
         double y = translation.getY();
-
-        //currentTargetVelocity = DriveFunctions.accelerationControls(x, y, currentTargetVelocity.getX(), currentTargetVelocity.getY());
-
         SwerveModuleState[] swerveModuleStates = SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        //currentTargetVelocity.getX(),
-                        //currentTargetVelocity.getY(),
                         x,
                         y,
                         rotation,
@@ -191,21 +179,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
     }*/
-
-
-    public double getGyroPitch() {
-        return gyro.getPitch();
-    }
-
-    public double getGyroRoll() {
-        return gyro.getRoll();
-    }
-
-    public double getGyroYaw() {
-        return gyro.getYaw();
-    }
-
-
     public void refreshVision() {
         limelight.updateResultToLatest();
         if (limelight.hasTarget()) {
@@ -220,23 +193,22 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
 
-    public boolean gyroPitchHasChanged() {
-        return gyroPitchChanged;
+    public double getGyroPitch() {
+        return gyro.getPitch();
     }
 
+    public double getGyroRoll() {
+        return gyro.getRoll();
+    }
+
+    public double getGyroYaw() {
+        return gyro.getYaw();
+    }
+    
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
         refreshVision();
-
-        if(previousGyroPitch != getGyroPitch()) {
-            gyroPitchChanged = true;
-        } else {
-            gyroPitchChanged = false;
-        }
-
-        previousGyroPitch = getGyroPitch();
-        
 
         // for (SwerveModule mod : mSwerveMods) {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
