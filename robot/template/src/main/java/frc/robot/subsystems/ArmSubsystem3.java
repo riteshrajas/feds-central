@@ -19,20 +19,10 @@ import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.TelescopeConstants;
 import frc.robot.utils.DriveFunctions;
-import frc.robot.RobotContainer;
 
-public class ArmSubsystem2 extends SubsystemBase {
-    private final TalonFX m_armMain = new TalonFX(ArmConstants.kArmMotor1); 
+public class ArmSubsystem3 extends SubsystemBase {
+    private final TalonFX m_armMain = new TalonFX(ArmConstants.kArmMotor1);
     private final TalonFX m_armFollower = new TalonFX(ArmConstants.kArmMotor2);
-    private final TalonFX m_telescopeMotor = new TalonFX(TelescopeConstants.kTelescopeMotor);
-    // private final ConeDetection coneDetector;
-
-    // private boolean settingArmPositionUp = false;
-    // private boolean armDoneRotating = false;
-    // private double targetArmPosition = ArmConstants.kArmHome;
-
-    private final PIDController m_extensionPIDController = new PIDController(TelescopeConstants.kP,
-            TelescopeConstants.kI, TelescopeConstants.kD);
     private final Constraints m_rotationConstraints = new Constraints(ArmConstants.cruiseVelocityAccelDown,
             ArmConstants.cruiseVelocityAccelDown); // FIXME: fix this
     private final PIDController m_rotationPIDController = new PIDController(ArmConstants.kPUp, ArmConstants.kIUp,
@@ -42,16 +32,12 @@ public class ArmSubsystem2 extends SubsystemBase {
 
     private double angleSetpointRadians;
     private boolean isOpenLoopRotation = true;
-    private boolean isOpenLoopExtension = true;
-    private double extensionSetpoint;
 
-    public ArmSubsystem2() {
+    public ArmSubsystem3() {
         m_armMain.configFactoryDefault();
         m_armFollower.configFactoryDefault();
 
         m_rotationPIDController.enableContinuousInput(0, 2 * Math.PI);
-        m_telescopeMotor.configFactoryDefault();
-        m_telescopeMotor.setNeutralMode(NeutralMode.Brake);
         setAngleSetpointRadians(getArmAngleRadians());
         m_rotationPIDController.setTolerance(TelescopeConstants.kThreshold.getRadians());
         isOpenLoopRotation = false;
@@ -105,18 +91,6 @@ public class ArmSubsystem2 extends SubsystemBase {
         m_armMain.configSupplyCurrentLimit(rotateArmMainCurrentLimit);
     }
 
-    public double getExtensionSetpoint() {
-        return extensionSetpoint;
-    }
-
-    public void setExtensionSetpoint(double setpoint) {
-        this.extensionSetpoint = setpoint;
-    }
-
-    public PIDController getExtensionPIDController() {
-        return this.m_extensionPIDController;
-    }
-
     public PIDController getRotationPIDController() {
         return this.m_rotationPIDController;
     }
@@ -128,61 +102,33 @@ public class ArmSubsystem2 extends SubsystemBase {
             }
         } else {
             isOpenLoopRotation = true;
+            m_armMain.set(ControlMode.PercentOutput, percent);
         }
     }
 
-    public Command extendToCommand(double length) {
-        m_extensionPIDController.setTolerance(length);
-        return run(() -> setExtensionSetpoint(length))
-                .until(m_extensionPIDController::atSetpoint)
-                .andThen(runOnce(() -> holdExtension()));
+    public Command rotateToCommand(Rotation2d angle) {
+        return run(() -> setAngleSetpointRadians(angle.getRadians()));
     }
 
-    public Command extendAndRotateCommand(Rotation2d angle, double length) {
-        m_extensionPIDController.setTolerance(length);
-        return run(() -> setExtensionAndRotation(angle.getRadians(), length))
-                .until(this::isExtenstionAndRotationAtSetpoint)
-                .andThen(runOnce(() -> holdExtension()));
-    }
-
-    public void setExtensionAndRotation(double angle, double length) {
-        setExtensionSetpoint(length);
-        setAngleSetpointRadians(angle);
-    }
-
-    public boolean isExtenstionAndRotationAtSetpoint() {
-        return m_extensionPIDController.atSetpoint() && m_rotationPIDController.atSetpoint();
-    }
-
-    public void extend(double percent) {
-        if (percent == 0.0) {
-            if (isOpenLoopExtension) {
-                holdExtension();
-            }
-        } else {
-            isOpenLoopExtension = true;
-            m_telescopeMotor.set(ControlMode.PercentOutput, percent);
-        }
-
-    }
-
-    public void extendClosedLoop(double velocity) {
-        isOpenLoopExtension = false;
-        double feedForward = 0; // calculate feed forward
-        m_telescopeMotor.set(ControlMode.PercentOutput, DriveFunctions.voltageToPercentOutput(feedForward));
+    public boolean isRotationAtSetpoint() {
+        return m_rotationPIDController.atSetpoint();
     }
 
     public void rotateClosedLoop(double velocity) {
+        if (getArmAngleRadians() > Units.degreesToRadians(ArmConstants.kForwardSoftLimit)){
+            velocity = 0;
+        }
         isOpenLoopRotation = false;
         SmartDashboard.putNumber("OUTPUT", velocity);
-        double feedForward = m_rotationFF.calculate(getArmAngleRadians(), velocity);
+        double feedForward = m_rotationFF.calculate(getArmAngleRadians(),velocity);
         SmartDashboard.putNumber("FeedForward", feedForward);
         SmartDashboard.putNumber("Voltage", DriveFunctions.voltageToPercentOutput(feedForward));
         m_armMain.set(ControlMode.PercentOutput, DriveFunctions.voltageToPercentOutput(feedForward));
     }
 
     public double getArmAngleRadians() {
-        return Units.degreesToRadians(Conversions.falconToDegrees(m_armMain.getSelectedSensorPosition(), ArmConstants.kArmGearRatio));
+        return Units.degreesToRadians(
+                Conversions.falconToDegrees(m_armMain.getSelectedSensorPosition(), ArmConstants.kArmGearRatio));
     }
 
     public double getAngleSetpointRadians() {
@@ -194,37 +140,20 @@ public class ArmSubsystem2 extends SubsystemBase {
     }
 
     public void holdAngle() {
-        setAngleSetpointRadians(getArmAngleRadians());
-        isOpenLoopRotation = false;
-    }
-
-    public void holdExtension() {
-        setExtensionSetpoint(getCurrentExtension());
-        isOpenLoopExtension = false;
+        rotateClosedLoop(0);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Angle", Units.radiansToDegrees(getArmAngleRadians()));
         if (isOpenLoopRotation) {
-            m_rotationPIDController.reset();
+        //     m_rotationPIDController.reset();
         } else {
             SmartDashboard.putNumber("Setpoint", getAngleSetpointRadians());
             SmartDashboard.putNumber("Measurement", getArmAngleRadians());
             SmartDashboard.putNumber("Error", getAngleSetpointRadians() - getArmAngleRadians());
-            m_rotationPIDController.setSetpoint(getAngleSetpointRadians());
-            rotateClosedLoop(m_rotationPIDController.calculate(getArmAngleRadians()));
+        //     m_rotationPIDController.setSetpoint(getAngleSetpointRadians());
+        //     rotateClosedLoop(m_rotationPIDController.calculate(getArmAngleRadians()));
         }
-
-        if (isOpenLoopExtension) {
-            m_extensionPIDController.reset();
-        } else {
-            m_extensionPIDController.setSetpoint(getExtensionSetpoint());
-            extendClosedLoop(m_extensionPIDController.calculate(getCurrentExtension()));
-        }
-    }
-
-    public double getCurrentExtension() {
-        return m_telescopeMotor.getSelectedSensorPosition();
     }
 }

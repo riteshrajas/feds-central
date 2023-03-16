@@ -24,6 +24,7 @@ import frc.robot.constants.PowerConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.TelescopeConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.commands.arm.ArmRotationCommandManual;
 import frc.robot.commands.arm.WaitUntilFullyRotate;
 
 import frc.robot.commands.drive.LockWheels;
@@ -49,7 +50,8 @@ import frc.robot.commands.auton.placeConeAuton;
 import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
 import frc.robot.commands.claw.kickOutPiece;
-import frc.robot.subsystems.ArmSubsystem;
+// import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem3;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystemWithPID;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -63,7 +65,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
     private final SwerveSubsystem s_swerve;
     private final VisionSubsystem s_vision;
-    private final ArmSubsystem s_arm;
+    // private final ArmSubsystem s_arm;
+    private final ArmSubsystem3 s_arm;
     //private final OrientatorSubsystem s_orientator;
     private final TelescopeSubsystem s_telescope;
     private final IntakeSubsystem s_intakeBlue;
@@ -88,11 +91,12 @@ public class RobotContainer {
         s_telescope = new TelescopeSubsystem();
         //s_orientator = new OrientatorSubsystem();
         s_swerve = new SwerveSubsystem(s_vision);
-        s_arm = new ArmSubsystem();
+        // s_arm = new ArmSubsystem();
+        s_arm = new ArmSubsystem3();
         s_claw = new ClawSubsystemWithPID();
 
-        m_autonChooser.setDefaultOption("Example PP Swerve", new placeConeAndCharge(s_swerve, s_claw, s_telescope, s_arm));
-        m_autonChooser.addOption("Example Swerve", new placeConeAuton(s_claw, s_telescope, s_arm));
+        // m_autonChooser.setDefaultOption("Example PP Swerve", new placeConeAndCharge(s_swerve, s_claw, s_telescope, s_arm));
+        // m_autonChooser.addOption("Example Swerve", new placeConeAuton(s_claw, s_telescope, s_arm));
         // m_autonChooser.addOption("GetOnBridge", new GetOnBridge(s_swerve));
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
@@ -107,15 +111,18 @@ public class RobotContainer {
                 () -> -m_driveController.getRightX(),
                 () -> m_driveController.rightTrigger().getAsBoolean()));
 
-        s_telescope.setDefaultCommand(
-            new TelescopeManualArm(
-                s_telescope, 
-                () -> m_operatorController.getLeftY()));
+        s_arm.setDefaultCommand(new ArmRotationCommandManual(s_arm, () -> m_operatorController.getLeftY()));
 
-        configureButtonBindings();
+        // s_telescope.setDefaultCommand(
+        //     new TelescopeManualArm(
+        //         s_telescope, 
+        //         () -> m_operatorController.getRIght()));
+
+        configureDriverButtonBindings();
+        configureOperatorButtonBindings();
     }
 
-    private void configureButtonBindings() {
+    private void configureDriverButtonBindings() {
         // driver
         // right bumper: claw open close
         // r-trigger: intake open
@@ -134,9 +141,9 @@ public class RobotContainer {
         //m_driveController.leftBumper().onTrue(new RetractIntake(s_intakeBlue));*/
         //m_driveController.rightTrigger().onTrue(new OpenClaw(s_claw));
         //m_driveController.rightBumper().onTrue(new CloseClaw( s_claw));
-
-        
-
+    }
+    
+    private void configureOperatorButtonBindings() {
         // operator
         // r-bumper: claw open close
         // r-stick: precise rotation of arm
@@ -145,44 +152,44 @@ public class RobotContainer {
         // d-pad: control presents for the telescoping arm
         // l-bumper: reverse intake
 
-        m_operatorController.a()
-            .onTrue(new ParallelCommandGroup(
-                s_arm.setPosition(ArmConstants.kArmGrabCone),
-                new SequentialCommandGroup(
-                    // new WaitUntilFullyRotate(s_arm),
-                    new WaitCommand(1),
-                    new ExtendTelescope(s_telescope,
-                        TelescopeConstants.kTelescopeGrabCone))));
+        // m_operatorController.a()
+        //     .onTrue(new ParallelCommandGroup(
+        //         s_arm.setPosition(ArmConstants.kArmGrabCone),
+        //         new SequentialCommandGroup(
+        //             // new WaitUntilFullyRotate(s_arm),
+        //             new WaitCommand(1),
+        //             new ExtendTelescope(s_telescope,
+        //                 TelescopeConstants.kTelescopeGrabCone))));
         
-        m_operatorController.povUp()
-            .onTrue(new ParallelCommandGroup(
-                s_arm.setPosition(ArmConstants.kArmPutHigh),
-                new SequentialCommandGroup(
-                    // new WaitUntilFullyRotate(s_arm),
-                    new WaitCommand(1),
-                    new ExtendTelescope(s_telescope,
-                        TelescopeConstants.kTelescopeExtendedMax))));
+        // m_operatorController.povUp()
+        //     .onTrue(new ParallelCommandGroup(
+        //         s_arm.setPosition(ArmConstants.kArmPutHigh),
+        //         new SequentialCommandGroup(
+        //             // new WaitUntilFullyRotate(s_arm),
+        //             new WaitCommand(1),
+        //             new ExtendTelescope(s_telescope,
+        //                 TelescopeConstants.kTelescopeExtendedMax))));
 
-        m_operatorController.povRight() 
-            .onTrue(new ParallelCommandGroup(
-                        s_arm.setPosition(ArmConstants.kArmPutMiddle),
-                        new SequentialCommandGroup(
-                                new WaitCommand(1),
-                                new ExtendTelescope(s_telescope,
-                                        TelescopeConstants.kTelescopeExtendedMiddle))));
+        // m_operatorController.povRight() 
+        //     .onTrue(new ParallelCommandGroup(
+        //                 s_arm.setPosition(ArmConstants.kArmPutMiddle),
+        //                 new SequentialCommandGroup(
+        //                         new WaitCommand(1),
+        //                         new ExtendTelescope(s_telescope,
+        //                                 TelescopeConstants.kTelescopeExtendedMiddle))));
 
-        m_operatorController.povDown()
-                .onTrue(new ParallelCommandGroup(s_arm.setPosition(ArmConstants.kArmPutLow),
-                        new SequentialCommandGroup(
-                                new WaitCommand(1),
-                                new ExtendTelescope(s_telescope,
-                                        TelescopeConstants.kTelescopeExtendedMiddle))));
+        // m_operatorController.povDown()
+        //         .onTrue(new ParallelCommandGroup(s_arm.setPosition(ArmConstants.kArmPutLow),
+        //                 new SequentialCommandGroup(
+        //                         new WaitCommand(1),
+        //                         new ExtendTelescope(s_telescope,
+        //                                 TelescopeConstants.kTelescopeExtendedMiddle))));
 
-        m_operatorController.povLeft()
-                .onTrue(new ParallelCommandGroup(
-                        new RetractTelescope(s_telescope),
-                        new SequentialCommandGroup(new WaitCommand(2.0),
-                                s_arm.setPosition(ArmConstants.kArmHome))));
+        // m_operatorController.povLeft()
+        //         .onTrue(new ParallelCommandGroup(
+        //                 new RetractTelescope(s_telescope),
+        //                 new SequentialCommandGroup(new WaitCommand(2.0),
+        //                         s_arm.setPosition(ArmConstants.kArmHome))));
 
         m_operatorController.rightTrigger().onTrue(new OpenClaw(s_claw));
         m_operatorController.rightBumper().onTrue(new CloseClaw(s_claw));
@@ -203,6 +210,7 @@ public class RobotContainer {
         //m_operatorController.b().onTrue(s_arm.slowlyGoDown());
 
     }
+
 
     public Command getAutonomousCommand() {
         return m_autonChooser.getSelected();

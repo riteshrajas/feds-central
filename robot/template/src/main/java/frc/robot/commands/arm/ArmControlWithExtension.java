@@ -13,14 +13,14 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem2;
 
-public class ArmControl extends CommandBase {
+public class ArmControlWithExtension extends CommandBase {
     /** Creates a new ArmControl. */
     private DoubleSupplier m_rotationSupplier;
     private DoubleSupplier m_extensionSupplier;
     
     private ArmSubsystem2 m_arm;
 
-    public ArmControl(ArmSubsystem2 arm, DoubleSupplier rotationSupplier, DoubleSupplier extensionSupplier) {
+    public ArmControlWithExtension(ArmSubsystem2 arm, DoubleSupplier rotationSupplier, DoubleSupplier extensionSupplier) {
         m_arm = arm;
         addRequirements(arm);
         
