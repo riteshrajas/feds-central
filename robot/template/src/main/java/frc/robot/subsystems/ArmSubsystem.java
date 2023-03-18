@@ -1,6 +1,4 @@
 package frc.robot.subsystems;
-
-import frc.robot.subsystems.VisionSubsystem;
 // import frc.robot.utils.ConeDetection;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -24,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ArmConstants.ConeOrientation;
 import frc.lib.math.Conversions;
-import frc.robot.subsystems.VisionSubsystem;
 
 public class ArmSubsystem extends SubsystemBase {
     private final TalonFX rotateArmMain = new TalonFX(ArmConstants.kArmMotor1);

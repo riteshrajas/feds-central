@@ -24,9 +24,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
-    public VisionSubsystem limelight;
+    public LimelightSubsystem limelight;
 
-    public SwerveSubsystem(VisionSubsystem limelight) {
+    public SwerveSubsystem(LimelightSubsystem limelight) {
         gyro = new Pigeon2(SwerveConstants.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
@@ -120,7 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void strafeToTarget(boolean isTargetLow) {
-        limelight.updateResultToLatest();
+        /*limelight.updateResultToLatest();
         if (limelight.hasTarget()) {
             limelight.updateTargetsToLatest();
             limelight.setTarget(isTargetLow);
@@ -129,7 +129,7 @@ public class SwerveSubsystem extends SubsystemBase {
             double strafeTargetDistance = limelight.strafeAlign();
             Translation2d strafeTranslation2d = new Translation2d(strafeTargetDistance, Math.PI / 2);
             drive(strafeTranslation2d, 0, false, false);
-        }
+        }*/
     }
 
     public boolean finishedStrafeTarget() {
@@ -137,7 +137,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void driveToTarget(boolean isTargetLow){
-        limelight.updateResultToLatest();
+        /*limelight.updateResultToLatest();
         if (limelight.hasTarget()) {
             limelight.updateTargetsToLatest();
             limelight.setTarget(isTargetLow);
@@ -145,19 +145,19 @@ public class SwerveSubsystem extends SubsystemBase {
             double moveToTargetDistance = limelight.getHorizontalDistanceToTarget() - ArmConstants.kSetRobotToTarget;
             Translation2d targetTranslation2d = new Translation2d(moveToTargetDistance, 0);
             drive(targetTranslation2d, 0, false, false);
-        }
+        }*/
     }
 
-    public boolean finishedMoveToTarget(boolean isTargetLow){
-        limelight.updateResultToLatest();
+    //public boolean finishedMoveToTarget(boolean isTargetLow){
+        /*limelight.updateResultToLatest();
         if (limelight.hasTarget()) {
             limelight.updateTargetsToLatest();
             limelight.setTarget(isTargetLow);            
         }
-        return limelight.getHorizontalDistanceToTarget() == ArmConstants.kSetRobotToTarget;
-    }
+        return limelight.getHorizontalDistanceToTarget() == ArmConstants.kSetRobotToTarget;*/
+    //}
 
-    public void rotateToTarget(boolean isTargetLow){
+    /*public void rotateToTarget(boolean isTargetLow){
         limelight.updateResultToLatest();
         if(limelight.hasTarget()){
             limelight.updateTargetsToLatest();
@@ -166,7 +166,7 @@ public class SwerveSubsystem extends SubsystemBase {
             double rotateAmount = limelight.rotateAlign();
             
         }
-    }
+    }*/
 
     /*public void rotateToTarget(boolean isTargetLow){
         limelight.updateResultToLatest();
@@ -179,7 +179,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
     }*/
-    public void refreshVision() {
+    /*public void refreshVision() {
         limelight.updateResultToLatest();
         if (limelight.hasTarget()) {
             limelight.updateTargetsToLatest();
@@ -190,7 +190,7 @@ public class SwerveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("The Camera Pitch", limelight.getTargetPitch());
         }
         
-    }
+    }*/
 
 
     public double getGyroPitch() {
@@ -212,7 +212,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
-        refreshVision();
+        //refreshVision();
 
         // for (SwerveModule mod : mSwerveMods) {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());

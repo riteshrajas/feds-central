@@ -57,16 +57,16 @@ import frc.robot.subsystems.ClawSubsystemWithPID;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.OrientatorSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.GripPipeline;
 import frc.robot.utils.VisionUtils;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 
 public class RobotContainer {
     private final SwerveSubsystem s_swerve;
-    private final VisionSubsystem s_vision;
     // private final ArmSubsystem s_arm;
     private final ArmSubsystem3 s_arm;
+    private final LimelightSubsystem s_limelight;
     //private final OrientatorSubsystem s_orientator;
     // private final TelescopeSubsystem s_telescope;
     // private final IntakeSubsystem s_intakeBlue;
@@ -86,13 +86,12 @@ public class RobotContainer {
 
     public RobotContainer() {
         CameraServer.startAutomaticCapture();
-
-        s_vision = new VisionSubsystem();
+        s_limelight = new LimelightSubsystem(false);
         // s_intakeBlue = new IntakeSubsystem(IntakeConstants.kIntakeBlueLeftDeployMotor,
         //                   IntakeConstants.kIntakeBlueLeftWheelMotor, false);
         // s_telescope = new TelescopeSubsystem();
         //s_orientator = new OrientatorSubsystem();
-        s_swerve = new SwerveSubsystem(s_vision);
+        s_swerve = new SwerveSubsystem(s_limelight);
         // s_arm = new ArmSubsystem();
         s_arm = new ArmSubsystem3();
         s_claw = new ClawSubsystemWithPID();
