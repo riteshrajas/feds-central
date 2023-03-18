@@ -58,36 +58,4 @@ public class ClawConstants {
         // motor.configReverseSoftLimitEnable(true, 0);
     }
 
-    public static void configPIDMotor(TalonFX motor) {
-        motor.configFactoryDefault();
-        motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
-
-        motor.setSensorPhase(kSensorPhase);
-
-        motor.configNominalOutputForward(0, kTimeoutMs);
-        motor.configNominalOutputReverse(0, kTimeoutMs);
-
-        motor.configPeakOutputForward(kPeakOutput, kTimeoutMs);
-        motor.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
-
-        motor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
-
-        motor.configVoltageCompSaturation(12);
-        motor.enableVoltageCompensation(true);
-        
-        motor.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(70, 25));
-        motor.configReverseSoftLimitThreshold(-Conversions.degreesToFalcon(70, 25));
-        motor.configForwardSoftLimitEnable(true, 0);
-        motor.configReverseSoftLimitEnable(true, 0);
-
-        motor.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
-        motor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
-        motor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
-        motor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
-
-        motor.setSelectedSensorPosition(0);
-
-        motor.configVoltageCompSaturation(12);
-        motor.enableVoltageCompensation(true);
-    }
 }

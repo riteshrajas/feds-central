@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
 import frc.robot.constants.ArmConstants;
-import frc.robot.constants.TelescopeConstants;
 import frc.robot.utils.DriveFunctions;
 
 public class ArmSubsystem4 extends SubsystemBase {
