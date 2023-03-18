@@ -86,4 +86,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void stopIntakeWheels() {
         intakeWheelMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
+
+    public boolean hitSoftLimit(){
+        return (getPositionEncoderCounts() > IntakeConstants.kIntakeForwardSoftLimit || getPositionEncoderCounts() < IntakeConstants.kIntakeRetractSoftLimit);
+    }
 }

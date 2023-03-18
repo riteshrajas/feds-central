@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import frc.lib.math.Conversions;
+
 public final class IntakeConstants {
     // Pheonix IDs
     public static final int kIntakeBlueLeftDeployMotor = 51;
@@ -17,4 +19,10 @@ public final class IntakeConstants {
     // Encoder Counts
     public static final double kIntakeEncoderOffsetDeployed = 2640;
     public static final double kIntakeEncoderOffsetRetracted = 0;
+
+    public static final double kIntakeGearRatio = 25;
+
+    //Soft Limits
+    public static final double kIntakeForwardSoftLimit = Conversions.degreesToFalcon(90, kIntakeGearRatio);
+    public static final double kIntakeRetractSoftLimit = Conversions.degreesToFalcon(-10, kIntakeGearRatio);
 }

@@ -7,19 +7,15 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class DeployIntake extends CommandBase {
     private final IntakeSubsystem m_intake;
-    private final Timer timer;
 
     public DeployIntake(IntakeSubsystem intake) {
         this.m_intake = intake;
-        timer = new Timer();
 
         addRequirements(m_intake);
     }    
 
     @Override
     public void initialize(){
-        timer.reset();
-        timer.start();
     }
 
     @Override
@@ -29,7 +25,7 @@ public class DeployIntake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(IntakeConstants.kDeployTime);
+        return m_intake.hitSoftLimit();
     }
 
     @Override

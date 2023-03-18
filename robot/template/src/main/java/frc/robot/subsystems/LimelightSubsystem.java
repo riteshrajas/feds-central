@@ -18,7 +18,7 @@ public class LimelightSubsystem extends SubsystemBase{
     private NetworkTable table;
 
 
-    public LimelightSubsystem(boolean isTargetLow){
+    public LimelightSubsystem(){
         table = NetworkTableInstance.getDefault().getTable("limelight");
 
     }
@@ -39,8 +39,8 @@ public class LimelightSubsystem extends SubsystemBase{
         return Math.toRadians(cameraPitch);
     }
 
-    public double getTargetDistance(boolean isTargetLow){
-        if(isTargetLow){
+    public double getTargetDistance(){
+        if(Math.abs(getTargetPitch()) < 0.3){
             cameraDistanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(0, 
                                                                 VisionConstants.lowTargetHeight, 
                                                                 VisionConstants.limelightPitchRadians,
@@ -67,35 +67,8 @@ public class LimelightSubsystem extends SubsystemBase{
         return cameraDistanceToTarget;
     }
 
-    public double getTargetDistance(double x){
-        if(x == 1){
-            cameraDistanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.limelightheight, 
-                                                                VisionConstants.lowTargetHeight, 
-                                                                VisionConstants.limelightPitchRadians,
-                                                                getTargetPitch());
-        }
-        else{
-            cameraDistanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.limelightheight, 
-                                                                VisionConstants.highTargetHeight, 
-                                                                VisionConstants.limelightPitchRadians,
-                                                                getTargetPitch());   
-        }
-        // This is the law of cosines
-        // C^2 = A^2 + B^2 - 2*A*Bcos(theta)
-        //double cameraDistanceToTargetSquared = Math.pow(cameraDistanceToTarget, 2); // this is A^2
-        //double limelightToArmRotateAxisSquared = Math.pow(VisionConstants.limelightToTopArmOffset, 2); // this is B^2
-        //double theta = Math.PI / 2 - getTargetPitch() - VisionConstants.limelightPitchRadians;
-    
-        //                        A^2                        +              B^2                - 2 *             A          *                        B                *     cos(theta)                      
-        //double rightHandSide = cameraDistanceToTargetSquared + limelightToArmRotateAxisSquared - 2 * cameraDistanceToTarget * VisionConstants.limelightToTopArmOffset * Math.cos(theta);
-
-        // C = sqrt(rightHandSize)
-        //return Math.sqrt(rightHandSide);
-        return cameraDistanceToTarget;
-    }
-
     public double getHorizontalDistanceToTarget(){
-        horizontalDistance = Math.cos(cameraPitch + getTargetPitch()) * getTargetDistance(true);
+        horizontalDistance = Math.cos(cameraPitch + getTargetPitch()) * getTargetDistance();
         return horizontalDistance;
     }
 
@@ -108,13 +81,7 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public double strafeAlign() {
         double driveDistance;
-        if (getTargetYaw() >= 0) {
-            driveDistance = (Math.cos(90 - getTargetYaw()) * getHorizontalDistanceToTarget())
-                    - VisionConstants.limelightOffset;
-        } else {
-            driveDistance = (Math.cos(90 - getTargetYaw()) * getHorizontalDistanceToTarget())
-                    + VisionConstants.limelightOffset;
-        }
+        driveDistance = Math.abs(Math.cos(getTargetYaw())) * getHorizontalDistanceToTarget();
         return driveDistance;
     }
 

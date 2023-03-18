@@ -29,7 +29,7 @@ import frc.robot.commands.drive.TeleopSwerve;
 import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.RunIntakeWheels;
-import frc.robot.commands.intake.StopIntakeWheels;
+import frc.robot.commands.intake.ReverseIntakeWheels;
 import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.commands.auton.examplePPAuto;
@@ -67,7 +67,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         CameraServer.startAutomaticCapture();
-        s_limelight = new LimelightSubsystem(false);
+        s_limelight = new LimelightSubsystem();
         s_swerve = new SwerveSubsystem(s_limelight);
         s_arm = new ArmSubsystem4();
 

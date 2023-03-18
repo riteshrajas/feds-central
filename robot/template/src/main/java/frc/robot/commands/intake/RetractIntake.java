@@ -7,19 +7,17 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class RetractIntake extends CommandBase {
     private final IntakeSubsystem m_intake;
-    private final Timer timer;
 
     public RetractIntake(IntakeSubsystem intake) {
         this.m_intake = intake;
-        timer = new Timer();
+
 
         addRequirements(m_intake);
     }    
 
     @Override
     public void initialize(){
-        timer.reset();
-        timer.start();
+
     }
 
     @Override
@@ -29,7 +27,7 @@ public class RetractIntake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(IntakeConstants.kRetractTime);
+        return m_intake.hitSoftLimit();
     }
 
     @Override
