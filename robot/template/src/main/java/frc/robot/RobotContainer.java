@@ -25,9 +25,6 @@ import frc.robot.constants.PowerConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.TelescopeConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.commands.arm.ArmRotationCommandManual;
-import frc.robot.commands.arm.WaitUntilFullyRotate;
-
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
 import frc.robot.commands.intake.DeployIntake;
@@ -45,13 +42,11 @@ import frc.robot.commands.telescope.RetractTelescope;
 import frc.robot.commands.telescope.TelescopeManualArm;
 import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.commands.auton.examplePPAuto;
-import frc.robot.commands.auton.placeConeAndCharge;
-import frc.robot.commands.auton.placeConeAuton;
 import frc.robot.commands.claw.CloseClaw;
 import frc.robot.commands.claw.OpenClaw;
 import frc.robot.commands.claw.kickOutPiece;
 // import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ArmSubsystem3;
+import frc.robot.subsystems.ArmSubsystem4;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystemWithPID;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -65,7 +60,7 @@ import frc.robot.subsystems.LimelightSubsystem;
 public class RobotContainer {
     private final SwerveSubsystem s_swerve;
     // private final ArmSubsystem s_arm;
-    private final ArmSubsystem3 s_arm;
+    private final ArmSubsystem4 s_arm;
     private final LimelightSubsystem s_limelight;
     //private final OrientatorSubsystem s_orientator;
     // private final TelescopeSubsystem s_telescope;
@@ -93,7 +88,7 @@ public class RobotContainer {
         //s_orientator = new OrientatorSubsystem();
         s_swerve = new SwerveSubsystem(s_limelight);
         // s_arm = new ArmSubsystem();
-        s_arm = new ArmSubsystem3();
+        s_arm = new ArmSubsystem4();
         s_claw = new ClawSubsystemWithPID();
 
         // m_autonChooser.setDefaultOption("Example PP Swerve", new placeConeAndCharge(s_swerve, s_claw, s_telescope, s_arm));
@@ -112,7 +107,7 @@ public class RobotContainer {
                 () -> -m_driveController.getRightX(),
                 () -> m_driveController.rightTrigger().getAsBoolean()));
 
-        s_arm.setDefaultCommand(new ArmRotationCommandManual(s_arm, () -> m_operatorController.getLeftY()));
+        //s_arm.setDefaultCommand(new ArmRotationCommandManual(s_arm, () -> m_operatorController.getLeftY()));
 
         // s_telescope.setDefaultCommand(
         //     new TelescopeManualArm(

@@ -4,8 +4,6 @@ public final class IntakeConstants {
     // Pheonix IDs
     public static final int kIntakeBlueLeftDeployMotor = 51;
     public static final int kIntakeBlueLeftWheelMotor = 61;
-    public static final int kIntakeRedRightDeployMotor = 52;
-    public static final int kIntakeRedRightWheelMotor = 62;
     public static final int kIntakeTriggerID = 2;
 
     // Speeds

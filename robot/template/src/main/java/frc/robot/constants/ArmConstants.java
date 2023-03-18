@@ -5,10 +5,9 @@ import frc.lib.math.Conversions;
 
 public class ArmConstants {
     // Phoenix ID's
-    public static final int kArmMotor1 = 57;
-    public static final int kArmMotor2 = 58;
+    public static final int kArmMotor1 = 52;
 
-    public static final double kArmGearRatio = 38.75;
+    public static final double kArmGearRatio = 250;
     public static final double kSetRobotToTarget = .56;
    
     // Feedforward

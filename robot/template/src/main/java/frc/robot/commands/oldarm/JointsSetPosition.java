@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+/*package frc.robot.commands.oldarm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
@@ -20,3 +20,4 @@ public class JointsSetPosition extends CommandBase {
         m_ArmSubsystem.setPosition(m_armPosition).schedule();
     }
 }
+*/

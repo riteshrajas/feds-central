@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.arm;
+/*package frc.robot.commands.oldarm;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,7 +11,7 @@ import frc.robot.subsystems.ArmSubsystem3;
 public class ArmRotationSetTo extends CommandBase {
   private ArmSubsystem3 m_arm;
   private double m_angleRadians;
-  /** Creates a new ArmRotationSetTo. */
+  /** Creates a new ArmRotationSetTo. 
   public ArmRotationSetTo(ArmSubsystem3 arm, double angleRadians) {
     addRequirements(arm);
     m_arm = arm;
@@ -44,3 +44,4 @@ public class ArmRotationSetTo extends CommandBase {
     return m_arm.getRotationPIDController().atSetpoint();
   }
 }
+*/

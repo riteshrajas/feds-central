@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+/*package frc.robot.commands.oldarm;
 
 import java.util.function.DoubleSupplier;
 
@@ -8,7 +8,7 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem3;
 
 public class ArmRotationCommandManual extends CommandBase {
-    /** Creates a new ArmControl. */
+    /** Creates a new ArmControl. 
     private DoubleSupplier m_rotationSupplier;
     
     private ArmSubsystem3 m_arm;
@@ -43,3 +43,4 @@ public class ArmRotationCommandManual extends CommandBase {
     }
     
 }
+*/

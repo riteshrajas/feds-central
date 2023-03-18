@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+/*package frc.robot.commands.oldarm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
@@ -17,3 +17,4 @@ public class WaitUntilFullyRotate extends CommandBase {
         return s_arm.getArmDoneRotating();
     }
 }
+*/
