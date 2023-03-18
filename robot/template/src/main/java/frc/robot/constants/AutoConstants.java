@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 public final class AutoConstants {
     // TODO: The below constants are used in the example auto, and must be tuned

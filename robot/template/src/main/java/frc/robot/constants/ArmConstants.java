@@ -33,6 +33,12 @@ public class ArmConstants {
     public static final double kPDown = 0.1;
     public static final double kIDown = 0;
     public static final double kDDown = 0;
+   
+    // FEEDFORWARD GAINS
+    public static final double kS = 0;
+    public static final double kG = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
     
     // setpoints
     public static final double kArmHome = 0;
@@ -41,6 +47,7 @@ public class ArmConstants {
     public static final double kArmPutLow =        Conversions.degreesToFalcon(0, kArmGearRatio);
     public static final double kArmGrabCone =      Conversions.degreesToFalcon(0, kArmGearRatio);
     public static final double kArmAutonPosition = Conversions.degreesToFalcon(0, kArmGearRatio);
+    public static final double kArmTolerance =     100;
 
     public static final double kForwardSoftLimit = Conversions.degreesToFalcon(100, kArmGearRatio);
     public static final double kReverseSoftLimit = Conversions.degreesToFalcon(-1, kArmGearRatio);

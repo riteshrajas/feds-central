@@ -2,9 +2,11 @@ package frc.robot.commands.arm;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem4;
 
 public class RotateArmManual extends CommandBase {
@@ -24,7 +26,11 @@ public class RotateArmManual extends CommandBase {
 
     @Override
     public void execute() {
-        s_arm.rotate(rotatePowerSupplier.getAsDouble());
+        double power = rotatePowerSupplier.getAsDouble();
+        power = MathUtil.applyDeadband(power, OIConstants.kDriverDeadzone);
+        power = Math.copySign(Math.pow(power, 2), power);
+        power /= 2;
+        s_arm.rotate(power);
     }
 
 }
