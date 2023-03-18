@@ -1,10 +1,7 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-import frc.lib.math.Conversions;
 
 public class ClawConstants {
     public static final int kClawMotorMain = 56;
@@ -12,27 +9,6 @@ public class ClawConstants {
 
     public static final double kIntakeConePercent = 0.2;
     public static final double kOuttakeConePercent = -0.2;
-
-    // set points
-    public static final double kOpenClawPosition = -Conversions.degreesToFalcon(40, 25);
-    public static final double kKickClawPosition = -Conversions.degreesToFalcon(5, 25);
-
-    public static final double kHoldBallSpeed = -0.1; // tune these
-    public static final double kHoldConeSpeed = -0.1;
-    public static final double kExtendSpeed = 0.35;
-    public static final double kClosePower  = 0.1;
-
-    public static final double kCloseSeconds = 0.2;
-
-    public static final int kPIDLoopIdx = 0;
-    public static final boolean kSensorPhase = true;
-    public static final double kP = 0.0;
-    public static final double kI = 0;
-    public static final double kD = 0.0;
-    public static final double kF = 0.4;
-    public static final int kIzone = 0;
-    public static final double kPeakOutput = 0.40;
-    public static final int kTimeoutMs = 30;
 
     public static void configMotor(TalonFX motor) {
         motor.configFactoryDefault();
