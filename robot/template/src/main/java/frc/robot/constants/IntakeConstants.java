@@ -12,6 +12,7 @@ public final class IntakeConstants {
     public static final double kIntakeDeploySpeed = 0.30;
     public static final double kIntakeRetractSpeed = -0.2;
     public static final double kIntakeWheelSpeed = -0.30;
+    public static final double kIntakeWheelEjectTime = 0.5;
 
     public static final double kDeployTime = 0.5;
     public static final double kRetractTime = 0.5;
