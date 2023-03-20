@@ -22,12 +22,12 @@ private final boolean isTargetLow;
 
     @Override
     public void execute(){
-        s_swerve.strafeToTarget(isTargetLow);
+        s_swerve.strafeToTarget();
     }
 
     @Override
     public boolean isFinished(){
-        return s_swerve.finishedStrafeTarget();
+        return false;
     }
 
     @Override

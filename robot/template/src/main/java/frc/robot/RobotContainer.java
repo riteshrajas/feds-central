@@ -64,7 +64,7 @@ public class RobotContainer {
     public RobotContainer() {
         CameraServer.startAutomaticCapture();
         s_limelight = new LimelightSubsystem();
-        s_swerve = new SwerveSubsystem(s_limelight);
+        s_swerve = new SwerveSubsystem();
         s_arm = new ArmSubsystem4();
         s_intake = new IntakeSubsystem();
 

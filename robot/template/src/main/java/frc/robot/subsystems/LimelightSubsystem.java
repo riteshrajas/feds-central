@@ -79,10 +79,14 @@ public class LimelightSubsystem extends SubsystemBase{
         }
     }
 
-    public double strafeAlign() {
+    public double strafeAlignDistance() {
         double driveDistance;
         driveDistance = Math.abs(Math.cos(getTargetYaw())) * getHorizontalDistanceToTarget();
         return driveDistance;
+    }
+
+    public boolean strafeDirection(){
+        return cameraYaw > 0;
     }
 
     public boolean strafeFinished() {

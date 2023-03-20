@@ -26,11 +26,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public LimelightSubsystem limelight;
 
-    public SwerveSubsystem(LimelightSubsystem limelight) {
+    public SwerveSubsystem() {
         gyro = new Pigeon2(SwerveConstants.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
         this.limelight = limelight;
+        limelight = new LimelightSubsystem();
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, SwerveConstants.Mod0.constants),
@@ -119,21 +120,17 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
-    public void strafeToTarget(boolean isTargetLow) {
-        /*limelight.updateResultToLatest();
-        if (limelight.hasTarget()) {
-            limelight.updateTargetsToLatest();
-            limelight.setTarget(isTargetLow);
-            limelight.getTargetYaw();
-
-            double strafeTargetDistance = limelight.strafeAlign();
-            Translation2d strafeTranslation2d = new Translation2d(strafeTargetDistance, Math.PI / 2);
-            drive(strafeTranslation2d, 0, false, false);
-        }*/
-    }
-
-    public boolean finishedStrafeTarget() {
-        return limelight.strafeFinished();
+    public void strafeToTarget() {
+        Translation2d translation;
+        limelight.setResult();
+        limelight.getHorizontalDistanceToTarget();
+        if(limelight.strafeDirection()){
+            translation = new Translation2d(limelight.strafeAlignDistance(), 0);
+        }
+        else{
+            translation = new Translation2d(-limelight.strafeAlignDistance(), 0);
+        }
+        drive(translation, 0, true, true);
     }
 
     public void driveToTarget(boolean isTargetLow){
