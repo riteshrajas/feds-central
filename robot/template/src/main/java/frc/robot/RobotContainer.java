@@ -51,7 +51,7 @@ public class RobotContainer {
     private final LimelightSubsystem s_limelight;
     //private final OrientatorSubsystem s_orientator;
     // private final TelescopeSubsystem s_telescope;
-    // private final IntakeSubsystem s_intakeBlue;
+    private final IntakeSubsystem s_intake;
 
     private final SlewRateLimiter slewRateLimiterX = new SlewRateLimiter(15);
     private final SlewRateLimiter slewRateLimiterY = new SlewRateLimiter(15);
@@ -70,6 +70,7 @@ public class RobotContainer {
         s_limelight = new LimelightSubsystem();
         s_swerve = new SwerveSubsystem(s_limelight);
         s_arm = new ArmSubsystem4();
+        s_intake = new IntakeSubsystem();
 
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
@@ -86,7 +87,7 @@ public class RobotContainer {
 
         configureDriverButtonBindings();
         configureOperatorButtonBindings();
-        configureTriggerBindings();
+        // configureTriggerBindings();
     }
 
     private void configureDriverButtonBindings() {
@@ -116,11 +117,11 @@ public class RobotContainer {
         // l-bumper: reverse intake
     }
 
-    private void configureTriggerBindings() {
-        new Trigger(s_swerve::gyroNotZero)
-                .onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("GyroZero", false)))
-                .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("GyroNotZero", true)));
-    }
+    // private void configureTriggerBindings() {
+    //     new Trigger(s_swerve::gyroNotZero)
+    //             .onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("GyroZero", false)))
+    //             .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("GyroNotZero", true)));
+    // }
 
 
     public Command getAutonomousCommand() {

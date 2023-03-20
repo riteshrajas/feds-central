@@ -13,18 +13,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final TalonFX intakeDeployMotor;
     private final TalonFX intakeWheelMotor;
-    private final boolean invert;
 
-    public IntakeSubsystem(int intakeDeployID, int intakeWheelID, boolean invert) {
-        intakeDeployMotor = new TalonFX(intakeDeployID);
-        intakeWheelMotor = new TalonFX(intakeWheelID);
+    public IntakeSubsystem() {
+        intakeDeployMotor = new TalonFX(IntakeConstants.kIntakeBlueLeftDeployMotor);
+        intakeWheelMotor = new TalonFX(IntakeConstants.kIntakeBlueLeftWheelMotor);
         IntakeConstants.configIntakeMotor(intakeDeployMotor);
         IntakeConstants.configIntakeMotor(intakeWheelMotor);
         
-        
         intakeWheelMotor.setNeutralMode(NeutralMode.Brake);
-        
-        this.invert = invert;
     }
 
     public double getPositionEncoderCounts() {
@@ -32,19 +28,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void rotateIntakeForwards() {
-        if(invert) {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeDeploySpeed);
-        } else {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeDeploySpeed);
-        }
+        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeDeploySpeed);
     }
 
     public void rotateIntakeBackwards() {
-        if(invert) {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeRetractSpeed);
-        } else {
-            intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeRetractSpeed);
-        }
+        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeRetractSpeed);
     }
 
     public void stopIntakeRotation() {
