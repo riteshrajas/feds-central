@@ -11,6 +11,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class GetOnBridge extends SequentialCommandGroup {
   public GetOnBridge(SwerveSubsystem s_swerve) {
+    addRequirements(s_swerve);
     addCommands(
         new ParallelDeadlineGroup(new WaitCommand(SwerveConstants.kChargingStationTime),
             new RunCommand(
