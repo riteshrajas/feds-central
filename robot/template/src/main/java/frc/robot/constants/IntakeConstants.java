@@ -13,14 +13,14 @@ public final class IntakeConstants {
     public static final int kIntakeTriggerID = 2;
 
     // Speeds
-    public static final double kIntakeDeploySpeed = 0.30;
-    public static final double kIntakeRetractSpeed = -0.2;
+    public static final double kIntakeDeploySpeed = 0.15;
+    public static final double kIntakeRetractSpeed = -0.15;
     public static final double kIntakeWheelSpeed = -0.30;
     public static final double kIntakeWheelEjectTime = 0.5;
 
     public static final double kPeakIntakeVelocity = 0.55;
     public static final double kPercentOfPeakIntakeVelocity = 0.45;
-    public static final double intakeVelocityAccelUp = kPeakIntakeVelocity*kPercentOfPeakIntakeVelocity;
+    public static final double intakeVelocityAccelUp = 2000;//kPeakIntakeVelocity*kPercentOfPeakIntakeVelocity;
 
     public static final double kDeployTime = 0.5;
     public static final double kRetractTime = 0.5;
@@ -35,7 +35,7 @@ public final class IntakeConstants {
 
 
     // PID (Feedback)
-    public static final double kPUp   = 0.1;
+    public static final double kPUp   = 0.2;
     public static final double kIUp   = 0;
     public static final double kDUp   = 0;
 
@@ -46,6 +46,9 @@ public final class IntakeConstants {
     //Soft Limits
     public static final double kIntakeForwardSoftLimit = Conversions.degreesToFalcon(90, kIntakeGearRatio);
     public static final double kIntakeRetractSoftLimit = Conversions.degreesToFalcon(-10, kIntakeGearRatio);
+    
+    public static final double kIntakeForwardSetpoint = Conversions.degreesToFalcon(90, kIntakeGearRatio);
+    public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(0, kIntakeGearRatio);
 
     public static void configIntakeMotor(TalonFX motor){
         
@@ -89,7 +92,7 @@ public final class IntakeConstants {
         motor.configFactoryDefault();
        
         /* MOTOR TYPES */
-        motor.setNeutralMode(NeutralMode.Brake);
+        motor.setNeutralMode(NeutralMode.Coast);
         
         //VOLTAGE COMPENSATION
         motor.configVoltageCompSaturation(12);

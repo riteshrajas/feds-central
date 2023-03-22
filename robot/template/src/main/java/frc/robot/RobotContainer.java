@@ -32,6 +32,7 @@ import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.ReverseIntakeWheels;
+import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.utilityCommands.TimerDeadline;
 import frc.robot.commands.arm.RotateArmManual;
@@ -119,6 +120,8 @@ public class RobotContainer {
 
         m_driveController.x().onTrue(new InstantCommand(() -> togglePercentDriveSpeed()));
 
+        m_driveController.a().onTrue(new StrafeAlign(s_swerve, false));
+
 
     }
     
@@ -132,18 +135,19 @@ public class RobotContainer {
         // l-bumper: reverse intake
 
 
-        m_operatorController.povUp().onTrue(new RotateArmPosition(s_arm, Units.degreesToRadians(ArmConstants.kArmPutHigh)).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
-        m_operatorController.povRight().onTrue(new RotateArmPosition(s_arm, Units.degreesToRadians(ArmConstants.kArmPutMiddle)).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
-        m_operatorController.povDown().onTrue(new RotateArmPosition(s_arm, Units.degreesToRadians(ArmConstants.kArmHome)).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povUp().onTrue(new RotateArmPosition(s_arm,    ArmConstants.kArmPutHigh).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povRight().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmPutMiddle).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povDown().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmHome).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
 
         m_operatorController.a().whileTrue(new IntakeCone(s_claw));
         m_operatorController.b().whileTrue(new OuttakeCone(s_claw));
         m_operatorController.x().whileTrue(new StopClaw(s_claw));
 
-        m_operatorController.leftTrigger().onTrue(new DeployIntake(s_intake));
-        m_operatorController.leftBumper().onTrue(new RetractIntake(s_intake));
+        m_operatorController.leftTrigger().onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint));
+        m_operatorController.leftBumper().onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
 
-        
+        m_operatorController.rightTrigger().whileTrue(new RunIntakeWheels(s_intake));
+        m_operatorController.rightBumper().whileTrue(new ReverseIntakeWheels(s_intake));
     }
 
     // private void configureTriggerBindings() {

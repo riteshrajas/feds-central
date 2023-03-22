@@ -51,7 +51,11 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeDeployMotor.set(ControlMode.MotionMagic, position);
     }
 
-    public boolean hitSoftLimit(){
-        return (getPositionEncoderCounts() >= IntakeConstants.kIntakeForwardSoftLimit || getPositionEncoderCounts() <= IntakeConstants.kIntakeRetractSoftLimit);
+    public boolean hitForwardSoftLimit(){
+        return getPositionEncoderCounts() >= IntakeConstants.kIntakeForwardSetpoint;
+    }
+    
+    public boolean hitReverseSoftLimit(){
+        return getPositionEncoderCounts() <= IntakeConstants.kIntakeRetractSetpoint;
     }
 }

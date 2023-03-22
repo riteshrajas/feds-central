@@ -27,7 +27,7 @@ public class RetractIntake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_intake.hitSoftLimit();
+        return m_intake.hitReverseSoftLimit();
     }
 
     @Override

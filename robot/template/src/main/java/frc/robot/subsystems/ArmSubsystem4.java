@@ -75,7 +75,7 @@ public class ArmSubsystem4 extends SubsystemBase {
         SmartDashboard.putNumber("Feedforward Offsetted", feedforwardOffset);
         SmartDashboard.putNumber("Velocity", velocity);
 
-        m_armMain.set(ControlMode.PercentOutput, DriveFunctions.voltageToPercentOutput(feedforward));
+        m_armMain.set(ControlMode.PercentOutput, DriveFunctions.voltageToPercentOutput(feedforwardOffset));
     }
 
     

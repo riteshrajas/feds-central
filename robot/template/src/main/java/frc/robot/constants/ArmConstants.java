@@ -27,7 +27,7 @@ public class ArmConstants {
     public static final double cruiseVelocityAccelDown = peakVelocityDown * percentOfPeakDown;
 
     // PID (Feedback)
-    public static final double kPUp   = 0.05;
+    public static final double kPUp   = 0.5;
     public static final double kIUp   = 0;
     public static final double kDUp   = 0;
 
@@ -37,15 +37,15 @@ public class ArmConstants {
    
     // FEEDFORWARD GAINS
     public static final double kS = 0;
-    public static final double kG = 0.06;
-    public static final double kV = 0.06;
+    public static final double kG = 0.05;
+    public static final double kV = 0.4;
     public static final double kA = 0;
-    public static final double kFeedforwardOffset = Math.PI;
+    public static final double kFeedforwardOffset = Math.PI/2;
     
     // setpoints
     public static final double kArmHome =          Units.degreesToRadians(0);
-    public static final double kArmPutHigh =       Units.degreesToRadians(90);
-    public static final double kArmPutMiddle =     Units.degreesToRadians(60); // FIXME: tune these
+    public static final double kArmPutHigh =       Units.degreesToRadians(80);
+    public static final double kArmPutMiddle =     Units.degreesToRadians(55); // FIXME: tune these
     public static final double kArmTolerance =     Units.degreesToRadians(5);
 
     public static final double kForwardSoftLimit = Conversions.degreesToFalcon(100, kArmGearRatio);

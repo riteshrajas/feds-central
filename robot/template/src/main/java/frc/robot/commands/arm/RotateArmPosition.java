@@ -21,16 +21,16 @@ public class RotateArmPosition extends CommandBase {
     @Override
     public void initialize() {
         s_arm.getRotationPIDController().reset();
-        SmartDashboard.putNumber("Angle set to PID (RADIANS)", m_angleRadians);
-        s_arm.getRotationPIDController().setSetpoint(m_angleRadians);
+        // SmartDashboard.putNumber("Angle set to PID (RADIANS)", m_angleRadians);
+        // s_arm.getRotationPIDController().setSetpoint(m_angleRadians);
     }
 
     @Override
     public void execute() {
         PIDController rotationController = s_arm.getRotationPIDController();
     
-        // SmartDashboard.putNumber("Angle set to PID (RADIANS)", m_angleRadians);
-        // rotationController.setSetpoint(m_angleRadians); // TODO: Why is this called continuously?
+        SmartDashboard.putNumber("Angle set to PID (RADIANS)", m_angleRadians);
+        rotationController.setSetpoint(m_angleRadians); // TODO: Why is this called continuously?
 
         double PIDCalculatedValue = rotationController.calculate(s_arm.getArmAngleRadians());
 

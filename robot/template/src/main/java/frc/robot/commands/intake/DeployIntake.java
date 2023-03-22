@@ -25,7 +25,7 @@ public class DeployIntake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_intake.hitSoftLimit();
+        return m_intake.hitForwardSoftLimit();
     }
 
     @Override
