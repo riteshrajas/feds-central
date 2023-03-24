@@ -10,13 +10,10 @@ import com.ctre.phoenix.motorcontrol.can.*;
 public class IntakeSubsystem extends SubsystemBase {
 
     private final TalonFX intakeDeployMotor;
-    private final TalonFX intakeWheelMotor;
 
     public IntakeSubsystem() {
         intakeDeployMotor = new TalonFX(IntakeConstants.kIntakeBlueLeftDeployMotor);
-        intakeWheelMotor = new TalonFX(IntakeConstants.kIntakeBlueLeftWheelMotor);
         IntakeConstants.configIntakeMotor(intakeDeployMotor);
-        IntakeConstants.configWheelMotor(intakeWheelMotor);
     }
 
     public double getPositionEncoderCounts() {
@@ -35,17 +32,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeDeployMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
 
-    public void runIntakeWheelsIn() {
-        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeWheelSpeed);
-    }
-
-    public void runIntakeWheelsOut() {
-        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeWheelSpeed);
-    }
-
-    public void stopIntakeWheels() {
-        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, 0);
-    }
+    
 
     public void setIntakePosition(double position){
         intakeDeployMotor.set(ControlMode.MotionMagic, position);

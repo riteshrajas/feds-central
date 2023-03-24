@@ -46,6 +46,7 @@ public final class IntakeConstants {
     //Soft Limits
     public static final double kIntakeForwardSoftLimit = Conversions.degreesToFalcon(90, kIntakeGearRatio);
     public static final double kIntakeRetractSoftLimit = Conversions.degreesToFalcon(-10, kIntakeGearRatio);
+    public static final double kIntakeMiddleScorePosition = Conversions.degreesToFalcon(-30, kIntakeGearRatio);
     
     public static final double kIntakeForwardSetpoint = Conversions.degreesToFalcon(90, kIntakeGearRatio);
     public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(0, kIntakeGearRatio);
@@ -88,26 +89,26 @@ public final class IntakeConstants {
 		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
     }
     
-    public static void configWheelMotor(TalonFX motor){
-        motor.configFactoryDefault();
+    public static void configWheelMotor(TalonFX intakeWheelMotor){
+        intakeWheelMotor.configFactoryDefault();
        
         /* MOTOR TYPES */
-        motor.setNeutralMode(NeutralMode.Coast);
+        intakeWheelMotor.setNeutralMode(NeutralMode.Brake);
         
         //VOLTAGE COMPENSATION
-        motor.configVoltageCompSaturation(12);
-        motor.enableVoltageCompensation(true);
+        intakeWheelMotor.configVoltageCompSaturation(12);
+        intakeWheelMotor.enableVoltageCompensation(true);
         
         //SET STATUS FRAME PERIODS
-        motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 255);
-        motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
-		motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
+        intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 255);
+        intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
+		intakeWheelMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
     }
 }

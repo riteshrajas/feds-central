@@ -4,16 +4,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
-public class RunIntakeWheels extends CommandBase {
+public class RunIntakeWheelsInfinite extends CommandBase {
     private final WheelSubsystem m_intake;
     private final Timer timer;
-    private final double time;
 
-    public RunIntakeWheels(WheelSubsystem intake, double time) {
+    public RunIntakeWheelsInfinite(WheelSubsystem intake) {
         this.m_intake = intake; 
         timer = new Timer();
-        this.time = time;
 
         addRequirements(m_intake);
     } 
@@ -31,7 +30,7 @@ public class RunIntakeWheels extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        return timer.hasElapsed(time);
+        return false;
     }
 
     @Override

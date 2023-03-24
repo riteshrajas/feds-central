@@ -31,6 +31,7 @@ import frc.robot.commands.drive.TeleopSwerve;
 import frc.robot.commands.intake.DeployIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.RunIntakeWheels;
+import frc.robot.commands.intake.RunIntakeWheelsInfinite;
 import frc.robot.commands.intake.ReverseIntakeWheels;
 import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.sensor.StrafeAlign;
@@ -48,6 +49,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.utils.GripPipeline;
 import frc.robot.utils.VisionUtils;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.WheelSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class RobotContainer {
@@ -56,6 +58,7 @@ public class RobotContainer {
     private final LimelightSubsystem s_limelight;
     private final IntakeSubsystem s_intake;
     private final ClawSubsystem s_claw;
+    private final WheelSubsystem s_wheels;
 
     private final SlewRateLimiter slewRateLimiterX = new SlewRateLimiter(15);
     private final SlewRateLimiter slewRateLimiterY = new SlewRateLimiter(15);
@@ -76,7 +79,7 @@ public class RobotContainer {
         s_arm = new ArmSubsystem4();
         s_intake = new IntakeSubsystem();
         s_claw = new ClawSubsystem();
-
+        s_wheels = new WheelSubsystem();
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
 
@@ -92,9 +95,8 @@ public class RobotContainer {
                         () -> -m_driveController.getRightX(),
                         () -> m_driveController.rightTrigger().getAsBoolean()));
 
-        s_arm.setDefaultCommand(new RotateArmManual(s_arm, () ->
-        -m_operatorController.getLeftY())); // damn inverted controls
-
+        s_arm.setDefaultCommand(new RotateArmManual(s_arm, () -> -m_operatorController.getLeftY())); // damn inverted
+                                                                                                     // controls
 
         configureDriverButtonBindings();
         configureOperatorButtonBindings();
@@ -116,15 +118,15 @@ public class RobotContainer {
                 new TeleopSwerve(s_swerve, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
         m_driveController.povLeft().whileTrue(
                 new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
-        m_driveController.povRight().whileTrue(new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
+        m_driveController.povRight().whileTrue(
+                new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
 
         m_driveController.x().onTrue(new InstantCommand(() -> togglePercentDriveSpeed()));
 
-        m_driveController.a().onTrue(new StrafeAlign(s_swerve, false));
-
+        m_driveController.a().onTrue(new StrafeAlign(s_swerve));
 
     }
-    
+
     private void configureOperatorButtonBindings() {
         // operator
         // r-bumper: claw open close
@@ -134,41 +136,58 @@ public class RobotContainer {
         // d-pad: control presents for the telescoping arm
         // l-bumper: reverse intake
 
+        // arm
+        m_operatorController.povUp().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmPutHigh)
+                .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povRight().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmPutHumanPlayer)
+                .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povLeft().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmHome)
+                .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
+        m_operatorController.povDown().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmPutMiddle)
+                .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
 
-        m_operatorController.povUp().onTrue(new RotateArmPosition(s_arm,    ArmConstants.kArmPutHigh).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
-        m_operatorController.povRight().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmPutMiddle).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
-        m_operatorController.povDown().onTrue(new RotateArmPosition(s_arm, ArmConstants.kArmHome).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
-
+        // claw
         m_operatorController.a().whileTrue(new IntakeCone(s_claw));
         m_operatorController.b().whileTrue(new OuttakeCone(s_claw));
-        m_operatorController.x().whileTrue(new StopClaw(s_claw));
 
-        m_operatorController.leftTrigger().onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint));
-        m_operatorController.leftBumper().onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
-
-        m_operatorController.rightTrigger().whileTrue(new RunIntakeWheels(s_intake));
-        m_operatorController.rightBumper().whileTrue(new ReverseIntakeWheels(s_intake));
+        // intake
+        m_driveController.rightTrigger()
+                .onTrue(new ParallelCommandGroup(
+                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint),
+                        new SequentialCommandGroup(new TimerDeadline(0.5)), new RunIntakeWheelsInfinite(s_wheels)));
+        m_driveController.rightBumper()
+                .onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
+        m_driveController.leftTrigger()
+                .onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime));
+        m_driveController.leftBumper()
+                .onTrue(new ParallelCommandGroup(
+                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeMiddleScorePosition),
+                        new SequentialCommandGroup(new TimerDeadline(.5), new RunIntakeWheels(s_wheels, 0.1),
+                                new ReverseIntakeWheels(s_wheels, 0.3))));
     }
 
     // private void configureTriggerBindings() {
-    //     new Trigger(s_swerve::gyroNotZero)
-    //             .onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("GyroZero", false)))
-    //             .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("GyroNotZero", true)));
+    // new Trigger(s_swerve::gyroNotZero)
+    // .onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("GyroZero",
+    // false)))
+    // .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("GyroNotZero",
+    // true)));
     // }
-
 
     public Command getAutonomousCommand() {
         return m_autonChooser.getSelected();
     }
 
     private void togglePercentDriveSpeed() {
-        if(controllerMultiplier == SwerveConstants.kPreciseSwerveSpeed) {
+        if (controllerMultiplier == SwerveConstants.kPreciseSwerveSpeed) {
             controllerMultiplier = 1;
         } else {
             controllerMultiplier = SwerveConstants.kPreciseSwerveSpeed;
         }
     }
 
-    public double getPercentDriveSpeed() { return controllerMultiplier; }
+    public double getPercentDriveSpeed() {
+        return controllerMultiplier;
+    }
 
 }

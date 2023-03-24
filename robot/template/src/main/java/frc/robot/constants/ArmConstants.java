@@ -44,12 +44,15 @@ public class ArmConstants {
     
     // setpoints
     public static final double kArmHome =          Units.degreesToRadians(0);
-    public static final double kArmPutHigh =       Units.degreesToRadians(80);
-    public static final double kArmPutMiddle =     Units.degreesToRadians(55); // FIXME: tune these
+    public static final double kArmPutHigh =       Units.degreesToRadians(110);
+    public static final double kArmPutMiddle =     Units.degreesToRadians(85); // FIXME: tune these
+    public static final double kArmPutHumanPlayer =     Units.degreesToRadians(90); // FIXME: tune these
     public static final double kArmTolerance =     Units.degreesToRadians(5);
 
-    public static final double kForwardSoftLimit = Conversions.degreesToFalcon(100, kArmGearRatio);
+    public static final double kForwardSoftLimit = Conversions.degreesToFalcon(125, kArmGearRatio);
     public static final double kReverseSoftLimit = Conversions.degreesToFalcon(-1, kArmGearRatio);
+
+    public static final double kArmManualLimiter = 0.5;
     
     public static void configArmMotor(TalonFX motor) {
         motor.configFactoryDefault();

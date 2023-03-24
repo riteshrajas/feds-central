@@ -85,7 +85,7 @@ public class ArmSubsystem4 extends SubsystemBase {
         // SmartDashboard.putNumber("Target Angle Rads Translated", this.angleSetpointRadians - Math.PI/2);
 
         SmartDashboard.putNumber("Target Angle Rads", this.getRotationPIDController().getSetpoint());
-        SmartDashboard.putNumber("Target Angle Rads Translated", this.getRotationPIDController().getSetpoint() - Math.PI/2);
+        SmartDashboard.putNumber("Target Angle Rads Translated", this.getRotationPIDController().getSetpoint() - (Math.PI * 19)/36);
         
         SmartDashboard.putNumber("Current Angle Rads", Units.degreesToRadians(
                 Conversions.falconToDegrees(m_armMain.getSelectedSensorPosition(), ArmConstants.kArmGearRatio)));

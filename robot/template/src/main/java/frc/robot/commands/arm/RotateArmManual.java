@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem4;
 
@@ -30,7 +31,7 @@ public class RotateArmManual extends CommandBase {
         power = MathUtil.applyDeadband(power, OIConstants.kDriverDeadzone);
         power = Math.copySign(Math.pow(power, 2), power);
         power /= 2;
-        s_arm.rotate(power);
+        s_arm.rotate(power * ArmConstants.kArmManualLimiter);
     }
 
 }
