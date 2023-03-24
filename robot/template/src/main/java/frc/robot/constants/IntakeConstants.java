@@ -26,12 +26,12 @@ public final class IntakeConstants {
     public static final double kRetractTime = 0.5;
 
     // Encoder Counts
-    public static final double kIntakeEncoderOffsetDeployed = 2640;
-    public static final double kIntakeEncoderOffsetRetracted = 0;
-    public static final double kIntakeGearRatio = 25;
+    //public static final double kIntakeEncoderOffsetDeployed = 2640;
+    /*public static final double kIntakeEncoderOffsetRetracted = 0;
     public static final double kIntakePositionDeployed = 0;
     public static final double kIntakePositionStart = 0;
-    public static final double kIntakePositionMid = 0;
+    public static final double kIntakePositionMid = 0;*/
+    public static final double kIntakeGearRatio = 25;
 
 
     // PID (Feedback)

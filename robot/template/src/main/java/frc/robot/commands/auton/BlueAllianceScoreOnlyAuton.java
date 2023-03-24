@@ -1,8 +1,14 @@
 package frc.robot.commands.auton;
 
+import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.drive.LockWheels;
+import frc.robot.commands.intake.ReverseIntakeWheels;
+import frc.robot.commands.intake.RotateIntakeToPosition;
+import frc.robot.commands.intake.RunIntakeWheelsInfinite;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.WheelSubsystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,14 +22,21 @@ import com.pathplanner.lib.commands.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class BlueAllianceScoreOnlyAuton extends SequentialCommandGroup {
+        private final IntakeSubsystem s_intake;
+        private final WheelSubsystem s_wheels;
+
     public BlueAllianceScoreOnlyAuton(SwerveSubsystem s_Swerve) {
         // This will load the file "FullAuto.path" and generate it with a max velocity
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
+        s_intake = new IntakeSubsystem();
+        s_wheels = new WheelSubsystem();
         ArrayList<PathPlannerTrajectory> pathGroup1 = (ArrayList<PathPlannerTrajectory>) PathPlanner
                 .loadPathGroup("High Cone + Low Cube (B)", new PathConstraints(3, 2));
 
@@ -56,7 +69,15 @@ public class BlueAllianceScoreOnlyAuton extends SequentialCommandGroup {
 
         addCommands(
                 new PlaceConeHigh(null, null, s_Swerve),
-                new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup1.get(0).getInitialHolonomicPose())),
-                fullAuto1, new WaitCommand(15));
+                new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup1.get(0).getInitialHolonomicPose())), 
+                new ParallelCommandGroup(fullAuto1, 
+                        new SequentialCommandGroup(new WaitCommand(2.3), 
+                                new ParallelDeadlineGroup(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint), 
+                                        new RunIntakeWheelsInfinite(s_wheels),
+                                        new WaitCommand(1.7)), 
+                                new ParallelDeadlineGroup(new WaitCommand(2.3), 
+                                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint))),
+                        new ReverseIntakeWheels(s_wheels, 0.5)), 
+                new WaitCommand(15));
     }
 }
