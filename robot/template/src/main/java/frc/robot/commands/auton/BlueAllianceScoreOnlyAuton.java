@@ -6,6 +6,8 @@ import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.intake.ReverseIntakeWheels;
 import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.intake.RunIntakeWheelsInfinite;
+import frc.robot.subsystems.ArmSubsystem5;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
@@ -30,13 +32,23 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class BlueAllianceScoreOnlyAuton extends SequentialCommandGroup {
         private final IntakeSubsystem s_intake;
         private final WheelSubsystem s_wheels;
+        private final ArmSubsystem5 s_arm;
+        private final ClawSubsystem s_claw;
 
-    public BlueAllianceScoreOnlyAuton(SwerveSubsystem s_Swerve) {
+    public BlueAllianceScoreOnlyAuton(SwerveSubsystem s_Swerve, ClawSubsystem s_claw, ArmSubsystem5 s_arm, IntakeSubsystem s_intake, WheelSubsystem s_wheels) {
         // This will load the file "FullAuto.path" and generate it with a max velocity
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
-        s_intake = new IntakeSubsystem();
-        s_wheels = new WheelSubsystem();
+        this.s_intake = s_intake;
+        this.s_wheels = s_wheels;
+        this.s_arm = s_arm;
+        this.s_claw = s_claw;
+
+        addRequirements(this.s_wheels);
+        addRequirements(this.s_claw);
+        addRequirements(this.s_intake);
+        addRequirements(this.s_arm);
+
         ArrayList<PathPlannerTrajectory> pathGroup1 = (ArrayList<PathPlannerTrajectory>) PathPlanner
                 .loadPathGroup("High Cone + Low Cube (B)", new PathConstraints(3, 2));
 
@@ -68,16 +80,16 @@ public class BlueAllianceScoreOnlyAuton extends SequentialCommandGroup {
 
 
         addCommands(
-                new PlaceConeHigh(null, null, s_Swerve),
+                new PlaceConeHigh(s_arm, s_claw, s_Swerve),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup1.get(0).getInitialHolonomicPose())), 
-                new ParallelCommandGroup(fullAuto1, 
+                new ParallelCommandGroup(
+                        fullAuto1, 
                         new SequentialCommandGroup(new WaitCommand(2.3), 
-                                new ParallelDeadlineGroup(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint), 
-                                        new RunIntakeWheelsInfinite(s_wheels),
-                                        new WaitCommand(1.7)), 
+                                new ParallelDeadlineGroup(new WaitCommand(1.7), new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint), 
+                                        new RunIntakeWheelsInfinite(s_wheels)), 
                                 new ParallelDeadlineGroup(new WaitCommand(2.3), 
-                                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint))),
-                        new ReverseIntakeWheels(s_wheels, 0.5)), 
+                                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint)), 
+                                new ReverseIntakeWheels(s_wheels, 0.5))),
                 new WaitCommand(15));
     }
 }

@@ -8,6 +8,8 @@ import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,6 +44,7 @@ import frc.robot.commands.arm2.RotateArm2Manual;
 import frc.robot.commands.arm2.RotateArm2Position;
 import frc.robot.commands.auton.BalancePath;
 import frc.robot.commands.auton.BlueAllianceScoreOnlyAuton;
+import frc.robot.commands.auton.PlaceConeHigh;
 import frc.robot.commands.auton.RedAllianceScoreOnlyAuton;
 import frc.robot.commands.auton.examplePPAuto;
 import frc.robot.commands.claw.IntakeCone;
@@ -77,6 +80,8 @@ public class RobotContainer {
     CommandXboxController m_driveController = new CommandXboxController(OIConstants.kDriveControllerPort);
     CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
+    XboxController xbox = new XboxController(20);
+
     SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
     private boolean use_wpi_pid_arm = false;
@@ -88,10 +93,12 @@ public class RobotContainer {
         s_intake = new IntakeSubsystem();
         s_claw = new ClawSubsystem();
         s_wheels = new WheelSubsystem();
+        s_arm2 = new ArmSubsystem5();
 
         m_autonChooser.addOption("Cone and Charge", new BalancePath(s_swerve));
-        m_autonChooser.addOption("Red Cone and Cube", new RedAllianceScoreOnlyAuton(s_swerve));
-        m_autonChooser.addOption("Blue Cone and Cube", new BlueAllianceScoreOnlyAuton(s_swerve));
+        m_autonChooser.addOption("Red Cone and Cube", new RedAllianceScoreOnlyAuton(s_swerve, s_claw, s_arm2, s_intake, s_wheels));
+        m_autonChooser.addOption("Blue Cone and Cube", new BlueAllianceScoreOnlyAuton(s_swerve, s_claw, s_arm2, s_intake, s_wheels));
+        m_autonChooser.addOption("Place cone only", new PlaceConeHigh(s_arm2, s_claw, s_swerve));
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
 
@@ -104,21 +111,22 @@ public class RobotContainer {
                                                                                                                   // CRAP
                                                                                                                   // WORK?
                         () -> -slewRateLimiterX.calculate(m_driveController.getLeftX() * getPercentDriveSpeed()),
-                        () -> -m_driveController.getRightX(),
+                        () -> -m_driveController.getRightX() * getPercentDriveSpeed(),
                         () -> m_driveController.rightTrigger().getAsBoolean()));
 
-        if (use_wpi_pid_arm) {
+        /*if (use_wpi_pid_arm) {
             s_arm = new ArmSubsystem4();
             s_arm.setDefaultCommand(new RotateArmManual(s_arm, () -> -m_operatorController.getLeftY())); // damn inverted
                                                                                                          // controls
             
                                                                                                          s_arm2 = null;
-        } else {
-            s_arm2 = new ArmSubsystem5();
-            s_arm2.setDefaultCommand(new RotateArm2Manual(s_arm2, () -> -m_operatorController.getLeftY())); // damn inverted
+        } else {*/
+        s_arm2.setDefaultCommand(new RotateArm2Manual(s_arm2, () -> -m_operatorController.getLeftY())); // damn inverted
             
-            s_arm = null;
-        }                          
+        s_arm = null;
+
+        s_wheels.setDefaultCommand(new RunIntakeWheelsInfinite(s_wheels, -0.05));
+
         configureDriverButtonBindings();
         configureOperatorButtonBindings();
         // configureTriggerBindings();
@@ -133,18 +141,39 @@ public class RobotContainer {
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
-        m_driveController.povUp().whileTrue(
-                new TeleopSwerve(s_swerve, () -> SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
-        m_driveController.povDown().whileTrue(
-                new TeleopSwerve(s_swerve, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
-        m_driveController.povLeft().whileTrue(
-                new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
-        m_driveController.povRight().whileTrue(
-                new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
-
-        m_driveController.b().onTrue(new InstantCommand(() -> togglePercentDriveSpeed()));
+        m_driveController.x().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> togglePercentDriveSpeed()),
+                new InstantCommand(() -> m_driveController.getHID().setRumble(RumbleType.kBothRumble, 1)),
+                new WaitCommand(0.5),
+                new InstantCommand(() -> m_driveController.getHID().setRumble(RumbleType.kBothRumble, 0))));
 
         m_driveController.a().onTrue(new StrafeAlign(s_swerve));
+
+        // m_driveController.povUp().whileTrue(
+        //         new TeleopSwerve(s_swerve, () -> SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        // m_driveController.povDown().whileTrue(
+        //         new TeleopSwerve(s_swerve, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> 0, () -> true));
+        // m_driveController.povLeft().whileTrue(
+        //         new TeleopSwerve(s_swerve, () -> 0, () -> SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
+        // m_driveController.povRight().whileTrue(
+        //         new TeleopSwerve(s_swerve, () -> 0, () -> -SwerveConstants.kPreciseSwerveSpeed, () -> 0, () -> true));
+
+        // intake
+        m_driveController.rightTrigger()
+        .onTrue(new ParallelCommandGroup(
+                new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint),
+                new SequentialCommandGroup(new TimerDeadline(0.5)), new RunIntakeWheelsInfinite(s_wheels)));
+        m_driveController.rightBumper()
+        .onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
+        m_driveController.leftTrigger()
+        .onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime));
+        m_driveController.leftBumper()
+        .onTrue(new ParallelCommandGroup(
+                new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeMiddleScorePosition),
+                new SequentialCommandGroup(new TimerDeadline(.5), new RunIntakeWheels(s_wheels, 0.1),
+                        new ReverseIntakeWheels(s_wheels, 0.3))));
+
+ 
 
     }
 
@@ -183,20 +212,7 @@ public class RobotContainer {
         m_operatorController.a().whileTrue(new IntakeCone(s_claw));
         m_operatorController.b().whileTrue(new OuttakeCone(s_claw));
 
-        // intake
-        m_driveController.rightTrigger()
-                .onTrue(new ParallelCommandGroup(
-                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint),
-                        new SequentialCommandGroup(new TimerDeadline(0.5)), new RunIntakeWheelsInfinite(s_wheels)));
-        m_driveController.rightBumper()
-                .onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
-        m_driveController.leftTrigger()
-                .onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime));
-        m_driveController.leftBumper()
-                .onTrue(new ParallelCommandGroup(
-                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeMiddleScorePosition),
-                        new SequentialCommandGroup(new TimerDeadline(.5), new RunIntakeWheels(s_wheels, 0.1),
-                                new ReverseIntakeWheels(s_wheels, 0.3))));
+        
     }
 
     // private void configureTriggerBindings() {

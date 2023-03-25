@@ -33,12 +33,12 @@ public class ArmConstants {
     
     // setpoints
     public static final double kArmHome =          Units.degreesToRadians(0);
-    public static final double kArmPutHigh =       Units.degreesToRadians(135);
+    public static final double kArmPutHigh =       Units.degreesToRadians(105);
     public static final double kArmPutMiddle =     Units.degreesToRadians(85); // FIXME: tune these
     public static final double kArmPutHumanPlayer =     Units.degreesToRadians(90); // FIXME: tune these
     public static final double kArmTolerance =     Units.degreesToRadians(5);
 
-    public static final double kForwardSoftLimit = Conversions.degreesToFalcon(150, kArmGearRatio);
+    public static final double kForwardSoftLimit = Conversions.degreesToFalcon(115, kArmGearRatio);
     public static final double kReverseSoftLimit = Conversions.degreesToFalcon(-1, kArmGearRatio);
 
     // ARM SUBSYSTEM 4 SPECIFIC
@@ -48,7 +48,7 @@ public class ArmConstants {
 
     // ARM SUBSYSTEM 5 SPECIFIC
     public static final double kArm2Tolerance = Conversions.degreesToFalcon(3, kArmGearRatio);
-    public static final int    peakVelocityUp        = 10_000;
+    public static final int    peakVelocityUp        = 8_000;
     public static final double percentOfPeakUp       = 1;
     public static final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
 
@@ -69,7 +69,7 @@ public class ArmConstants {
         motor.selectProfileSlot(0, 0);
         
         /* THRESHOLDS */
-        motor.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(95, ArmConstants.kArmGearRatio),
+        motor.configForwardSoftLimitThreshold(Conversions.degreesToFalcon(ArmConstants.kForwardSoftLimit, ArmConstants.kArmGearRatio),
                 0);
         motor.configReverseSoftLimitThreshold(Conversions.degreesToFalcon(-1, ArmConstants.kArmGearRatio), 0);
         motor.configForwardSoftLimitEnable(true, 0);

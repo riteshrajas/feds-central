@@ -7,25 +7,37 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 public class RunIntakeWheelsInfinite extends CommandBase {
-    private final WheelSubsystem m_intake;
-    private final Timer timer;
+    private final WheelSubsystem m_wheels;
+    private final double speed;
 
+
+    public RunIntakeWheelsInfinite(WheelSubsystem intake, double speed) {
+        this.m_wheels = intake; 
+        this.speed = speed;
+       
+
+        addRequirements(m_wheels);
+    } 
     public RunIntakeWheelsInfinite(WheelSubsystem intake) {
-        this.m_intake = intake; 
-        timer = new Timer();
+        this.m_wheels = intake; 
+        this.speed = 0;
+       
 
-        addRequirements(m_intake);
+        addRequirements(m_wheels);
     } 
 
     @Override 
     public void initialize(){
-        timer.reset();
-        timer.start();
+       
     }
     
     @Override
     public void execute() {
-        m_intake.runIntakeWheelsIn();
+        if(speed != 0) {
+            m_wheels.runIntakeWheelsIn(speed);
+        } else {
+            m_wheels.runIntakeWheelsIn();
+        }
     }
 
     @Override
@@ -35,6 +47,6 @@ public class RunIntakeWheelsInfinite extends CommandBase {
 
     @Override
     public void end(boolean interrupted){
-        m_intake.stopIntakeWheels();
+        m_wheels.stopIntakeWheels();
     }
 }

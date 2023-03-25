@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.arm2.RotateArm2Position;
 import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.utilityCommands.TimerDeadline;
@@ -28,21 +29,27 @@ public class PlaceConeHigh extends SequentialCommandGroup{
         addRequirements(this.s_swerve);
 
         addCommands(
-            new RotateArm2Position(s_arm, ArmConstants.kArmPutHigh),
-            new OuttakeCone(s_claw),
-            new ParallelDeadlineGroup(new TimerDeadline(1), new RunCommand(
+            new ParallelDeadlineGroup(
+                new WaitCommand(4),
+                new RotateArm2Position(s_arm, ArmConstants.kArmPutHigh)),
+            new ParallelDeadlineGroup(
+                new WaitCommand(.75), 
+                new RunCommand(
                 () -> {
                   // Robot.motionMode = MotionMode.NULL;
                   s_swerve.setModuleStates(
                       new SwerveModuleState[] {
-                          new SwerveModuleState(-1.2, Rotation2d.fromDegrees(0)),
-                          new SwerveModuleState(-1.2, Rotation2d.fromDegrees(0)),
-                          new SwerveModuleState(-1.2, Rotation2d.fromDegrees(0)),
-                          new SwerveModuleState(-1.2, Rotation2d.fromDegrees(0))
+                          new SwerveModuleState(-.8, Rotation2d.fromDegrees(0)),
+                          new SwerveModuleState(-.8, Rotation2d.fromDegrees(0)),
+                          new SwerveModuleState(-.8, Rotation2d.fromDegrees(0)),
+                          new SwerveModuleState(-.8, Rotation2d.fromDegrees(0))
                       });
                 }
-        )),
-        new ParallelDeadlineGroup(new TimerDeadline(1), new RunCommand(
+            )), 
+            new ParallelDeadlineGroup(new WaitCommand(0.5), new OuttakeCone(s_claw)),
+            new ParallelDeadlineGroup(
+                new WaitCommand(.75), 
+                new RunCommand(
                 () -> {
                   // Robot.motionMode = MotionMode.NULL;
                   s_swerve.setModuleStates(
@@ -53,8 +60,10 @@ public class PlaceConeHigh extends SequentialCommandGroup{
                           new SwerveModuleState(1.2, Rotation2d.fromDegrees(0))
                       });
                 }
-        )),
-            new RotateArm2Position(s_arm, ArmConstants.kArmHome)
+            )),
+            new ParallelDeadlineGroup(
+                new WaitCommand(4),
+                new RotateArm2Position(s_arm, ArmConstants.kArmHome))
         );
     }
     

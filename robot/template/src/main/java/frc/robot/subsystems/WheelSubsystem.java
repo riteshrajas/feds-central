@@ -20,6 +20,10 @@ public class WheelSubsystem extends SubsystemBase{
         intakeWheelMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeWheelSpeed);
     }
 
+    public void runIntakeWheelsIn(double speed) {
+        intakeWheelMotor.set(TalonFXControlMode.PercentOutput, speed);
+    }
+
     public void runIntakeWheelsOut() {
         intakeWheelMotor.set(TalonFXControlMode.PercentOutput, -IntakeConstants.kIntakeWheelSpeed);
     }

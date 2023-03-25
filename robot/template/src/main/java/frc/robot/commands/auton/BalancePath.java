@@ -28,7 +28,7 @@ public class BalancePath extends SequentialCommandGroup {
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
         ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner
-                .loadPathGroup("Mid Score + Balance", new PathConstraints(0.5, 0.5));
+                .loadPathGroup("Mid Score + Balance", new PathConstraints(1.5, 0.75));
 
         // This is just an example event map. It would be better to have a constant,
         // global event map

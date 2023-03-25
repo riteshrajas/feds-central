@@ -21,10 +21,10 @@ public final class AutoConstants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     public static class Balance {
-        public static final double kPitchP = 0;
+        public static final double kPitchP = 0.4;
         public static final double kPitchI = 0;
         public static final double kPitchD = 0;
-        public static final double kPitchDeadband = 0;
+        public static final double kPitchDeadband = 0.5;
 
         public static final double kRollP = 0;
         public static final double kRollI = 0;
