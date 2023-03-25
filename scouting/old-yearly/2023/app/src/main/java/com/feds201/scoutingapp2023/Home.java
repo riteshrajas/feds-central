@@ -1,5 +1,6 @@
 package com.feds201.scoutingapp2023;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,8 +34,13 @@ import java.util.List;
 public class Home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View homeView = inflater.inflate(R.layout.fragment_home_tablet, container, false);
-
+        View homeView;
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600) {
+            homeView = inflater.inflate(R.layout.fragment_home_tablet, container, false);
+        } else {
+            homeView = inflater.inflate(R.layout.fragment_home_phone, container, false);
+        }
         ArrayList<String> matchesStrings = DatabaseUtilities.ListOfAllMatches();
 
         try {
