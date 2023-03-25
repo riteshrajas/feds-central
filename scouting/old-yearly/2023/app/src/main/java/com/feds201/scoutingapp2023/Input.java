@@ -162,6 +162,15 @@ public class Input extends Fragment {
             }
         }
 
+        // SET UP ALL VIEWS
+
+
+
+
+
+
+
+
 
         // 3. Hiding objects on tab switch
         // 3a. objects hidden on start
@@ -234,32 +243,40 @@ public class Input extends Fragment {
         for(GamePieceButton gamePieceButton : autonButtons) {
                 gamePieceButton.button.setOnClickListener(view -> {
                     Log.d("score", "auton: " + currentMatch.autonLow + " " + currentMatch.autonMiddle + " " + currentMatch.autonHigh);
+
+                    int row = gamePieceButton.getRowFromScoreType(gamePieceButton.getScoreType());
+                    int col = gamePieceButton.getButtonId()-1;
+
                     if(gamePieceButton.getCycleAll()) {
                         gamePieceButton.imageState++;
                         switch(gamePieceButton.imageState) {
                             case 1:
                                 gamePieceButton.button.setImageResource(R.drawable.cone);
+                                currentMatch.autonGrid[row][col] = Match.GamePiece.CONE;
                                 Log.d("score", gamePieceButton.getScoreType().toString());
                                 switch(gamePieceButton.getScoreType()) {
                                     case AUTON_LOW:
                                         currentMatch.autonLow++;
                                         matchDao.update(currentMatch);
-
                                         break;
                                     case AUTON_MIDDLE:
                                         currentMatch.autonMiddle++;
+                                        currentMatch.autonGrid[1][gamePieceButton.getButtonId()-1] = Match.GamePiece.CONE;
                                         matchDao.update(currentMatch);
                                         break;
                                     case AUTON_HIGH:
                                         currentMatch.autonHigh++;
+                                        currentMatch.autonGrid[0][gamePieceButton.getButtonId()-1] = Match.GamePiece.CONE;
                                         matchDao.update(currentMatch);
                                         break;
                                 }
                                 break;
                             case 2:
+                                currentMatch.autonGrid[row][col] = Match.GamePiece.CUBE;
                                 gamePieceButton.button.setImageResource(R.drawable.cube);
                                 break;
                             case 3:
+                                currentMatch.autonGrid[row][col] = Match.GamePiece.NONE;
                                 gamePieceButton.button.setImageResource(R.drawable.nothing);
                                 gamePieceButton.imageState = 0;
                                 switch(gamePieceButton.getScoreType()) {
@@ -283,6 +300,7 @@ public class Input extends Fragment {
                         switch(gamePieceButton.imageState) {
                             case 1:
                                 gamePieceButton.button.setImageResource(R.drawable.cube);
+                                currentMatch.autonGrid[row][col] = Match.GamePiece.CUBE;
                                 switch(gamePieceButton.getScoreType()) {
                                     case AUTON_LOW:
                                         currentMatch.autonLow++;
@@ -299,6 +317,7 @@ public class Input extends Fragment {
                                 }
                                 break;
                             case 2:
+                                currentMatch.autonGrid[row][col] = Match.GamePiece.NONE;
                                 gamePieceButton.button.setImageResource(R.drawable.nothing);
                                 gamePieceButton.imageState = 0;
                                 switch(gamePieceButton.getScoreType()) {
@@ -324,11 +343,14 @@ public class Input extends Fragment {
         // 4b. teleop grid button listeners
         for(GamePieceButton gamePieceButton : teleopButtons) {
             gamePieceButton.button.setOnClickListener(view -> {
+                int row = gamePieceButton.getRowFromScoreType(gamePieceButton.getScoreType());
+                int col = gamePieceButton.getButtonId()-1;
                 Log.d("score", "teleop: " + currentMatch.teleopLow + " " + currentMatch.teleopMiddle + " " + currentMatch.teleopHigh);
                 if (gamePieceButton.getCycleAll()) {
                     gamePieceButton.imageState++;
                     switch(gamePieceButton.imageState) {
                         case 1:
+                            currentMatch.teleopGrid[row][col] = Match.GamePiece.CONE;
                             gamePieceButton.button.setImageResource(R.drawable.cone);
                             switch(gamePieceButton.getScoreType()) {
                                 case TELEOP_LOW:
@@ -346,9 +368,11 @@ public class Input extends Fragment {
                             }
                             break;
                         case 2:
+                            currentMatch.teleopGrid[row][col] = Match.GamePiece.CUBE;
                             gamePieceButton.button.setImageResource(R.drawable.cube);
                             break;
                         case 3:
+                            currentMatch.teleopGrid[row][col] = Match.GamePiece.NONE;
                             gamePieceButton.button.setImageResource(R.drawable.nothing);
                             gamePieceButton.imageState = 0;
                             switch(gamePieceButton.getScoreType()) {
@@ -371,6 +395,7 @@ public class Input extends Fragment {
                     gamePieceButton.imageState++;
                     switch (gamePieceButton.imageState) {
                         case 1:
+                            currentMatch.teleopGrid[row][col] = Match.GamePiece.CUBE;
                             gamePieceButton.button.setImageResource(R.drawable.cube);
                             switch(gamePieceButton.getScoreType()) {
                                 case TELEOP_LOW:
@@ -388,6 +413,7 @@ public class Input extends Fragment {
                             }
                             break;
                         case 2:
+                            currentMatch.teleopGrid[row][col] = Match.GamePiece.NONE;
                             gamePieceButton.button.setImageResource(R.drawable.nothing);
                             gamePieceButton.imageState = 0;
                             switch(gamePieceButton.getScoreType()) {

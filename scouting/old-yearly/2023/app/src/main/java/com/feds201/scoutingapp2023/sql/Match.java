@@ -7,8 +7,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import org.json.JSONObject;
-
 /* Hi welcome to Zayn's (crazed) SQL brain dump
  * our team number
  * match number
@@ -119,5 +117,8 @@ public class Match {
     }
 
     @Ignore
-    public GamePiece[][] grid = new GamePiece[3][9];
+    public GamePiece[][] autonGrid = new GamePiece[3][9];
+
+    @Ignore
+    public GamePiece[][] teleopGrid = new GamePiece[3][9];
 }

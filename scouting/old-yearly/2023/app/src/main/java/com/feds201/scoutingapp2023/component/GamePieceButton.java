@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 
 import com.feds201.scoutingapp2023.R;
+import com.google.android.material.color.utilities.Score;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,6 +48,15 @@ public class GamePieceButton implements Component {
         return null;
     }
 
+    public int getRowFromScoreType(ScoreType st) {
+        switch (st) {
+            case AUTON_LOW:      case TELEOP_LOW:    return 2;
+            case AUTON_MIDDLE:   case TELEOP_MIDDLE: return 1;
+            case AUTON_HIGH:     case TELEOP_HIGH:   return 0;
+        }
+        return -1;
+    }
+
 
     public static ArrayList<GamePieceButton> generateCyclingButtonsFromPrefix(Class resClass, String prefix, View view) {
         java.lang.reflect.Field[] fields = resClass.getFields();
@@ -66,6 +76,10 @@ public class GamePieceButton implements Component {
         }
 
         return buttons;
+    }
+
+    public int getButtonId() {
+        return buttonId;
     }
 
 //    public void cycleImageAll() {
