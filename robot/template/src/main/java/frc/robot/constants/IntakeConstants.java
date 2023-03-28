@@ -15,7 +15,7 @@ public final class IntakeConstants {
     // Speeds
     public static final double kIntakeDeploySpeed = 0.15;
     public static final double kIntakeRetractSpeed = -0.15;
-    public static final double kIntakeWheelSpeed = -0.22;
+    public static final double kIntakeWheelSpeed = -0.07;
     
     public static final double kIntakeWheelEjectTime = 0.5;
 
@@ -50,7 +50,7 @@ public final class IntakeConstants {
     public static final double kIntakeMiddleScorePosition = Conversions.degreesToFalcon(-30, kIntakeGearRatio);
     
     public static final double kIntakeForwardSetpoint = Conversions.degreesToFalcon(90, kIntakeGearRatio);
-    public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(0, kIntakeGearRatio);
+    public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(-5, kIntakeGearRatio);
 
     public static void configIntakeMotor(TalonFX motor){
         

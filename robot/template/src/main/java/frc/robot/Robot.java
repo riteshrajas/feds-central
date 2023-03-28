@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    RobotContainer.controllerMultiplier = 1;
   }
 
   @Override

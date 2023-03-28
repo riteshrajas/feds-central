@@ -36,7 +36,9 @@ public class ArmConstants {
     public static final double kArmPutHigh =       Units.degreesToRadians(105);
     public static final double kArmPutMiddle =     Units.degreesToRadians(85); // FIXME: tune these
     public static final double kArmPutHumanPlayer =     Units.degreesToRadians(90); // FIXME: tune these
-    public static final double kArmTolerance =     Units.degreesToRadians(5);
+    public static final double kArmTolerance =     Units.degreesToRadians(3);
+    public static final double kLowerOverCone =    Units.degreesToRadians(98);
+
 
     public static final double kForwardSoftLimit = Conversions.degreesToFalcon(115, kArmGearRatio);
     public static final double kReverseSoftLimit = Conversions.degreesToFalcon(-1, kArmGearRatio);

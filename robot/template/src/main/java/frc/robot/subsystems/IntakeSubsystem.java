@@ -14,6 +14,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         intakeDeployMotor = new TalonFX(IntakeConstants.kIntakeBlueLeftDeployMotor);
         IntakeConstants.configIntakeMotor(intakeDeployMotor);
+        intakeDeployMotor.setSelectedSensorPosition(0);
     }
 
     public double getPositionEncoderCounts() {

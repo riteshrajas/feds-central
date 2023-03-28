@@ -34,9 +34,9 @@ public class BalanceWhileOn extends CommandBase {
 
         s_swerve.drive(
             new Translation2d(
-                -rollCommand,
-                -pitchCommand
-            ).times(.75),
+                rollCommand,
+                pitchCommand
+            ).times(1),
             0.0,
             false, 
             true

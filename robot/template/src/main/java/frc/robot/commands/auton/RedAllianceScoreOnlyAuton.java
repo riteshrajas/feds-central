@@ -50,7 +50,8 @@ public class RedAllianceScoreOnlyAuton extends SequentialCommandGroup {
         // for every path in the group
         addRequirements(s_Swerve);
         ArrayList<PathPlannerTrajectory> pathGroup1 = (ArrayList<PathPlannerTrajectory>) PathPlanner
-                .loadPathGroup("High Cone + Low Cube (B)", new PathConstraints(3, 2));
+                .loadPathGroup("High Cone + Low Cube (B)", new PathConstraints(3, 2)); //FIXME: IS THIS RIGHT?????
+        //FIXME:                     ^^^^^^^^^^^^^^^^^^^^^^^^^
 
         // This is just an example event map. It would be better to have a constant,
         // global event map
@@ -90,6 +91,6 @@ public class RedAllianceScoreOnlyAuton extends SequentialCommandGroup {
                                 new ParallelDeadlineGroup(new WaitCommand(2.3), 
                                         new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint)), 
                                 new ReverseIntakeWheels(s_wheels, 0.5))),
-                new WaitCommand(15));
+                new WaitCommand(100));
         }
 }

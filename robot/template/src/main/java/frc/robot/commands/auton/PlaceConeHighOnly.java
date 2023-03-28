@@ -14,12 +14,12 @@ import frc.robot.subsystems.ArmSubsystem5;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class PlaceConeHigh extends SequentialCommandGroup{
+public class PlaceConeHighOnly extends SequentialCommandGroup{
     private ArmSubsystem5 s_arm;
     private ClawSubsystem s_claw;
     private SwerveSubsystem s_swerve;
 
-    public PlaceConeHigh(ArmSubsystem5 s_arm, ClawSubsystem s_claw, SwerveSubsystem s_swerve){
+    public PlaceConeHighOnly(ArmSubsystem5 s_arm, ClawSubsystem s_claw, SwerveSubsystem s_swerve){
         this.s_arm = s_arm;
         this.s_claw = s_claw;
         this.s_swerve = s_swerve;
@@ -45,7 +45,7 @@ public class PlaceConeHigh extends SequentialCommandGroup{
                           new SwerveModuleState(-.8, Rotation2d.fromDegrees(0))
                       });
                 }
-            )),
+            )), 
             new ParallelDeadlineGroup(
                 new WaitCommand(2),
                 new RotateArm2Position(s_arm, Units.degreesToRadians(ArmConstants.kLowerOverCone))), 
@@ -66,7 +66,8 @@ public class PlaceConeHigh extends SequentialCommandGroup{
             )),
             new ParallelDeadlineGroup(
                 new WaitCommand(4),
-                new RotateArm2Position(s_arm, ArmConstants.kArmHome))
+                new RotateArm2Position(s_arm, ArmConstants.kArmHome)),
+            new WaitCommand(15)
         );
     }
     

@@ -90,6 +90,6 @@ public class BlueAllianceScoreOnlyAuton extends SequentialCommandGroup {
                                 new ParallelDeadlineGroup(new WaitCommand(2.3), 
                                         new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint)), 
                                 new ReverseIntakeWheels(s_wheels, 0.5))),
-                new WaitCommand(15));
+                new WaitCommand(100));
     }
 }
