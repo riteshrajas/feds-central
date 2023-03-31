@@ -146,7 +146,7 @@ public class SwerveSubsystem extends SubsystemBase {
         limelight.setResult();
 
         SmartDashboard.putNumber("Target Distance", limelight.getHorizontalDistanceToTarget());
-        SmartDashboard.putNumber("Target Strafe", limelight.strafeAlignDistance());
+        SmartDashboard.putNumber("Target Strafe", limelight.getStrafeAlignDistance());
 
     }
 }

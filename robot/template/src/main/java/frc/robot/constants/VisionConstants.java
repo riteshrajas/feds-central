@@ -8,4 +8,5 @@ public final class VisionConstants {
     public static final double highTargetHeight = 1.10;
     public static final double limelightPitchRadians = 0;
     public static final double kAlignmentThreshold = 0.025;
+    public static final double kDepthAlignmentDistance = 0.8;
 }

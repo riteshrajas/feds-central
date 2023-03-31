@@ -30,15 +30,13 @@ public class StrafeAlign extends CommandBase{
 
     @Override
     public void execute(){
-        s_limelight.setResult();
-        s_limelight.strafeAlignDistance();
-        double strafeCommand = strafeController.calculate(s_limelight.strafeAlignDistance(), 0);
-        s_swerve.drive(new Translation2d(strafeCommand, new Rotation2d(Math.PI/2)), 0, true, false);
+        double strafeCommand = strafeController.calculate(s_limelight.getStrafeAlignDistance(), 0);
+        s_swerve.drive((new Translation2d(strafeCommand, new Rotation2d(Math.PI/2))).times(0.6), 0, true, true);
     }
 
     @Override
     public boolean isFinished(){
-        return Math.abs(s_limelight.strafeAlignDistance()) < VisionConstants.kAlignmentThreshold;
+        return Math.abs(s_limelight.getStrafeAlignDistance()) < VisionConstants.kAlignmentThreshold;
     }
 
     @Override

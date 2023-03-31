@@ -32,44 +32,21 @@ public class LimelightSubsystem extends SubsystemBase{
     }
 
     public double getTargetYaw(){
+        setResult();
         return Math.toRadians(cameraYaw);
     }
 
     public double getTargetPitch(){
+        setResult();
         return Math.toRadians(cameraPitch);
     }
 
     public double getTargetDistance(){
-        if(Math.abs(getTargetPitch()) < 0.3){
-            cameraDistanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(0, 
-                                                                VisionConstants.lowTargetHeight, 
-                                                                VisionConstants.limelightPitchRadians,
-                                                                getTargetPitch()); 
-        }
-        else{
-            cameraDistanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.limelightheight, 
-                                                                VisionConstants.highTargetHeight, 
-                                                                VisionConstants.limelightPitchRadians,
-                                                                getTargetPitch());    
-        }
-        
-        // This is the law of cosines
-        // C^2 = A^2 + B^2 - 2*A*Bcos(theta)
-        //double cameraDistanceToTargetSquared = Math.pow(cameraDistanceToTarget, 2); // this is A^2
-        //double limelightToArmRotateAxisSquared = Math.pow(VisionConstants.limelightToTopArmOffset, 2); // this is B^2
-        //double theta = Math.PI / 2 - getTargetPitch() - VisionConstants.limelightPitchRadians;
-    
-        //                        A^2                        +              B^2                - 2 *             A          *                        B                *     cos(theta)                      
-        //double rightHandSide = cameraDistanceToTargetSquared + limelightToArmRotateAxisSquared - 2 * cameraDistanceToTarget * VisionConstants.limelightToTopArmOffset * Math.cos(theta);
-
-        // C = sqrt(rightHandSize)
-        //return Math.sqrt(rightHandSide);
-        return cameraDistanceToTarget;
+        return (VisionConstants.limelightheight - VisionConstants.highTargetHeight) / (Math.cos((Math.PI/2) - getTargetPitch()));
     }
 
     public double getHorizontalDistanceToTarget(){
-        horizontalDistance = Math.cos(cameraPitch + getTargetPitch()) * getTargetDistance();
-        return horizontalDistance;
+        return Math.tan((Math.PI/2) + getTargetPitch()) * (VisionConstants.limelightheight - VisionConstants.highTargetHeight);
     }
 
     @Override
@@ -79,7 +56,7 @@ public class LimelightSubsystem extends SubsystemBase{
         }
     }
 
-    public double strafeAlignDistance() {
+    public double getStrafeAlignDistance() {
         double driveDistance;
         driveDistance = Math.abs(Math.sin(getTargetYaw())) * getHorizontalDistanceToTarget();
         return driveDistance;

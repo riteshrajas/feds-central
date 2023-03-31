@@ -25,6 +25,10 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeDeployMotor.set(ControlMode.MotionMagic, position);
     }
 
+    public void rotateIntakeManual(double power){
+        intakeDeployMotor.set(ControlMode.PercentOutput, power);
+    }
+
     public boolean hitForwardSoftLimit(){
         return getPositionEncoderCounts() >= IntakeConstants.kIntakeForwardSetpoint;
     }
