@@ -26,7 +26,7 @@ public class cubeOnly extends SequentialCommandGroup{
         addRequirements(this.s_swerve);
 
         addCommands(
-            new ReverseIntakeWheels(s_wheels, 0.6), 
+            new ReverseIntakeWheels(s_wheels, 0.6, 0.1), 
             new ParallelDeadlineGroup(
                 new WaitCommand(3.10), 
                 new RunCommand(

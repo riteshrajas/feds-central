@@ -143,12 +143,10 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
+        limelight.setResult();
 
-        // for (SwerveModule mod : mSwerveMods) {
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
-        //             mod.getPosition().angle.getDegrees());
-        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        // }
+        SmartDashboard.putNumber("Target Distance", limelight.getHorizontalDistanceToTarget());
+        SmartDashboard.putNumber("Target Strafe", limelight.strafeAlignDistance());
+
     }
 }

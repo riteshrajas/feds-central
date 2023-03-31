@@ -32,8 +32,6 @@ import frc.robot.constants.OIConstants;
 import frc.robot.commands.drive.BalanceWhileOn;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.TeleopSwerve;
-import frc.robot.commands.intake.DeployIntake;
-import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.RunIntakeWheelsInfinite;
 import frc.robot.commands.intake.ReverseIntakeWheels;
@@ -103,6 +101,7 @@ public class RobotContainer {
         //m_autonChooser.addOption("Place cone only", new PlaceConeHighOnly(s_arm2, s_claw, s_swerve));
         // m_autonChooser.addOption("CubeOnly", new cubeOnly(s_wheels, s_swerve, s_intake));
         m_autonChooser.addOption("BalanceOnly", new BalanceWhileOn(s_swerve));
+        m_autonChooser.addOption("Test Path", new examplePPAuto(s_swerve));
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
 
@@ -130,9 +129,6 @@ public class RobotContainer {
     }
 
     private void configureDriverButtonBindings() {
-        // driver
-        // right bumper: claw open close
-        // r-trigger: intake open
         m_driveController.y().onTrue(
                 new InstantCommand(() -> s_swerve.zeroGyro()));
 
@@ -151,27 +147,14 @@ public class RobotContainer {
         .onTrue(new ParallelCommandGroup(
                 new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeForwardSetpoint),
                 new SequentialCommandGroup(new WaitCommand(0.5)), new RunIntakeWheelsInfinite(s_wheels)));
-        m_driveController.rightBumper()
+        
+                m_driveController.rightBumper()
         .onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
 
-        // Back to what it was before: 1:24pm
-        m_driveController.leftTrigger().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime));
-
-        m_driveController.leftBumper()
-        .onTrue(new ParallelCommandGroup(
-                new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeMiddleScorePosition),
-                new SequentialCommandGroup(new WaitCommand(.5), new RunIntakeWheels(s_wheels, 0.2),
-                        new ReverseIntakeWheels(s_wheels, 0.3))));
+        m_driveController.leftTrigger().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelLowSpeed));
     }
 
     private void configureOperatorButtonBindings() {
-        // operator
-        // r-bumper: claw open close
-        // r-stick: precise rotation of arm
-        // l-stick press: activate DANGER MODE
-        // l-stick: nothing normally. DANGER MODE: control telescoping arm
-        // d-pad: control presents for the telescoping arm
-        // l-bumper: reverse intake
 
         // arm
         m_operatorController.povUp().onTrue(new RotateArm2Position(s_arm2, ArmConstants.kArmPutHigh)           // UP     = HIGH PLACE
@@ -185,12 +168,16 @@ public class RobotContainer {
         
         // claw
         m_operatorController.a().whileTrue(new IntakeCone(s_claw));
-        m_operatorController.b().whileTrue(new OuttakeCone(s_claw));                
+        m_operatorController.b().whileTrue(new OuttakeCone(s_claw));      
 
-        // m_operatorController.rightTrigger().onTrue(new ReverseIntakeWheelsFast(s_wheels, IntakeConstants.kIntakeWheelEjectTime, 0.5));
-    }
-
+        //Intake Wheel Shooting
+        m_operatorController.rightTrigger().onTrue(
+            new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelMiddleSpeed));
+        m_operatorController.leftTrigger().onTrue(
+            new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelHighSpeed));
     
+
+    }
 
     public Command getAutonomousCommand() {
         return m_autonChooser.getSelected();

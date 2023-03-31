@@ -24,7 +24,7 @@ public class examplePPAuto extends SequentialCommandGroup {
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
         ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner
-                .loadPathGroup("Top Path 2 Ball", new PathConstraints(4, 3));
+                .loadPathGroup("Test Path", new PathConstraints(2, 2));
 
         // This is just an example event map. It would be better to have a constant,
         // global event map

@@ -13,9 +13,9 @@ public final class IntakeConstants {
     public static final int kIntakeTriggerID = 2;
 
     // Speeds
-    public static final double kIntakeDeploySpeed = 0.15;
-    public static final double kIntakeRetractSpeed = -0.15;
-    public static final double kIntakeWheelSpeed = -0.07;
+    public static final double kIntakeWheelLowSpeed = -0.15;
+    public static final double kIntakeWheelMiddleSpeed = 0.5;
+    public static final double kIntakeWheelHighSpeed = 0.2;
     
     public static final double kIntakeWheelEjectTime = 0.5;
 
@@ -23,15 +23,6 @@ public final class IntakeConstants {
     public static final double kPercentOfPeakIntakeVelocity = 0.45;
     public static final double intakeVelocityAccelUp = 2000;//kPeakIntakeVelocity*kPercentOfPeakIntakeVelocity;
 
-    public static final double kDeployTime = 0.5;
-    public static final double kRetractTime = 0.5;
-
-    // Encoder Counts
-    //public static final double kIntakeEncoderOffsetDeployed = 2640;
-    /*public static final double kIntakeEncoderOffsetRetracted = 0;
-    public static final double kIntakePositionDeployed = 0;
-    public static final double kIntakePositionStart = 0;
-    public static final double kIntakePositionMid = 0;*/
     public static final double kIntakeGearRatio = 25;
 
 
@@ -47,10 +38,11 @@ public final class IntakeConstants {
     //Soft Limits
     public static final double kIntakeForwardSoftLimit = Conversions.degreesToFalcon(90, kIntakeGearRatio);
     public static final double kIntakeRetractSoftLimit = Conversions.degreesToFalcon(-10, kIntakeGearRatio);
-    public static final double kIntakeMiddleScorePosition = Conversions.degreesToFalcon(-30, kIntakeGearRatio);
+    public static final double kIntakeMiddleScorePosition = Conversions.degreesToFalcon(-7, kIntakeGearRatio);
+    public static final double kIntakeHighScorePosition = Conversions.degreesToFalcon(-6, kIntakeGearRatio);
     
     public static final double kIntakeForwardSetpoint = Conversions.degreesToFalcon(90, kIntakeGearRatio);
-    public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(-5, kIntakeGearRatio);
+    public static final double kIntakeRetractSetpoint = Conversions.degreesToFalcon(0, kIntakeGearRatio);
 
     public static void configIntakeMotor(TalonFX motor){
         

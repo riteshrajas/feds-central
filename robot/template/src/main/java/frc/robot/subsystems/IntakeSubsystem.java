@@ -21,20 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
         return intakeDeployMotor.getSelectedSensorPosition();
     }
 
-    public void rotateIntakeForwards() {
-        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeDeploySpeed);
-    }
-
-    public void rotateIntakeBackwards() {
-        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, IntakeConstants.kIntakeRetractSpeed);
-    }
-
-    public void stopIntakeRotation() {
-        intakeDeployMotor.set(TalonFXControlMode.PercentOutput, 0);
-    }
-
-    
-
     public void setIntakePosition(double position){
         intakeDeployMotor.set(ControlMode.MotionMagic, position);
     }

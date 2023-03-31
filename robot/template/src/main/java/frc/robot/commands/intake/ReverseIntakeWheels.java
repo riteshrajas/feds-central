@@ -10,11 +10,13 @@ public class ReverseIntakeWheels extends CommandBase{
     private final WheelSubsystem m_intake;
     private final Timer timer;
     private final double time;
+    private final double speed;
 
-    public ReverseIntakeWheels(WheelSubsystem m_intake, double time){
+    public ReverseIntakeWheels(WheelSubsystem m_intake, double time, double speed){
         this.m_intake = m_intake;
         timer = new Timer();
         this.time = time;
+        this.speed = speed;
 
         addRequirements(this.m_intake);
     }
@@ -28,7 +30,7 @@ public class ReverseIntakeWheels extends CommandBase{
 
     @Override
     public void execute(){
-        m_intake.runIntakeWheelsOut();
+        m_intake.runIntakeWheelsOut(speed);
     }
 
     @Override
