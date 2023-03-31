@@ -32,4 +32,9 @@ public class DepthAlign extends CommandBase{
         double depthCommand = depthController.calculate(s_limelight.getHorizontalDistanceToTarget(), VisionConstants.kDepthAlignmentDistance);
         s_swerve.drive(new Translation2d(depthCommand, new Rotation2d(0)), 0, true, true);
     }
+
+    @Override
+    public boolean isFinished(){
+        return Math.abs(s_limelight.getHorizontalDistanceToTarget() - VisionConstants.kDepthAlignmentDistance) < VisionConstants.kDepthAlignmentDistance;
+    }
 }
