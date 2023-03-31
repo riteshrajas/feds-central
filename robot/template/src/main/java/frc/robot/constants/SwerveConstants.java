@@ -55,6 +55,10 @@ public final class SwerveConstants {
     public static final double drivePeakCurrentDuration = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
 
+    /* Swerve Offsets */
+
+    public static final double kRollOffset = 0;
+
     /*
      * These values are used by the drive falcon to ramp in open loop and closed
      * loop driving.

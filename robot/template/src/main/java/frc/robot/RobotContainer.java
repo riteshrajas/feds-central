@@ -119,7 +119,7 @@ public class RobotContainer {
 
         
         s_arm2.setDefaultCommand(new RotateArm2Manual(s_arm2, () -> -m_operatorController.getLeftY())); // damn inverted
-        s_wheels.setDefaultCommand(new RunIntakeWheelsInfinite(s_wheels, -0.05));
+        s_wheels.setDefaultCommand(new RunIntakeWheelsInfinite(s_wheels, -0.08));
         s_intake.setDefaultCommand(new RotateIntakeToPosition(s_intake, 0));
         s_reportingSubsystem.setDefaultCommand(new ReportingCommand(s_reportingSubsystem, s_pigeon2));
 
@@ -152,6 +152,8 @@ public class RobotContainer {
         .onTrue(new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint));
 
         m_driveController.leftTrigger().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelLowSpeed));
+
+        m_driveController.povDown().onTrue(new BalanceWhileOn(s_swerve));
     }
 
     private void configureOperatorButtonBindings() {

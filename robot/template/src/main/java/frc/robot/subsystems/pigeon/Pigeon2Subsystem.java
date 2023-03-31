@@ -1,6 +1,9 @@
 package frc.robot.subsystems.pigeon;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import frc.robot.constants.SwerveConstants;
+
 import com.ctre.phoenix.sensors.Pigeon2_Faults;
 
 public class Pigeon2Subsystem extends PigeonSubsystem {
@@ -16,6 +19,11 @@ public class Pigeon2Subsystem extends PigeonSubsystem {
   }
   public Pigeon2Subsystem(int deviceId, String canbus) {
     this(new WPI_Pigeon2(deviceId, canbus));
+  }
+
+  @Override
+  public double getRoll() {
+    return super.getRoll() + SwerveConstants.kRollOffset;
   }
 
   @Override
