@@ -58,7 +58,7 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public double getStrafeAlignDistance() {
         double driveDistance;
-        driveDistance = Math.abs(Math.sin(getTargetYaw())) * getHorizontalDistanceToTarget();
+        driveDistance = Math.sin(getTargetYaw()) * getHorizontalDistanceToTarget();
         return driveDistance;
     }
 

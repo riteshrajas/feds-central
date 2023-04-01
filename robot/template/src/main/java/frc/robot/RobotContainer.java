@@ -36,6 +36,7 @@ import frc.robot.commands.intake.RunIntakeWheels;
 import frc.robot.commands.intake.RunIntakeWheelsInfinite;
 import frc.robot.commands.intake.ReverseIntakeWheels;
 import frc.robot.commands.intake.RotateIntakeToPosition;
+import frc.robot.commands.sensor.DepthAlign;
 import frc.robot.commands.sensor.ReportingCommand;
 import frc.robot.commands.sensor.StrafeAlign;
 import frc.robot.commands.arm.RotateArmManual;
@@ -155,7 +156,8 @@ public class RobotContainer {
 
         m_driveController.leftTrigger().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelLowSpeed));
 
-        m_driveController.povDown().onTrue(new BalanceWhileOn(s_swerve));
+        m_driveController.povDown().onTrue(new StrafeAlign(s_swerve, s_limelight));
+        m_driveController.povUp().onTrue(new DepthAlign(s_swerve, s_limelight));
     }
 
     private void configureOperatorButtonBindings() {

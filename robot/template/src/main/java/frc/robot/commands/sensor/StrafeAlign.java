@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class StrafeAlign extends CommandBase{   
@@ -17,7 +18,7 @@ public class StrafeAlign extends CommandBase{
     public StrafeAlign(SwerveSubsystem s_swerve, LimelightSubsystem s_limelight){
         this.s_swerve = s_swerve;
         this.s_limelight = s_limelight;
-        strafeController = new PIDController(.2, 0, 0);
+        strafeController = new PIDController(1, 0.4, 0);
 
         addRequirements(this.s_swerve);
         addRequirements(this.s_limelight);
@@ -31,7 +32,11 @@ public class StrafeAlign extends CommandBase{
     @Override
     public void execute(){
         double strafeCommand = strafeController.calculate(s_limelight.getStrafeAlignDistance(), 0);
-        s_swerve.drive((new Translation2d(strafeCommand, new Rotation2d(Math.PI/2))).times(0.6), 0, true, true);
+
+        SmartDashboard.putNumber("STRAFE COMMAND", strafeCommand);
+        Translation2d strafe = new Translation2d(strafeCommand, new Rotation2d(Math.PI/2)).times(-2.5);
+        SmartDashboard.putNumber("Translation Y", strafe.getY());
+        s_swerve.drive((strafe), 0, true, true);
     }
 
     @Override

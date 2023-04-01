@@ -3,6 +3,7 @@ package frc.robot.commands.sensor;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -16,7 +17,7 @@ public class DepthAlign extends CommandBase{
     public DepthAlign(SwerveSubsystem s_swerve, LimelightSubsystem s_limelight){
         this.s_swerve = s_swerve;
         this.s_limelight = s_limelight;
-        depthController = new PIDController(0.2, 0, 0);
+        depthController = new PIDController(0.8, 0, 0);
 
         addRequirements(this.s_swerve);
         addRequirements(this.s_limelight);
@@ -30,11 +31,17 @@ public class DepthAlign extends CommandBase{
     @Override
     public void execute(){
         double depthCommand = depthController.calculate(s_limelight.getHorizontalDistanceToTarget(), VisionConstants.kDepthAlignmentDistance);
-        s_swerve.drive(new Translation2d(depthCommand, new Rotation2d(0)), 0, true, true);
+        Translation2d depth = new Translation2d(depthCommand, new Rotation2d(0)).times(3);
+        SmartDashboard.putNumber("Depth: ", depth.getX());
+        s_swerve.drive(depth, 0, true, true);
     }
 
     @Override
     public boolean isFinished(){
-        return Math.abs(s_limelight.getHorizontalDistanceToTarget() - VisionConstants.kDepthAlignmentDistance) < VisionConstants.kDepthAlignmentDistance;
+        return Math.abs(s_limelight.getHorizontalDistanceToTarget() - VisionConstants.kDepthAlignmentDistance) < VisionConstants.kDepthThreshold;
+    }
+@Override
+    public void end(boolean interrupted) {
+        s_swerve.drive(new Translation2d(0, 0), 0, true, false);
     }
 }
