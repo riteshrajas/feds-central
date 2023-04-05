@@ -28,8 +28,9 @@ public final class AutoConstants {
         public static final double kPitchDeadband = 1;
 
         public static final double kRollP = 0.15;
-        public static final double kRollI = 0;
+        public static final double kRollI = 0.01;
         public static final double kRollD = 0;
-        public static final double kRollDeadband = 1;
+        public static final double kRollDeadband = 5; // FIXME: Does this jank even work?
+        public static final double kRollPIDOutputScalar = 1;
     }
 }

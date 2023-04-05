@@ -178,7 +178,7 @@ public class RobotContainer {
     private void configureOperatorButtonBindings() {
 
         // arm
-        m_operatorController.povUp().onTrue(
+        m_operatorController.y().onTrue(
             new SequentialCommandGroup (
                 new ParallelRaceGroup(
                     new StrafeAlign(s_swerve, s_limelight, 0), 
@@ -205,6 +205,9 @@ public class RobotContainer {
                     new RotateArm2Position(s_arm2, controllerMultiplier))
             
                 ));
+
+        m_operatorController.povUp().onTrue(new RotateArm2Position(s_arm2, ArmConstants.kArmPutHigh)
+                .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
         m_operatorController.povRight().onTrue(new RotateArm2Position(s_arm2, ArmConstants.kArmPutHumanPlayer) // RIGHT  = HUMAN PLAYER PLACE
                 .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
         m_operatorController.povLeft().onTrue(new RotateArm2Position(s_arm2, ArmConstants.kArmHome)            // LEFT   = HOME

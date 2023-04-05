@@ -101,7 +101,7 @@ public class ArmConstants {
         
         /* CURRENT LIMITING */
         SupplyCurrentLimitConfiguration rotateArmMainCurrentLimit = new SupplyCurrentLimitConfiguration();
-        rotateArmMainCurrentLimit.currentLimit = 40;
+        rotateArmMainCurrentLimit.currentLimit = 10;
         motor.configSupplyCurrentLimit(rotateArmMainCurrentLimit);
     }
 }
