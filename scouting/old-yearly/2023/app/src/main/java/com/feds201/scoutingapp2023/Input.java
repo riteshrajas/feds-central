@@ -196,9 +196,9 @@ public class Input extends Fragment {
             int row = gpb.getRowFromScoreType(gpb.getScoreType());
             int col = gpb.getColNum()-1;
 
-            Log.d("gamepiece", "" + row + ", " + col + " " + gpb.getScoreType().toString() + " " + gpb.toString());
+            //Log.d("gamepiece", "" + row + ", " + col + " " + gpb.getScoreType().toString() + " " + gpb.toString());
             Match.GamePiece type = currentMatch.teleopGrid[row][col];
-            Log.d("gamepiece", type.toString());
+            //Log.d("gamepiece", type.toString());
 
             switch(type) {
                 case CONE:
@@ -341,219 +341,184 @@ public class Input extends Fragment {
             }
         });
 
+
+
         // 4. Component specific code
         // 4a. auton grid button listeners
-        for(GamePieceButton gamePieceButton : autonButtons) {
-                gamePieceButton.button.setOnClickListener(view -> {
-                    Log.d("score", "auton: " + currentMatch.autonLow + " " + currentMatch.autonMiddle + " " + currentMatch.autonHigh);
-
-                    int row = gamePieceButton.getRowFromScoreType(gamePieceButton.getScoreType());
-                    int col = gamePieceButton.getColNum()-1;
-
-                    if(gamePieceButton.getCycleAll()) {
-                        gamePieceButton.imageState++;
-                        switch(gamePieceButton.imageState) {
+        for(GamePieceButton gpb : teleopButtons) {
+            gpb.button.setOnClickListener(view -> {
+                int row = gpb.getRowFromScoreType(gpb.getScoreType());
+                int col = gpb.getColNum()-1;
+                gpb.imageState++;
+                switch(gpb.getCycleState()){
+                    case BOTH:
+                        switch(gpb.imageState){
                             case 1:
-                                gamePieceButton.button.setImageResource(R.drawable.cone);
-                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CONE);
-                                Log.d("score", gamePieceButton.getScoreType().toString());
-                                switch(gamePieceButton.getScoreType()) {
-                                    case AUTON_LOW:
-                                        currentMatch.autonLow++;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_MIDDLE:
-                                        currentMatch.autonMiddle++;
-//                                        currentMatch.autonGrid[1][gamePieceButton.getButtonId()-1] = Match.GamePiece.CONE;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_HIGH:
-                                        currentMatch.autonHigh++;
-//                                        currentMatch.autonGrid[0][gamePieceButton.getButtonId()-1] = Match.GamePiece.CONE;
-                                        matchDao.update(currentMatch);
-                                        break;
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.CONE);
+                                gpb.button.setImageResource(R.drawable.cone);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow++; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle++; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh++; break;
                                 }
                                 break;
                             case 2:
-                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CUBE);
-                                gamePieceButton.button.setImageResource(R.drawable.cube);
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.CUBE);
+                                gpb.button.setImageResource(R.drawable.cube);
                                 break;
                             case 3:
-                                currentMatch.setAutonGrid(row, col, Match.GamePiece.NONE);
-                                gamePieceButton.button.setImageResource(R.drawable.nothing);
-                                gamePieceButton.imageState = 0;
-                                switch(gamePieceButton.getScoreType()) {
-                                    case AUTON_LOW:
-                                        currentMatch.autonLow--;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_MIDDLE:
-                                        currentMatch.autonMiddle--;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_HIGH:
-                                        currentMatch.autonHigh--;
-                                        matchDao.update(currentMatch);
-                                        break;
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow--; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle--; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh--; break;
                                 }
+                                gpb.imageState = 0;
                                 break;
-                            default:
-                                gamePieceButton.imageState = 0;
-                                break;
+                            default: gpb.imageState = 0; break;
                         }
-                    } else {
-                        gamePieceButton.imageState++;
-                        switch(gamePieceButton.imageState) {
+                        break;
+                    case CONE:
+                        switch(gpb.imageState) {
                             case 1:
-                                gamePieceButton.button.setImageResource(R.drawable.cube);
-                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CUBE);
-                                switch(gamePieceButton.getScoreType()) {
-                                    case AUTON_LOW:
-                                        currentMatch.autonLow++;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_MIDDLE:
-                                        currentMatch.autonMiddle++;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_HIGH:
-                                        currentMatch.autonHigh++;
-                                        matchDao.update(currentMatch);
-                                        break;
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.CONE);
+                                gpb.button.setImageResource(R.drawable.cone);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow++; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle++; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh++; break;
                                 }
                                 break;
                             case 2:
-                                currentMatch.setAutonGrid(row, col, Match.GamePiece.NONE);
-                                gamePieceButton.button.setImageResource(R.drawable.nothing);
-                                gamePieceButton.imageState = 0;
-                                switch(gamePieceButton.getScoreType()) {
-                                    case AUTON_LOW:
-                                        currentMatch.autonLow--;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_MIDDLE:
-                                        currentMatch.autonMiddle--;
-                                        matchDao.update(currentMatch);
-                                        break;
-                                    case AUTON_HIGH:
-                                        currentMatch.autonHigh--;
-                                        matchDao.update(currentMatch);
-                                        break;
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow--; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle--; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh--; break;
+                                }
+                                gpb.imageState = 0;
+                                break;
+                            default: gpb.imageState = 0; break;
+                        }
+                        break;
+                    case CUBE:
+                        switch(gpb.imageState) {
+                            case 1:
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.CUBE);
+                                gpb.button.setImageResource(R.drawable.cube);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow++; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle++; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh++; break;
                                 }
                                 break;
-                            default:
-                                gamePieceButton.imageState = 0;
+                            case 2:
+                                currentMatch.setTeleopGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case TELEOP_LOW: currentMatch.teleopLow--; break;
+                                    case TELEOP_MIDDLE: currentMatch.teleopMiddle--; break;
+                                    case TELEOP_HIGH: currentMatch.teleopHigh--; break;
+                                }
+                                gpb.imageState = 0;
                                 break;
+                            default: gpb.imageState = 0; break;
                         }
-
-                    }
-                    Log.d("score", "" + gamePieceButton.imageState);
-               });
-        }
-
-        // 4b. teleop grid button listeners
-        for(GamePieceButton gamePieceButton : teleopButtons) {
-            gamePieceButton.button.setOnClickListener(view -> {
-                int row = gamePieceButton.getRowFromScoreType(gamePieceButton.getScoreType());
-                int col = gamePieceButton.getColNum()-1;
-                Log.d("score", "teleop: " + currentMatch.teleopLow + " " + currentMatch.teleopMiddle + " " + currentMatch.teleopHigh);
-                Log.d("score", currentMatch.teleopGridString);
-                if (gamePieceButton.getCycleAll()) {
-                    gamePieceButton.imageState++;
-                    switch(gamePieceButton.imageState) {
-                        case 1:
-                            currentMatch.setTeleopGrid(row, col, Match.GamePiece.CONE);
-                            gamePieceButton.button.setImageResource(R.drawable.cone);
-                            switch(gamePieceButton.getScoreType()) {
-                                case TELEOP_LOW:
-                                    currentMatch.teleopLow++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_MIDDLE:
-                                    currentMatch.teleopMiddle++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_HIGH:
-                                    currentMatch.teleopHigh++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                            }
-                            break;
-                        case 2:
-                            currentMatch.setTeleopGrid(row, col, Match.GamePiece.CUBE);
-                            gamePieceButton.button.setImageResource(R.drawable.cube);
-                            break;
-                        case 3:
-                            currentMatch.setTeleopGrid(row, col, Match.GamePiece.NONE);
-                            gamePieceButton.button.setImageResource(R.drawable.nothing);
-                            gamePieceButton.imageState = 0;
-                            switch(gamePieceButton.getScoreType()) {
-                                case TELEOP_LOW:
-                                    currentMatch.teleopLow--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_MIDDLE:
-                                    currentMatch.teleopMiddle--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_HIGH:
-                                    currentMatch.teleopHigh--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                            }
-                            break;
-                        default:
-                            gamePieceButton.imageState = 0;
-                            break;
-                    }
-                } else {
-                    gamePieceButton.imageState++;
-                    switch (gamePieceButton.imageState) {
-                        case 1:
-                            currentMatch.setTeleopGrid(row, col, Match.GamePiece.CUBE);
-                            gamePieceButton.button.setImageResource(R.drawable.cube);
-                            switch(gamePieceButton.getScoreType()) {
-                                case TELEOP_LOW:
-                                    currentMatch.teleopLow++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_MIDDLE:
-                                    currentMatch.teleopMiddle++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_HIGH:
-                                    currentMatch.teleopHigh++;
-                                    matchDao.update(currentMatch);
-                                    break;
-                            }
-                            break;
-                        case 2:
-                            currentMatch.setTeleopGrid(row, col, Match.GamePiece.NONE);
-                            gamePieceButton.button.setImageResource(R.drawable.nothing);
-                            gamePieceButton.imageState = 0;
-                            switch(gamePieceButton.getScoreType()) {
-                                case TELEOP_LOW:
-                                    currentMatch.teleopLow--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_MIDDLE:
-                                    currentMatch.teleopMiddle--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                                case TELEOP_HIGH:
-                                    currentMatch.teleopHigh--;
-                                    matchDao.update(currentMatch);
-                                    break;
-                            }
-                            break;
-                        default:
-                            gamePieceButton.imageState = 0;
-                            break;
-                    }
+                        break;
                 }
+                matchDao.update(currentMatch);
             });
         }
 
+        for(GamePieceButton gpb : autonButtons) {
+            gpb.button.setOnClickListener(view -> {
+                int row = gpb.getRowFromScoreType(gpb.getScoreType());
+                int col = gpb.getColNum()-1;
+                gpb.imageState++;
+                switch(gpb.getCycleState()){
+                    case BOTH:
+                        switch(gpb.imageState){
+                            case 1:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CONE);
+                                gpb.button.setImageResource(R.drawable.cone);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow++; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle++; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh++; break;
+                                }
+                                break;
+                            case 2:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CUBE);
+                                gpb.button.setImageResource(R.drawable.cube);
+                                break;
+                            case 3:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow--; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle--; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh--; break;
+                                }
+                                gpb.imageState = 0;
+                                break;
+                            default: gpb.imageState = 0; break;
+                        }
+                        break;
+                    case CONE:
+                        switch(gpb.imageState) {
+                            case 1:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CONE);
+                                gpb.button.setImageResource(R.drawable.cone);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow++; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle++; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh++; break;
+                                }
+                                break;
+                            case 2:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow--; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle--; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh--; break;
+                                }
+                                gpb.imageState = 0;
+                                break;
+                            default: gpb.imageState = 0; break;
+                        }
+                        break;
+                    case CUBE:
+                        switch(gpb.imageState) {
+                            case 1:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.CUBE);
+                                gpb.button.setImageResource(R.drawable.cube);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow++; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle++; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh++; break;
+                                }
+                                break;
+                            case 2:
+                                currentMatch.setAutonGrid(row, col, Match.GamePiece.NONE);
+                                gpb.button.setImageResource(R.drawable.nothing);
+                                switch(gpb.getScoreType()){
+                                    case AUTON_LOW: currentMatch.autonLow--; break;
+                                    case AUTON_MIDDLE: currentMatch.autonMiddle--; break;
+                                    case AUTON_HIGH: currentMatch.autonHigh--; break;
+                                }
+                                gpb.imageState = 0;
+                                break;
+                            default: gpb.imageState = 0; break;
+
+                        }
+                        break;
+                }
+                matchDao.update(currentMatch);
+            });
+        }
         // 4c. tally event listeners
         linksTally.minus.setOnClickListener(v -> {
             int x = Integer.parseInt((linksTally.text.getText().toString()));

@@ -16,7 +16,8 @@ public class GamePieceButton implements Component {
     public int imageState = 0;
     private final int buttonId;
     private final String type;
-    private final boolean cycleAll;
+
+    private final CycleState cycleState;
     private final String buttonIdString;
 
     public enum ScoreType {
@@ -28,11 +29,11 @@ public class GamePieceButton implements Component {
         TELEOP_HIGH
     }
 
-    public GamePieceButton(int buttonId, String buttonIdString, View view, String type, boolean cycleAll) {
+    public GamePieceButton(int buttonId, String buttonIdString, View view, String type, CycleState cycleState) {
         this.button = view.findViewById(buttonId);
         this.buttonId = buttonId;
         this.type = type;
-        this.cycleAll = cycleAll;
+        this.cycleState = cycleState;
         this.buttonIdString = buttonIdString;
     }
 
@@ -65,8 +66,8 @@ public class GamePieceButton implements Component {
             if (field.getName().contains(prefix)) {
                 try {
                     int id = field.getInt(resClass);
-                    boolean cycleAll = checkIfCanCycleAll(field.getName());
-                    GamePieceButton button = new GamePieceButton(id, field.getName(), view, prefix, cycleAll);
+                    CycleState cycleState = findCycleState(field.getName());
+                    GamePieceButton button = new GamePieceButton(id, field.getName(), view, prefix, cycleState);
                     buttons.add(button);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
@@ -101,30 +102,17 @@ public class GamePieceButton implements Component {
 //        }
 //    }
 
-    public void cycleImage() {
-        this.imageState++;
-        switch(this.imageState) {
-            case 1:
-                this.button.setImageResource(R.drawable.cube);
-                break;
-            case 2:
-                this.button.setImageResource(R.drawable.nothing);
-                this.imageState = 0;
-                break;
-        }
-    }
+    public CycleState getCycleState() { return this.cycleState; }
 
-    public boolean getCycleAll() { return this.cycleAll; }
-
-    public static boolean checkIfCanCycleAll(String fieldName) {
+    public static CycleState findCycleState(String fieldName) {
         String lastChar = fieldName.substring(fieldName.length()-1);
         int lastNum = Integer.parseInt(lastChar);
         if (fieldName.contains("low"))
-            return true;
+            return CycleState.BOTH;
         else{
             switch (lastNum) {
-                case 1: case 3: case 4: case 6: case 7: case 9: return true;
-                default: return false;
+                case 1: case 3: case 4: case 6: case 7: case 9: return CycleState.CONE;
+                default: return CycleState.CUBE;
             }
         }
     }
@@ -136,4 +124,9 @@ public class GamePieceButton implements Component {
     }
 
 
+    public enum CycleState {
+        CUBE,
+        CONE,
+        BOTH
+    }
 }

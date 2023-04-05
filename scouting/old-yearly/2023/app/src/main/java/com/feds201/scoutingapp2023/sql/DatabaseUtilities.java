@@ -25,21 +25,18 @@ public class DatabaseUtilities {
     public static void TeamNumberMatchNumberMatchTypeColorColorNumberToRow(ArrayList<String[]> teamNumberMatchNumberMatchType, String color, int colorNumber) {
         MatchDao matchDao = MainActivity.app_db.matchDao();
 
-        int count = 1;
         for(int i = 0; i < teamNumberMatchNumberMatchType.size(); i++) {
             String[] currentMatchString = teamNumberMatchNumberMatchType.get(i);
 
             if (currentMatchString[2].equals("qm")) { // we only really need to scout qualifying matches :)
                 Match m = new Match();
-                m.uid = count;
+                m.uid = Integer.parseInt(currentMatchString[1]);
                 m.teamNumber = Integer.parseInt(currentMatchString[0]);
                 m.matchNumber = Integer.parseInt(currentMatchString[1]);
                 m.matchType = currentMatchString[2];
                 m.color = color;
                 m.colorNumber = colorNumber;
                 matchDao.insertAll(m);
-
-                count++;
             }
         }
     }

@@ -27,9 +27,9 @@ public class BlueAllianceAPI {
         params.put("X-TBA-Auth-Key", TBAAuthKey);
         String paramsStr = getParamsString(params);
         String getURL = BLUE_ALLIANCE_API_URI + "event/" + eventCode + "/matches?" + paramsStr;
-//        Log.d("json", getURL);
+//        //Log.d("json", getURL);
         String getRequest = sendGetRequest(getURL);
-//        Log.d("json", "REQUEST SENT");
+//        //Log.d("json", "REQUEST SENT");
         return getRequest;
     }
 
@@ -67,7 +67,7 @@ public class BlueAllianceAPI {
     }
 
     public static ArrayList<String[]> TeamNumberMatchNumberMatchType(String json, String colorCode) {
-        Log.d("json", colorCode);
+        //Log.d("json", colorCode);
         String allianceColor = colorCode.contains("R") ? "red" : "blue";
         int allianceNumber = Integer.parseInt(colorCode.substring(1));
         ArrayList<String[]> allStringsList = new ArrayList<>();

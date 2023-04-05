@@ -17,17 +17,17 @@ public class JSONRequest {
                 .url(url)
                 .build();
 
-        Log.d("json", "In sendGetRequest method");
+        //Log.d("json", "In sendGetRequest method");
 
         try (Response response = client.newCall(request).execute()) {
-            Log.d("json", "In request OK!");
-            Log.d("json", url);
+            //Log.d("json", "In request OK!");
+            //Log.d("json", url);
             return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Log.d("json", "Nothing was returned by the request.");
+        //Log.d("json", "Nothing was returned by the request.");
         return "";
     }
 

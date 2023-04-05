@@ -56,7 +56,7 @@ public class Home extends Fragment {
         StringBuilder printStr = new StringBuilder();
         for(String s : matchesStrings) {
             printStr.append(s).append(",");
-            Log.d("matches", printStr.toString());
+            //Log.d("matches", printStr.toString());
         }
 
         RecyclerView qualsList = homeView.findViewById(R.id.rvQuals);

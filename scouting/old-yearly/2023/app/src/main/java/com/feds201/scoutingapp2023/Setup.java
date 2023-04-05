@@ -32,7 +32,7 @@ public class Setup extends Fragment {
 
         submitButton.setOnClickListener(view -> {
             String color = colorCodeInput.getText().toString();
-            Log.d("json", color);
+            //Log.d("json", color);
             if(tbaAuthInput.getText().toString().equals("ilovescouting23")) {
                 if(!competitionCodeInput.getText().toString().equals("") && !colorCodeInput.getText().toString().equals("")) {
                     new Thread(() -> {

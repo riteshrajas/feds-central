@@ -160,7 +160,7 @@ public class Match {
         String[] strs = teleopGridString.split(",");
         for(int i = 0; i < teleopGrid.length; i++) {
             for(int j = 0; j < teleopGrid[0].length; j++) {
-                Log.d("gamepiece", "i: " + i + "j: " + j + " == " + strs[i * teleopGrid[0].length + j]);
+                //Log.d("gamepiece", "i: " + i + "j: " + j + " == " + strs[i * teleopGrid[0].length + j]);
                 teleopGrid[i][j] = Match.gamePieceFromString(strs[i * teleopGrid[0].length + j]);
             }
         }
@@ -169,7 +169,7 @@ public class Match {
         String[] strs = autonGridString.split(",");
         for(int i = 0; i < autonGrid.length; i++) {
             for(int j = 0; j < autonGrid[0].length; j++) {
-                Log.d("gamepiece", "i: " + i + "j: " + j + " == " + strs[i * autonGrid[0].length + j]);
+                //Log.d("gamepiece", "i: " + i + "j: " + j + " == " + strs[i * autonGrid[0].length + j]);
                 autonGrid[i][j] = Match.gamePieceFromString(strs[i * autonGrid[0].length + j]);
             }
         }
@@ -180,7 +180,7 @@ public class Match {
             for (int j = 0; j < autonGrid[0].length; j++) {
                 if(autonGrid[i][j] == null) {
                     autonGrid[i][j] = GamePiece.NONE;
-                    Log.d("AutonGrid", autonGrid[i][j].toString());
+                    //Log.d("AutonGrid", autonGrid[i][j].toString());
                 }
             }
         }
@@ -191,7 +191,7 @@ public class Match {
             for (int j = 0; j < teleopGrid[0].length; j++) {
                 if(teleopGrid[i][j] == null) {
                     teleopGrid[i][j] = GamePiece.NONE;
-                    Log.d("TeleopGrid", teleopGrid[i][j].toString());
+                    //Log.d("TeleopGrid", teleopGrid[i][j].toString());
                 }
             }
         }

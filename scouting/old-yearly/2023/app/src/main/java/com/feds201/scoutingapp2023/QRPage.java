@@ -75,7 +75,7 @@ public class QRPage extends Fragment {
             e.printStackTrace();
         }
 
-        Log.d("match", Input.currentMatch.toString());
+        //Log.d("match", Input.currentMatch.toString());
 
         return rootView;
     }
