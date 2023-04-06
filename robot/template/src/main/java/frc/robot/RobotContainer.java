@@ -41,19 +41,16 @@ import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.sensor.DepthAlign;
 import frc.robot.commands.sensor.ReportingCommand;
 import frc.robot.commands.sensor.StrafeAlign;
-import frc.robot.commands.arm.RotateArmManual;
-import frc.robot.commands.arm.RotateArmPosition;
+import frc.robot.commands.sensor.TeleopSensor;
 import frc.robot.commands.arm2.RotateArm2Manual;
 import frc.robot.commands.arm2.RotateArm2Position; 
-import frc.robot.commands.auton.BalancePath;
 import frc.robot.commands.auton.ExampleCurveAuto;
-import frc.robot.commands.auton.TestAuton;
-import frc.robot.commands.auton.examplePPAuto;
+import frc.robot.commands.auton.PlaceHighCone;
+import frc.robot.commands.auton.CenterFieldAuton;
 import frc.robot.commands.claw.IntakeCone;
 import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.claw.StopClaw;
 // import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ArmSubsystem4;
 import frc.robot.subsystems.ArmSubsystem5;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -105,12 +102,12 @@ public class RobotContainer {
         //m_autonChooser.addOption("Blue Cone and Cube", new BlueAllianceScoreOnlyAuton(s_swerve, s_claw, s_arm2, s_intake, s_wheels));
         //m_autonChooser.addOption("Place cone only", new PlaceConeHighOnly(s_arm2, s_claw, s_swerve));
         // m_autonChooser.addOption("CubeOnly", new cubeOnly(s_wheels, s_swerve, s_intake));
-        m_autonChooser.addOption("placing arm test", new TestAuton(s_swerve, s_limelight, s_arm2, s_intake, s_wheels, s_claw));
-        m_autonChooser.addOption("Test Path", new examplePPAuto(s_swerve));
+        m_autonChooser.addOption("placing arm test", new PlaceHighCone(s_swerve, s_limelight, s_arm2, s_intake, s_wheels, s_claw));
+        m_autonChooser.addOption("Test Path", new CenterFieldAuton(s_swerve, s_limelight, s_arm2, s_claw, s_intake, s_wheels));
         m_autonChooser.addOption("Test Curve Path", new ExampleCurveAuto(s_swerve));
 
         m_autonChooser.addOption("Placing Arm + Curve", 
-                                        new SequentialCommandGroup(new TestAuton(s_swerve, s_limelight, s_arm2, s_intake, s_wheels, s_claw), 
+                                        new SequentialCommandGroup(new PlaceHighCone(s_swerve, s_limelight, s_arm2, s_intake, s_wheels, s_claw), 
                                                                    new ExampleCurveAuto(s_swerve)));
 
 
@@ -133,6 +130,7 @@ public class RobotContainer {
         s_wheels.setDefaultCommand(new RunIntakeWheelsInfinite(s_wheels, -0.08));
         s_intake.setDefaultCommand(new RotateIntakeToPosition(s_intake, 0));
         s_reportingSubsystem.setDefaultCommand(new ReportingCommand(s_reportingSubsystem, s_pigeon2));
+        s_limelight.setDefaultCommand(new TeleopSensor(s_limelight));
 
         configureDriverButtonBindings();
         configureOperatorButtonBindings();

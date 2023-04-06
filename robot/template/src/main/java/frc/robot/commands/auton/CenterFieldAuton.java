@@ -1,9 +1,18 @@
 package frc.robot.commands.auton;
 
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.commands.arm2.RotateArm2Position;
+import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.drive.BalanceWhileOn;
 import frc.robot.commands.drive.LockWheels;
+import frc.robot.commands.sensor.DepthAlign;
+import frc.robot.subsystems.ArmSubsystem5;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.WheelSubsystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +23,17 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class examplePPAuto extends SequentialCommandGroup {
-    public examplePPAuto(SwerveSubsystem s_Swerve) {
+public class CenterFieldAuton extends SequentialCommandGroup {
+    public CenterFieldAuton(SwerveSubsystem s_Swerve,LimelightSubsystem s_limelight, ArmSubsystem5 s_arm, ClawSubsystem s_claw, IntakeSubsystem s_intake, WheelSubsystem s_wheels) {
         // This will load the file "FullAuto.path" and generate it with a max velocity
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
@@ -55,6 +68,7 @@ public class examplePPAuto extends SequentialCommandGroup {
 
 
         addCommands(
+                new PlaceHighCone(s_Swerve, s_limelight, s_arm, s_intake, s_wheels, s_claw),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
                 fullAuto,
                 new BalanceWhileOn(s_Swerve),
