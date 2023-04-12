@@ -12,6 +12,11 @@ public class RotateArm2Position extends CommandBase {
         this.s_arm = s_arm;
         addRequirements(s_arm);
 
+        s_arm.setGoingUp();
+        if (angleRadians < s_arm.getArmAngleRadians()) { // target less than start --> going down
+            s_arm.setGoingDown();
+        }
+
         this.m_angleRadians = angleRadians;
     }
 
@@ -23,5 +28,10 @@ public class RotateArm2Position extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        s_arm.setGoingUp();
     }
 }

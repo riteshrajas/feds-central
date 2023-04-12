@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,12 +42,15 @@ import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.sensor.DepthAlign;
 import frc.robot.commands.sensor.ReportingCommand;
 import frc.robot.commands.sensor.StrafeAlign;
+import frc.robot.commands.sensor.TeleopVision;
 import frc.robot.commands.arm2.RotateArm2Manual;
 import frc.robot.commands.arm2.RotateArm2Position; 
 import frc.robot.commands.auton.LeftFieldAuton;
 import frc.robot.commands.auton.PlaceHighCone;
 import frc.robot.commands.auton.cubeOnly;
 import frc.robot.commands.auton.CenterFieldAuton;
+import frc.robot.commands.auton.CubeBalance;
+import frc.robot.commands.auton.CubeBalanceMobility;
 import frc.robot.commands.claw.IntakeCone;
 import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.claw.StopClaw;
@@ -95,10 +99,11 @@ public class RobotContainer {
         s_arm2 = new ArmSubsystem5();
         s_reportingSubsystem = new ReportingSubsystem();
 
-        m_autonChooser.addOption("placing arm test", new PlaceHighCone(s_swerve, s_limelight, s_arm2, s_claw));
-        m_autonChooser.addOption("Center Field Auton", new CenterFieldAuton(s_swerve, s_limelight, s_arm2, s_claw, s_intake, s_wheels));
-        m_autonChooser.addOption("Left Side Auton", new LeftFieldAuton(s_swerve, s_arm2, s_claw, s_intake, s_wheels, s_limelight));
-        m_autonChooser.addOption("Last Resort", new cubeOnly(s_wheels, s_swerve, s_intake));
+        //m_autonChooser.addOption("Center Field Auton", new CenterFieldAuton(s_swerve, s_limelight, s_arm2, s_claw, s_intake, s_wheels));
+        //m_autonChooser.addOption("Left Side Auton", new LeftFieldAuton(s_swerve, s_arm2, s_claw, s_intake, s_wheels, s_limelight));
+        //m_autonChooser.addOption("Last Resort", new cubeOnly(s_wheels, s_swerve, s_intake));
+        m_autonChooser.addOption("Co-op High + Balance", new CubeBalance(s_wheels, s_swerve, s_intake));
+        m_autonChooser.addOption("Co-op High + Mobility", new CubeBalanceMobility(s_wheels, s_swerve, s_intake));
 
 
 
@@ -121,6 +126,7 @@ public class RobotContainer {
         //s_wheels.setDefaultCommand(new RunIntakeWheelsInfinite(s_wheels, -0.12));
         s_intake.setDefaultCommand(new RotateIntakeToPosition(s_intake, 0));
         s_reportingSubsystem.setDefaultCommand(new ReportingCommand(s_reportingSubsystem, s_pigeon2));
+        s_limelight.setDefaultCommand(new TeleopVision(s_limelight));
 
         configureDriverButtonBindings();
         configureOperatorButtonBindings();
@@ -134,6 +140,9 @@ public class RobotContainer {
         //Reset Gyro / LockWheels
         m_driveController.y().onTrue(
                 new InstantCommand(() -> s_swerve.zeroGyro()));
+
+        m_driveController.b().onTrue(
+            new InstantCommand(() -> s_swerve.zeroGyroOther()));
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
@@ -162,15 +171,26 @@ public class RobotContainer {
             new RunIntakeWheels(s_wheels, 2.5))
             );
 
-        m_driveController.leftTrigger().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelLowSpeed));
+        m_driveController.leftTrigger().onTrue(
+            new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelLowSpeed));
 
-        //m_driveController.leftBumper().onTrue(new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, -IntakeConstants.kIntakeWheelHighSpeed));
+        m_driveController.leftBumper().onTrue(
+            new SequentialCommandGroup(
+                new RunIntakeWheels(s_wheels, 0.15),
+                new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelMiddleSpeed)));
+
+        m_driveController.a().onTrue(
+            new SequentialCommandGroup(
+                new RunIntakeWheels(s_wheels, 0.15),
+                new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelHighSpeed)));
+
+        m_driveController.povLeft().onTrue(new ParallelDeadlineGroup(
+            new WaitCommand(0.5), 
+            new RunIntakeWheelsInfinite(s_wheels)));
 
 
 
         // DEBUGGING KEY BINDINGS
-        m_driveController.povDown().onTrue(new StrafeAlign(s_swerve, s_limelight, 0));
-        m_driveController.povUp().onTrue(new DepthAlign(s_swerve, s_limelight, VisionConstants.kDepthAlignmentDistance));
 
         m_driveController.povRight().onTrue(new BalanceWhileOn(s_swerve));
 
@@ -179,31 +199,6 @@ public class RobotContainer {
     private void configureOperatorButtonBindings() {
 
         // arm
-        m_operatorController.y().onTrue(
-            new SequentialCommandGroup (
-                new ParallelRaceGroup(
-                    new StrafeAlign(s_swerve, s_limelight, 0), 
-                    new WaitCommand(0.6)), 
-                new ParallelCommandGroup(
-                    new RotateArm2Position(s_arm2, ArmConstants.kArmPutHigh).until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone),
-                    new SequentialCommandGroup(
-                        new WaitCommand(2.5),
-                        new ParallelRaceGroup(
-                            new WaitCommand(0.6),
-                            new DepthAlign(s_swerve, s_limelight, VisionConstants.kDepthAlignmentDistance)))),
-                new RotateArm2Position(s_arm2, ArmConstants.kLowerOverCone),
-                new ParallelDeadlineGroup(
-                    new WaitCommand(1.3),
-                    new OuttakeCone(s_claw),
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.3)),
-                        new RotateArm2Position(s_arm2, ArmConstants.kArmPutHigh)),
-                new ParallelRaceGroup(
-                    new WaitCommand(0.6),
-                    new DepthAlign(s_swerve, s_limelight, VisionConstants.kRetreatDistance)),
-                new ParallelDeadlineGroup(
-                    new WaitCommand(2), 
-                    new RotateArm2Position(s_arm2, controllerMultiplier))));
 
         m_operatorController.povUp().onTrue(new RotateArm2Position(s_arm2, ArmConstants.kArmPutHigh)
                 .until(() -> m_operatorController.getLeftY() > OIConstants.kArmDeadzone));
@@ -219,14 +214,6 @@ public class RobotContainer {
         // claw
         m_operatorController.a().whileTrue(new IntakeCone(s_claw));
         m_operatorController.b().whileTrue(new OuttakeCone(s_claw));      
-
-
-
-        //Intake Wheel Shooting
-        m_operatorController.rightTrigger().onTrue(
-            new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelMiddleSpeed));
-        m_operatorController.leftTrigger().onTrue(
-            new ReverseIntakeWheels(s_wheels, IntakeConstants.kIntakeWheelEjectTime, IntakeConstants.kIntakeWheelHighSpeed));
     }
 
 

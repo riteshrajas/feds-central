@@ -23,6 +23,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -62,9 +63,9 @@ public class LeftFieldAuton extends SequentialCommandGroup {
 
 
         addCommands(
-                new PlaceHighCone(s_Swerve, s_limelight, s_arm, s_claw),
+                new PlaceHighCube(s_Swerve, s_arm, s_claw),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
-                new ParallelDeadlineGroup(
+                new ParallelRaceGroup(
                         fullLeftSideAuto, 
                         new SequentialCommandGroup(
                                 new WaitCommand(3.4),

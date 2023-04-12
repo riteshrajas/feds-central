@@ -42,4 +42,14 @@ public class ArmSubsystem5 extends SubsystemBase {
 
         m_armMotor.set(ControlMode.MotionMagic, Conversions.degreesToFalcon(Units.radiansToDegrees(position), ArmConstants.kArmGearRatio), DemandType.ArbitraryFeedForward, feedforwardOffset);
     }
+
+    public void setGoingUp() {
+        m_armMotor.configMotionAcceleration(ArmConstants.cruiseVelocityAccelUp, 0);
+        m_armMotor.configMotionCruiseVelocity(ArmConstants.cruiseVelocityAccelUp, 0);
+    }
+
+    public void setGoingDown() {
+        m_armMotor.configMotionAcceleration(ArmConstants.cruiseVelocityAccelDown, 0);
+        m_armMotor.configMotionCruiseVelocity(ArmConstants.cruiseVelocityAccelDown, 0);
+    }
 }

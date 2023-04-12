@@ -112,6 +112,10 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void zeroGyroOther(){
+        gyro.setYaw(180);
+    }
+
     public void rotateRobotToZero(){
         
     }

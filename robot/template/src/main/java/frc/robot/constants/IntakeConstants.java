@@ -14,8 +14,8 @@ public final class IntakeConstants {
 
     // Speeds
     public static final double kIntakeWheelLowSpeed = -0.15;
-    public static final double kIntakeWheelMiddleSpeed = 0.5;
-    public static final double kIntakeWheelHighSpeed = 0.7;
+    public static final double kIntakeWheelMiddleSpeed = 0.53;
+    public static final double kIntakeWheelHighSpeed = 0.24;
     
     public static final double kIntakeWheelEjectTime = 0.5;
 

@@ -44,7 +44,7 @@ public class CenterFieldAuton extends SequentialCommandGroup {
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
         ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner
-                .loadPathGroup("Mid Score + Balance", new PathConstraints(2, 1.5));
+                .loadPathGroup("Mid Score + Balance", new PathConstraints(2.5, 1.5));
 
         // This is just an example event map. It would be better to have a constant,
         // global event map
@@ -74,7 +74,7 @@ public class CenterFieldAuton extends SequentialCommandGroup {
 
 
         addCommands(
-                new PlaceHighCone(s_Swerve, s_limelight, s_arm, s_claw),
+                new PlaceHighCube(s_Swerve, s_arm, s_claw),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
                 new ParallelDeadlineGroup(
                         fullAuto,

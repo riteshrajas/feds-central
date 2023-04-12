@@ -50,12 +50,12 @@ public class ArmConstants {
 
     // ARM SUBSYSTEM 5 SPECIFIC
     public static final double kArm2Tolerance = Conversions.degreesToFalcon(3, kArmGearRatio);
-    public static final int    peakVelocityUp        = 9_000;
+    public static final int    peakVelocityUp        = 11_000; // this is the same as it was before, Nihar
     public static final double percentOfPeakUp       = 1;
     public static final double cruiseVelocityAccelUp = peakVelocityUp * percentOfPeakUp;
 
-    public static final int    peakVelocityDown        = 8090;
-    public static final double percentOfPeakDown       = .65;
+    public static final int    peakVelocityDown        = 14_000; // this is a little less than double, double would be ~18_000, be careful!!!
+    public static final double percentOfPeakDown       = 1;
     public static final double cruiseVelocityAccelDown = peakVelocityDown * percentOfPeakDown;
 
     
@@ -97,7 +97,7 @@ public class ArmConstants {
         motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
         motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
 
-        motor.configPeakOutputReverse(-0.1);
+        motor.configPeakOutputReverse(-0.3);
         
         /* CURRENT LIMITING */
         SupplyCurrentLimitConfiguration rotateArmMainCurrentLimit = new SupplyCurrentLimitConfiguration();

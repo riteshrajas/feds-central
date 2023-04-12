@@ -22,6 +22,10 @@ public class LimelightSubsystem extends SubsystemBase{
         table = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
+    public void setFieldMode(){
+        table.getEntry("ledMode").setNumber(1);
+    }
+
     public void setResult(){
         if(table.getEntry("tv").getDouble(0) == 1){
             cameraYaw = table.getEntry("tx").getDouble(0);

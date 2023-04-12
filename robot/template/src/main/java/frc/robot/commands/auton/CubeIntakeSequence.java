@@ -28,7 +28,7 @@ public class CubeIntakeSequence extends SequentialCommandGroup{
                         new RunIntakeWheelsInfinite(s_wheels)),
                 new ParallelDeadlineGroup(
                         new WaitCommand(2),
-                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint))
-        );
+                        new RotateIntakeToPosition(s_intake, IntakeConstants.kIntakeRetractSetpoint),
+                        new RunIntakeWheelsInfinite(s_wheels)));
     }
 }
