@@ -71,13 +71,13 @@
     }
   ],
   "maxVelocity": 3.0,
-  "maxAcceleration": 2.0,
+  "maxAcceleration": null,
   "isReversed": null,
   "markers": [
     {
-      "position": 0.0,
+      "position": 0.79999999999998,
       "names": [
-        "event"
+        "DropIntake"
       ]
     }
   ]

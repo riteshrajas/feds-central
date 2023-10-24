@@ -52,6 +52,7 @@ import frc.robot.commands.auton.cubeOnly;
 import frc.robot.commands.auton.CenterFieldAuton;
 import frc.robot.commands.auton.CubeBalance;
 import frc.robot.commands.auton.CubeBalanceMobility;
+import frc.robot.commands.auton.CurvePathWithMarkers;
 import frc.robot.commands.claw.IntakeCone;
 import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.claw.StopClaw;
@@ -107,7 +108,7 @@ public class RobotContainer {
         //m_autonChooser.addOption("Last Resort", new cubeOnly(s_wheels, s_swerve, s_intake));
         m_autonChooser.addOption("Co-op High + Balance", new CubeBalance(s_wheels, s_swerve, s_intake));
         m_autonChooser.addOption("Co-op High + Mobility", new CubeBalanceMobility(s_wheels, s_swerve, s_intake));
-
+        m_autonChooser.addOption("Left Side Auton + Markers", new CurvePathWithMarkers(s_swerve, s_intake));
 
 
         Shuffleboard.getTab("Autons").add(m_autonChooser);
@@ -145,7 +146,7 @@ public class RobotContainer {
                 new InstantCommand(() -> s_swerve.zeroGyro()));
 
         m_driveController.b().onTrue(
-            new InstantCommand(() -> s_swerve.zeroGyroOther()));
+            new InstantCommand(() -> s_swerve.zeroGyro180()));
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
 
