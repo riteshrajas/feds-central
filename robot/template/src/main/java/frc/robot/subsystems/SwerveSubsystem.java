@@ -6,7 +6,6 @@ import frc.robot.constants.SwerveConstants;
 
 import frc.robot.subsystems.pigeon.Pigeon2Subsystem;
 import frc.robot.RobotContainer;
-import frc.robot.constants.ArmConstants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -128,18 +127,6 @@ public class SwerveSubsystem extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
-    }
-
-    public void driveToTarget(boolean isTargetLow){
-        /*limelight.updateResultToLatest();
-        if (limelight.hasTarget()) {
-            limelight.updateTargetsToLatest();
-            limelight.setTarget(isTargetLow);
-
-            double moveToTargetDistance = limelight.getHorizontalDistanceToTarget() - ArmConstants.kSetRobotToTarget;
-            Translation2d targetTranslation2d = new Translation2d(moveToTargetDistance, 0);
-            drive(targetTranslation2d, 0, false, false);
-        }*/
     }
 
 

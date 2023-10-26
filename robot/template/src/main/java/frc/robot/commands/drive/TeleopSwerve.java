@@ -2,7 +2,6 @@ package frc.robot.commands.drive;
 
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;

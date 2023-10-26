@@ -4,7 +4,6 @@ import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.intake.ReverseIntakeWheels;
-import frc.robot.subsystems.ArmSubsystem5;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -28,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class LeftFieldAuton extends SequentialCommandGroup {
-    public LeftFieldAuton(SwerveSubsystem s_Swerve, ArmSubsystem5 s_arm, ClawSubsystem s_claw, IntakeSubsystem s_intake, WheelSubsystem s_wheels, LimelightSubsystem s_limelight) {
+    public LeftFieldAuton(SwerveSubsystem s_Swerve, ClawSubsystem s_claw, IntakeSubsystem s_intake, WheelSubsystem s_wheels, LimelightSubsystem s_limelight) {
         // This will load the file "FullAuto.path" and generate it with a max velocity
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
@@ -63,7 +62,6 @@ public class LeftFieldAuton extends SequentialCommandGroup {
 
 
         addCommands(
-                new PlaceHighCube(s_Swerve, s_arm, s_claw),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
                 new ParallelRaceGroup(
                         fullLeftSideAuto, 

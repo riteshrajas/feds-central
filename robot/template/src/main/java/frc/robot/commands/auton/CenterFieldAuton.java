@@ -1,9 +1,7 @@
 package frc.robot.commands.auton;
 
-import frc.robot.constants.ArmConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.commands.arm2.RotateArm2Position;
 import frc.robot.commands.claw.OuttakeCone;
 import frc.robot.commands.drive.BalanceWhileOn;
 import frc.robot.commands.drive.LockWheels;
@@ -11,7 +9,6 @@ import frc.robot.commands.intake.ReverseIntakeWheels;
 import frc.robot.commands.intake.RotateIntakeToPosition;
 import frc.robot.commands.intake.RunIntakeWheelsInfinite;
 import frc.robot.commands.sensor.DepthAlign;
-import frc.robot.subsystems.ArmSubsystem5;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -39,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class CenterFieldAuton extends SequentialCommandGroup {
-    public CenterFieldAuton(SwerveSubsystem s_Swerve,LimelightSubsystem s_limelight, ArmSubsystem5 s_arm, ClawSubsystem s_claw, IntakeSubsystem s_intake, WheelSubsystem s_wheels) {
+    public CenterFieldAuton(SwerveSubsystem s_Swerve,LimelightSubsystem s_limelight, ClawSubsystem s_claw, IntakeSubsystem s_intake, WheelSubsystem s_wheels) {
         // This will load the file "FullAuto.path" and generate it with a max velocity
         // of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
@@ -74,7 +71,6 @@ public class CenterFieldAuton extends SequentialCommandGroup {
 
 
         addCommands(
-                new PlaceHighCube(s_Swerve, s_arm, s_claw),
                 new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
                 new ParallelDeadlineGroup(
                         fullAuto,
