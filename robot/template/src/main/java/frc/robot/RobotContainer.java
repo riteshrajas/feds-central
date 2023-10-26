@@ -66,8 +66,8 @@ public class RobotContainer {
         s_wheels = new WheelSubsystem();
         s_reportingSubsystem = new ReportingSubsystem();
 
-        //m_autonChooser.addOption("Center Field Auton", new CenterFieldAuton(s_swerve, s_limelight, s_claw, s_intake, s_wheels));
-        //m_autonChooser.addOption("Left Side Auton", new LeftFieldAuton(s_swerve, s_2, s_claw, s_intake, s_wheels, s_limelight));
+        //m_autonChooser.addOption("Center Field Auton", new CenterFieldAuton(s_swerve, s_limelight, s_intake, s_wheels));
+        //m_autonChooser.addOption("Left Side Auton", new LeftFieldAuton(s_swerve, s_2, s_intake, s_wheels, s_limelight));
         //m_autonChooser.addOption("Last Resort", new cubeOnly(s_wheels, s_swerve, s_intake));
         m_autonChooser.addOption("Co-op High + Balance", new CubeBalance(s_wheels, s_swerve, s_intake));
         m_autonChooser.addOption("Co-op High + Mobility", new CubeBalanceMobility(s_wheels, s_swerve, s_intake));
