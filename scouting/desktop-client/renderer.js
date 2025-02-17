@@ -5,7 +5,7 @@ function createNavBar() {
     // Create the icon
     const icon = document.createElement('img');
     icon.src = '../../assets/logo.bmp'; // Replace with the actual path to your icon
-    icon.alt = 'ScoutOps Icon';
+    icon.alt = 'scouting_app Icon';
 
     // Create the title
     const title = document.createElement('div');

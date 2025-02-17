@@ -1,5 +1,5 @@
 {
-  "name": "scoutops_win_cli",
+  "name": "scouting_app_win_cli",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
@@ -23,8 +23,8 @@
     "node": "^20.16.0"
   },
   "build": {
-    "appId": "com.pyintel.scoutops",
-    "productName": "ScoutOps",
+    "appId": "com.pyintel.scouting_app",
+    "productName": "scouting_app",
     "files": [
       "main.js",
       "dist/**/*",
