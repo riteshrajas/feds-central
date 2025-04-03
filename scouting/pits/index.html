@@ -10,6 +10,10 @@
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzhlNTRlOSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0tMS0xM2gydjZoLTJ6bTAgOGgydjJoLTJ6Ii8+PC9zdmc+" type="image/svg+xml">
     <!-- Add font for improved aesthetics -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add animated backgrounds -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Add more beautiful icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         body {
             font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif;
@@ -17,13 +21,17 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="animate__animated animate__fadeIn">
         <h1>Scout Ops Pits</h1>
+        <p class="tagline">Advanced robotics team analysis platform</p>
     </header>
     
     <div class="container">
-        <div class="panel">
-            <div class="panel-header">Search & Filter</div>
+        <div class="panel animate__animated animate__fadeInUp animate__delay-1s">
+            <div class="panel-header">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">filter_list</i>
+                Search & Filter
+            </div>
             <div class="panel-body">
                 <div class="search-controls">
                     <div class="control-group">
@@ -60,9 +68,10 @@
         </div>
         
         <!-- Smart Insights Panel -->
-        <div class="panel">
+        <div class="panel animate__animated animate__fadeInUp animate__delay-2s">
             <div class="panel-header">
-                <span>Smart Insights</span>
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">lightbulb</i>
+                Smart Insights
                 <span class="pyintel-badge" style="margin: 0 0 0 10px; padding: 3px 8px; font-size: 0.7em;">PyIntel AI</span>
             </div>
             <div class="panel-body">
@@ -100,8 +109,11 @@
             </div>
         </div>
         
-        <div class="panel">
-            <div class="panel-header">Key Statistics</div>
+        <div class="panel animate__animated animate__fadeInUp animate__delay-3s">
+            <div class="panel-header">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">insert_chart</i>
+                Key Statistics
+            </div>
             <div class="panel-body">
                 <div class="charts-container">
                     <div class="chart" id="drivetrain-chart"></div>
@@ -111,9 +123,10 @@
         </div>
         
         <!-- Advanced Analytics Section -->
-        <div class="panel">
+        <div class="panel animate__animated animate__fadeInUp animate__delay-4s">
             <div class="panel-header">
-                <span>Advanced Analytics</span>
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">analytics</i>
+                Advanced Analytics
                 <span class="pyintel-badge" style="margin: 0 0 0 10px; padding: 3px 8px; font-size: 0.7em;">PyIntel AI</span>
             </div>
             <div class="panel-body">
@@ -127,6 +140,21 @@
                     <div class="analytics-card">
                         <h4>Climbing Capability</h4>
                         <div id="climbing-capability" class="comparison-slider">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analytics-grid" style="margin-top: 20px;">
+                    <div class="analytics-card">
+                        <h4>Scoring Capabilities</h4>
+                        <div id="scoring-capability-chart">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Auton Success Rate</h4>
+                        <div id="auton-success-chart">
                             <!-- Will be populated by JS -->
                         </div>
                     </div>
@@ -149,8 +177,11 @@
             </div>
         </div>
         
-        <div class="panel">
-            <div class="panel-header">Team Data</div>
+        <div class="panel animate__animated animate__fadeInUp animate__delay-5s">
+            <div class="panel-header">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">groups</i>
+                Team Data
+            </div>
             <div class="panel-body">
                 <div id="loading" class="loading">
                     <div class="spinner"></div>
@@ -182,24 +213,43 @@
     <!-- Team Detail Modal -->
     <div id="team-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modal-team-title">Team Details</h2>
-            <img id="modal-team-img" class="team-detail-img" src="" alt="Robot Image">
-            
-            <div class="team-detail-info" id="modal-team-info">
-                <!-- Details will be populated here -->
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <div id="modal-team-title" class="modal-title">
+                    <!-- Title will be dynamically populated -->
+                </div>
             </div>
             
+            <!-- Modal Image Container -->
+            <div id="modal-team-img-container" class="carousel">
+                <!-- Images will be dynamically populated -->
+            </div>
+    
+            <!-- Modal Team Info -->
+            <div id="modal-team-info" class="modal-team-info">
+                <!-- Team details will be dynamically populated -->
+            </div>
+    
             <!-- Team Performance Predictions -->
-            <div id="team-predictions" style="margin-top: 25px;">
-                <h3 style="border-bottom: 2px solid #f1f3f4; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <div id="team-predictions" class="modal-title">
+                <span>
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 8px; color: #4285f4;">psychology</i>
                     Performance Predictions
-                    <span class="pyintel-badge" style="margin: 0; padding: 3px 8px; font-size: 0.7em;">PyIntel AI</span>
-                </h3>
-                <div id="predictions-container" class="loading-shimmer" style="height: 100px; border-radius: 10px;"></div>
+                </span>
+                <span class="pyintel-badge" style="margin: 10px; padding: 3px 8px; font-size: 0.7em;">PyIntel AI</span>
+        
+                <div id="predictions-container" class="loading-shimmer" style="height: max-content;">
+                    <!-- Predictions will be dynamically populated -->
+                </div>
+                <div style="height: 20px;">
+                    <br>
+                    </div>    
+                <!-- Research Button -->
+                <button id="research-button" class="action-button research-button">
+                    <i class="material-icons">search</i> Research
+                </button>
             </div>
         </div>
     </div>
-
 </body>
 </html>

@@ -3,7 +3,7 @@ let teamsData = [];
 let filteredData = [];
 const modal = document.getElementById("team-modal");
 const closeBtn = document.getElementsByClassName("close")[0];
-const apiUrl = "https://script.google.com/macros/s/AKfycbyebARML-RoGQGZ7ugmVNGvuwtGhyh5it1LEeNWDaiVQPsbA1mD8pSZcDO9Vk2UryIxTg/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbxMEwVi_j2-9FZrAAfet6x4bTtMfvN3VAc8R9j-3ZrgrnatDfw24q2Z7fFZaMk-Tv7n_w/exec";
 let teamPerformanceMetrics = {};
 
 // Event listeners
@@ -62,32 +62,52 @@ document.addEventListener("DOMContentLoaded", function() {
 async function fetchData() {
     const loadingEl = document.getElementById("loading");
     loadingEl.style.display = "flex";
-    
+
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl + '?type=pit');
         const data = await response.json();
-        
-        teamsData = data;
+
+        // Map the new data structure to the existing format
+        teamsData = data.map(team => ({
+            team: team.team,
+            auton: team.auton,
+            drivetrain: team.drivetrain,
+            endgame: team.endgame,
+            intakeAlgae: team.intakeAlgae,
+            intakeCoral: team.intakeCoral,
+            leaveAuton: team.leaveAuton,
+            scoreAlgae: team.scoreAlgae,
+            scoreCoral: team.scoreCoral,
+            scoreLocation: team.scoreLocation,
+            scoreType: team.scoreType,
+            botImageUrls: [
+                team.botImageUrl1,
+                team.botImageUrl2,
+                team.botImageUrl3
+            ].filter(url => url), // Filter out any undefined or null URLs
+            timestamp: team.timestamp
+        }));
+
         filteredData = [...teamsData];
-        
+
         console.log("Data fetched successfully:", teamsData);
-        
+
         // Once data is loaded, update the UI
         loadData();
-        
+
         // Generate smart insights after loading
         generateSmartInsights();
-        
+
         // Populate advanced analytics sections
         generateAdvancedAnalytics();
-        
+
         // Hide loading with fade-out
         loadingEl.style.opacity = '0';
         setTimeout(() => {
             loadingEl.style.display = "none";
             loadingEl.style.opacity = '1';
         }, 300);
-        
+
     } catch (error) {
         console.error("Error fetching data:", error);
         loadingEl.innerHTML = `
@@ -123,469 +143,220 @@ function loadData() {
     });
 }
 
-// Function to display teams data in table
 function displayTeamsData() {
     const tableBody = document.getElementById("teams-data");
     const table = document.getElementById("teams-table");
-    
-    // Create table header if it doesn't exist
-    if (!document.querySelector('#teams-table thead')) {
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        
-        const headers = [
-            { text: 'Team #', icon: '🔢' },
-            { text: 'Image', icon: '📷' },
-            { text: 'Drivetrain', icon: '🔄' },
-            { text: 'Auton', icon: '🤖' },
-            { text: 'Score Type', icon: '🎯' },
-            { text: 'Endgame', icon: '🏁' },
-            { text: 'Actions', icon: '⚙️' }
-        ];
-        
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.innerHTML = `${header.icon} <span>${header.text}</span>`;
-            headerRow.appendChild(th);
-        });
-        
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-    }
-    
+
     // Clear existing data
     tableBody.innerHTML = "";
-    
-    // Show no results message if no data
-    if (filteredData.length === 0) {
-        const emptyRow = document.createElement('tr');
-        const emptyCell = document.createElement('td');
-        emptyCell.colSpan = 7;
-        emptyCell.style.textAlign = 'center';
-        emptyCell.style.padding = '30px';
-        emptyCell.innerHTML = `
-            <div style="color: #5f6368;">
-                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto; display: block; opacity: 0.6;">
-                    <circle cx="12" cy="8" r="5"></circle>
-                    <path d="M20 21v-2a7 7 0 0 0-14 0v2"></path>
-                    <line x1="8" y1="2" x2="16" y2="16"></line>
-                </svg>
-                <p style="margin-top: 10px; font-size: 1.1em;">No teams match your filter criteria</p>
-                <button onclick="resetFilters()" style="margin-top: 10px; display: inline-block;">Reset Filters</button>
-            </div>
-        `;
-        emptyRow.appendChild(emptyCell);
-        tableBody.appendChild(emptyRow);
-        return;
-    }
-    
-    // Add rows with animation
+
     filteredData.forEach((team, index) => {
         const row = document.createElement("tr");
         row.style.animation = `fadeIn 0.3s ease forwards ${index * 0.05}s`;
         row.style.opacity = "0";
-        
+
         // Team number
         const teamCell = document.createElement("td");
         teamCell.textContent = team.team;
         teamCell.style.fontWeight = "bold";
         teamCell.style.fontSize = "1.1em";
         row.appendChild(teamCell);
-        
-        // Robot image
+
+        // Robot image (only the first one)
         const imageCell = document.createElement("td");
+        const fileId = extractGoogleDriveFileId(team.botImageUrls[0]);
         const img = document.createElement("img");
-        img.src = team.botImageId ? `https://lh3.google.com/u/0/d/${team.botImageId}` : "image.png";
+        img.src = fileId ? `https://lh3.googleusercontent.com/d/${fileId}` : "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
         img.alt = `Team ${team.team} Robot`;
         img.className = "bot-image";
         img.dataset.team = team.team;
-        
+
         // Add hover effect
-        img.addEventListener("mouseover", function() {
+        img.addEventListener("mouseover", function () {
             this.style.transform = "scale(1.1)";
             this.style.boxShadow = "0 8px 16px rgba(0,0,0,0.2)";
         });
-        
-        img.addEventListener("mouseout", function() {
+
+        img.addEventListener("mouseout", function () {
             this.style.transform = "";
             this.style.boxShadow = "";
         });
-        
+
         img.addEventListener("click", () => showTeamDetails(team));
-        img.addEventListener("error", function() {
-            this.src = "https://media.istockphoto.com/id/1065465342/vector/cute-vector-speech-bubble-icon-with-hello-greeting.jpg?s=612x612&w=0&k=20&c=dIq85nTuC9OGJAuuIUdz0u0EQg2N4pEpWzKxa8S0gbY=";
+        img.addEventListener("error", function () {
+            this.src = "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
         });
+
         imageCell.appendChild(img);
         row.appendChild(imageCell);
-        
-        // Drivetrain
+
+        // Drivetrain cell
         const drivetrainCell = document.createElement("td");
-        drivetrainCell.textContent = team.drivetrain || "N/A";
-        if (team.drivetrain === "Swerve drive") {
-            drivetrainCell.innerHTML = `<span class="tag tag-blue">Swerve drive</span>`;
-        } else if (team.drivetrain === "Tank drive") {
-            drivetrainCell.innerHTML = `<span class="tag tag-red">Tank drive</span>`;
-        } else {
-            drivetrainCell.innerHTML = `<span class="tag tag-gray">Unknown</span>`;
-        }
+        drivetrainCell.innerHTML = `
+            <span class="badge" style="background-color: ${team.drivetrain === 'Swerve drive' ? '#1a73e8' : '#ea4335'}">
+                ${team.drivetrain || 'Unknown'}
+            </span>
+        `;
         row.appendChild(drivetrainCell);
         
-        // Auton
+        // Auton cell
         const autonCell = document.createElement("td");
-        autonCell.textContent = team.auton || "N/A";
-        if (team.auton && team.auton.includes("Auto")) {
-            autonCell.style.color = "#34a853";
-            autonCell.style.fontWeight = "500";
-        }
+        autonCell.textContent = team.auton || 'N/A';
         row.appendChild(autonCell);
         
-        // Score Type
+        // Score Type cell
         const scoreTypeCell = document.createElement("td");
         if (team.scoreType) {
-            const scoreTypes = team.scoreType.split(", ");
-            const scoreTypesHTML = scoreTypes.map(type => 
-                `<span class="mini-tag">${type}</span>`
-            ).join(" ");
-            scoreTypeCell.innerHTML = scoreTypesHTML;
+            const types = team.scoreType.split(',').map(t => t.trim()).filter(t => t);
+            types.forEach(type => {
+                const badge = document.createElement('span');
+                badge.className = 'badge small';
+                badge.style.backgroundColor = '#34a853';
+                badge.style.marginRight = '5px';
+                badge.textContent = type;
+                scoreTypeCell.appendChild(badge);
+            });
         } else {
-            scoreTypeCell.textContent = "N/A";
+            scoreTypeCell.textContent = 'N/A';
         }
         row.appendChild(scoreTypeCell);
         
-        // Endgame
+        // Endgame cell
         const endgameCell = document.createElement("td");
-        if (team.endgame === "Deep Climb") {
-            endgameCell.innerHTML = `<span class="tag tag-green">Deep Climb</span>`;
-        } else if (team.endgame === "Shallow Climb") {
-            endgameCell.innerHTML = `<span class="tag tag-yellow">Shallow Climb</span>`;
-        } else if (team.endgame === "Park") {
-            endgameCell.innerHTML = `<span class="tag tag-blue-light">Park</span>`;
-        } else {
-            endgameCell.textContent = team.endgame || "N/A";
-        }
+        const endgameColor = 
+            team.endgame === 'Deep Climb' ? '#34a853' : 
+            team.endgame === 'Shallow Climb' ? '#fbbc04' : '#4285f4';
+        endgameCell.innerHTML = `
+            <span class="badge" style="background-color: ${endgameColor}">
+                ${team.endgame || 'Unknown'}
+            </span>
+        `;
         row.appendChild(endgameCell);
         
-        // Actions
+        // Actions cell
         const actionsCell = document.createElement("td");
         const viewBtn = document.createElement("button");
-        viewBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 5px;">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-        </svg> View Details`;
-        viewBtn.className = "button-small";
+        viewBtn.className = "action-button";
+        viewBtn.innerHTML = `<i class="material-icons">visibility</i>`;
+        viewBtn.title = "View Details";
         viewBtn.addEventListener("click", () => showTeamDetails(team));
         actionsCell.appendChild(viewBtn);
         row.appendChild(actionsCell);
-        
+
         tableBody.appendChild(row);
     });
-    
-    // Add CSS for tags
-    if (!document.getElementById('table-styles')) {
-        const style = document.createElement('style');
-        style.id = 'table-styles';
-        style.textContent = `
-            .tag {
-                display: inline-block;
-                padding: 4px 8px;
-                border-radius: 12px;
-                font-size: 0.85em;
-                font-weight: 500;
-                text-align: center;
-            }
-            .tag-blue { background-color: #d2e3fc; color: #1a73e8; }
-            .tag-red { background-color: #fce8e6; color: #ea4335; }
-            .tag-green { background-color: #ceead6; color: #34a853; }
-            .tag-yellow { background-color: #fef7e0; color: #f9ab00; }
-            .tag-blue-light { background-color: #e8f0fe; color: #4285f4; }
-            .tag-gray { background-color: #f1f3f4; color: #5f6368; }
-            .mini-tag {
-                display: inline-block;
-                padding: 2px 6px;
-                border-radius: 10px;
-                font-size: 0.8em;
-                background-color: #f1f3f4;
-                color: #5f6368;
-                margin: 2px;
-            }
-            .button-small {
-                padding: 6px 12px;
-                font-size: 0.9em;
-                border-radius: 6px;
-                display: inline-flex;
-                align-items: center;
-            }
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-    }
 }
 
-// Show team details in modal
+function extractGoogleDriveFileId(url) {
+    const match = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
+}
+
 function showTeamDetails(team) {
     const modalTitle = document.getElementById("modal-team-title");
-    const modalImg = document.getElementById("modal-team-img");
+    const modalImgContainer = document.getElementById("modal-team-img-container");
     const modalInfo = document.getElementById("modal-team-info");
-    
+    const predictionsContainer = document.getElementById("predictions-container");
+
+    if (!modalTitle || !modalImgContainer || !modalInfo || !predictionsContainer) {
+        console.error("Modal elements not found in the DOM.");
+        return;
+    }
+
+    // Populate modal title
     modalTitle.innerHTML = `
         <span style="font-size: 1.2em; color: #5f6368;">Team</span> 
-        <span style="color: #1a73e8; font-size: 1.5em;">${team.team}</span>
+        <span style="color: #1a73e8; font-size: 1.5em;">${team.team || 'N/A'}</span>
     `;
-    
-    modalImg.src = team.botImageId ? `https://lh3.google.com/u/0/d/${team.botImageId}` : "https://media.istockphoto.com/id/1065465342/vector/cute-vector-speech-bubble-icon-with-hello-greeting.jpg?s=612x612&w=0&k=20&c=dIq85nTuC9OGJAuuIUdz0u0EQg2N4pEpWzKxa8S0gbY=";
-    modalImg.alt = `Team ${team.team} Robot`;
-    modalImg.style.transition = "transform 0.5s ease";
-    
-    // Add zoom effect on hover
-    modalImg.addEventListener("mouseover", function() {
-        this.style.transform = "scale(1.02)";
+
+    // Populate images in a carousel
+    modalImgContainer.innerHTML = "";
+    const carousel = document.createElement("div");
+    carousel.className = "carousel";
+
+    team.botImageUrls.forEach((url, index) => {
+        const fileId = extractGoogleDriveFileId(url);
+        const img = document.createElement("img");
+        img.src = fileId ? `https://lh3.googleusercontent.com/d/${fileId}` : "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+        img.alt = `Team ${team.team || 'N/A'} Robot Image ${index + 1}`;
+        img.className = "carousel-image";
+
+        img.addEventListener("click", function () {
+            window.open(this.src, "_blank");
+        });
+
+        img.addEventListener("error", function () {
+            this.src = "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+        });
+
+        carousel.appendChild(img);
     });
-    
-    modalImg.addEventListener("mouseout", function() {
-        this.style.transform = "scale(1)";
-    });
-    
-    modalImg.addEventListener("error", function() {
-        this.src = "https://media.istockphoto.com/id/1065465342/vector/cute-vector-speech-bubble-icon-with-hello-greeting.jpg?s=612x612&w=0&k=20&c=dIq85nTuC9OGJAuuIUdz0u0EQg2N4pEpWzKxa8S0gbY=";
-    });
-    
-    // Generate detail fields
-    modalInfo.innerHTML = "";
-    
-    // Add team summary at the top
-    const summary = document.createElement("div");
-    summary.className = "team-summary";
-    summary.innerHTML = `
-        <div class="summary-title">Team Summary</div>
-        <div class="summary-content">
-            <div class="summary-item">
-                <div class="summary-icon" style="background-color: #d2e3fc;">🔄</div>
-                <div class="summary-text">${team.drivetrain || 'N/A'}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-icon" style="background-color: #ceead6;">🤖</div>
-                <div class="summary-text">${team.auton || 'N/A'}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-icon" style="background-color: #fef7e0;">🏁</div>
-                <div class="summary-text">${team.endgame || 'N/A'}</div>
+
+    modalImgContainer.appendChild(carousel);
+
+    // Populate team details
+    modalInfo.innerHTML = `
+        <div class="team-summary">
+            <div class="summary-title">Team Summary</div>
+            <div class="summary-content">
+                <div class="summary-item">
+                    <div class="summary-icon" style="background-color: #d2e3fc;">🔄</div>
+                    <div class="summary-text">${team.drivetrain || 'N/A'}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon" style="background-color: #ceead6;">🤖</div>
+                    <div class="summary-text">${team.auton || 'N/A'}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon" style="background-color: #fef7e0;">🏁</div>
+                    <div class="summary-text">${team.endgame || 'N/A'}</div>
+                </div>
             </div>
         </div>
     `;
-    modalInfo.appendChild(summary);
-    
-    // Create sections
-    const sections = [
-        {
-            title: "Autonomous",
-            icon: "🤖",
-            color: "#ceead6",
-            fields: [
-                { label: "Autonomous Mode", value: team.auton, icon: "🤖" },
-                { label: "Leave in Auton", value: team.leaveAuton, icon: "🚶" }
-            ]
-        },
-        {
-            title: "Scoring Capabilities",
-            icon: "🎯",
-            color: "#d2e3fc",
-            fields: [
-                { label: "Score Location", value: team.scoreLocation, icon: "📍" },
-                { label: "Score Type", value: team.scoreType, icon: "🎯" },
-                { label: "Score Coral", value: team.scoreCoral, icon: "🏆" },
-                { label: "Score Algae", value: team.scoreAlgae, icon: "🌊" }
-            ]
-        },
-        {
-            title: "Intake Capabilities",
-            icon: "🧩",
-            color: "#fce8e6",
-            fields: [
-                { label: "Intake Coral", value: team.intakeCoral, icon: "🧩" },
-                { label: "Intake Algae", value: team.intakeAlgae, icon: "🌿" }
-            ]
-        },
-        {
-            title: "Endgame & Metadata",
-            icon: "📊",
-            color: "#fef7e0",
-            fields: [
-                { label: "Endgame", value: team.endgame, icon: "🏁" },
-                { label: "Scouted On", value: formatTimestamp(team.timestamp), icon: "📅" }
-            ]
-        }
-    ];
-    
-    // Add CSS for sections if not already added
-    if (!document.getElementById('modal-styles')) {
-        const style = document.createElement('style');
-        style.id = 'modal-styles';
-        style.textContent = `
-            .team-summary {
-                background: linear-gradient(135deg, #f5f7fa, #f8f9ff);
-                border-radius: 12px;
-                padding: 15px;
-                margin-bottom: 25px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            }
-            .summary-title {
-                font-size: 1.1em;
-                font-weight: 500;
-                color: #5f6368;
-                margin-bottom: 10px;
-            }
-            .summary-content {
-                display: flex;
-                justify-content: space-around;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .summary-item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .summary-icon {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.2em;
-            }
-            .summary-text {
-                font-weight: 500;
-            }
-            .detail-section {
-                background-color: #fff;
-                border-radius: 12px;
-                padding: 15px;
-                margin-bottom: 20px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-                opacity: 0;
-                transform: translateY(10px);
-                animation: slideIn 0.5s forwards;
-            }
-            .section-header {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding-bottom: 10px;
-                margin-bottom: 15px;
-                border-bottom: 1px solid #f1f3f4;
-            }
-            .section-icon {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1em;
-            }
-            .section-title {
-                font-weight: 500;
-                font-size: 1.1em;
-            }
-            .detail-items {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 10px;
-            }
-            .detail-item {
-                background-color: #f8f9fa;
-                border-radius: 8px;
-                padding: 12px;
-                transition: all 0.2s ease;
-            }
-            .detail-item:hover {
-                background-color: #f1f3f4;
-                transform: translateX(3px);
-            }
-            .detail-label {
-                font-size: 0.9em;
-                color: #5f6368;
-                margin-bottom: 5px;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }
-            .detail-value {
-                font-weight: 500;
-            }
-            @keyframes slideIn {
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
+
+    // Generate and display predictions
+    predictionsContainer.innerHTML = `<div class="loading-shimmer" style="height: 100px; border-radius: 10px;"></div>`;
+    generatePredictions(team, predictionsContainer);
+
+    // Show the modal
+    const modal = document.getElementById("team-modal");
+    if (modal) {
+        modal.style.display = "block";
+        void modal.offsetWidth; // Force reflow for transition
+        modal.classList.add("show");
+
+        // Disable background scrolling
+        document.body.classList.add("no-scroll");
+    } else {
+        console.error("Modal container not found in the DOM.");
     }
-    
-    // Add sections
-    sections.forEach((section, sectionIndex) => {
-        const validFields = section.fields.filter(field => field.value);
-        
-        if (validFields.length > 0) {
-            const sectionEl = document.createElement("div");
-            sectionEl.className = "detail-section";
-            sectionEl.style.animationDelay = `${sectionIndex * 0.1}s`;
-            
-            const header = document.createElement("div");
-            header.className = "section-header";
-            header.innerHTML = `
-                <div class="section-icon" style="background-color: ${section.color}">${section.icon}</div>
-                <div class="section-title">${section.title}</div>
-            `;
-            
-            const items = document.createElement("div");
-            items.className = "detail-items";
-            
-            validFields.forEach((field, fieldIndex) => {
-                if (field.value) {
-                    const item = document.createElement("div");
-                    item.className = "detail-item";
-                    
-                    const label = document.createElement("div");
-                    label.className = "detail-label";
-                    label.innerHTML = `${field.icon} ${field.label}`;
-                    
-                    const value = document.createElement("div");
-                    value.className = "detail-value";
-                    value.textContent = field.value;
-                    
-                    item.appendChild(label);
-                    item.appendChild(value);
-                    items.appendChild(item);
-                }
-            });
-            
-            sectionEl.appendChild(header);
-            sectionEl.appendChild(items);
-            modalInfo.appendChild(sectionEl);
-        }
-    });
-    
-    // Add performance predictions section
-    const predictionsContainer = document.getElementById("predictions-container");
-    predictionsContainer.className = "loading-shimmer";
-    
-    // Simulate AI prediction generation with a delay
-    setTimeout(() => {
-        generatePredictions(team, predictionsContainer);
-    }, 1500);
-    
-    modal.style.display = "block";
-    // Force reflow for transition to work
-    void modal.offsetWidth;
-    modal.classList.add("show");
 }
+
+// Function to close the modal and re-enable background scrolling
+function closeModal() {
+    const modal = document.getElementById("team-modal");
+    if (modal) {
+        modal.classList.remove("show");
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 300); // Match the transition duration
+
+        // Re-enable background scrolling
+        document.body.classList.remove("no-scroll");
+    }
+}
+
+// Add event listener for the close button
+document.querySelector(".close").addEventListener("click", closeModal);
+
+// Close modal when clicking outside of it
+window.addEventListener("click", function (event) {
+    const modal = document.getElementById("team-modal");
+    if (event.target === modal) {
+        closeModal();
+    }
+});
 
 // Format timestamp
 function formatTimestamp(timestamp) {
@@ -1119,6 +890,100 @@ function generateAdvancedAnalytics() {
             sliders[1].style.width = `${tankWithClimbPercentage}%`;
         }, 200);
     }, 1000);
+    
+    // Create new data visualizations
+    createScoringCapabilityChart();
+    createAutonSuccessRate();
+}
+
+// Function to create scoring capability chart
+function createScoringCapabilityChart() {
+    const chartContainer = document.getElementById("scoring-capability-chart");
+    if (!chartContainer) return;
+    
+    // Calculate scoring data
+    const scoreTypes = {};
+    teamsData.forEach(team => {
+        if (!team.scoreType) return;
+        
+        const type = team.scoreType;
+        const types = type.split(",").map(t => t.trim()).filter(t => t);
+        
+        types.forEach(scoreType => {
+            scoreTypes[scoreType] = (scoreTypes[scoreType] || 0) + 1;
+        });
+    });
+    
+    // Create pie chart
+    let chartHTML = `
+        <h3>Scoring Capabilities</h3>
+        <div style="height: 220px; display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+            <div class="pie-chart">
+    `;
+    
+    const colors = ["#4285f4", "#ea4335", "#fbbc04", "#34a853", "#46bdc6", "#7baaf7"];
+    const total = Object.values(scoreTypes).reduce((sum, val) => sum + val, 0);
+    
+    let startAngle = 0;
+    let index = 0;
+    let legendHTML = `<div class="chart-legend">`;
+    
+    Object.entries(scoreTypes).forEach(([type, count]) => {
+        const percentage = (count / total) * 100;
+        const angle = (percentage * 3.6); // 3.6 degrees per percentage point for a circle
+        const endAngle = startAngle + angle;
+        const color = colors[index % colors.length];
+        
+        chartHTML += `
+            <div class="pie-segment" style="
+                --start-angle: ${startAngle}deg;
+                --end-angle: ${endAngle}deg;
+                --color: ${color};
+            "></div>
+        `;
+        
+        legendHTML += `
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: ${color}"></span>
+                <span class="legend-label">${type}</span>
+                <span class="legend-value">${Math.round(percentage)}%</span>
+            </div>
+        `;
+        
+        startAngle = endAngle;
+        index++;
+    });
+    
+    chartHTML += `</div>${legendHTML}</div>`;
+    
+    chartContainer.innerHTML = chartHTML;
+}
+
+// Function to create auton success rate visualization
+function createAutonSuccessRate() {
+    const chartContainer = document.getElementById("auton-success-chart");
+    if (!chartContainer) return;
+    
+    // Count auton capabilities
+    const autonLeaveCount = teamsData.filter(team => team.leaveAuton === "Yes").length;
+    const autonSuccessRate = Math.round((autonLeaveCount / teamsData.length) * 100) || 0;
+    
+    // Create gauge chart
+    let chartHTML = `
+        <h3>Auton Success Rate</h3>
+        <div style="padding: 20px; text-align: center;">
+            <div class="gauge-chart">
+                <div class="gauge-value" style="--percentage: ${autonSuccessRate}%">
+                    <span>${autonSuccessRate}%</span>
+                </div>
+            </div>
+            <div style="margin-top: 15px; font-weight: 500; color: var(--dark-gray);">
+                Teams that successfully leave starting zone in auton
+            </div>
+        </div>
+    `;
+    
+    chartContainer.innerHTML = chartHTML;
 }
 
 // New function to generate AI-powered performance predictions
@@ -1209,7 +1074,6 @@ function renderPredictions(predictions, container) {
             </svg>
             Powered by PyIntel AI
         </div>
-        
         <div class="gradient-border">
             <div style="display: flex; flex-wrap: wrap; gap: 20px; animation: fadeIn 0.5s ease;">
                 <div style="flex: 1; min-width: 200px;">
@@ -1332,4 +1196,83 @@ function renderPredictions(predictions, container) {
         container.style.opacity = "1";
         container.style.transform = "translateY(0)";
     }, 50);
+}
+
+
+// Add event listener for the "Research" button
+document.getElementById("research-button").addEventListener("click", async function () {
+    const teamNumber = document.getElementById("modal-team-title").textContent.match(/\d+/)?.[0];
+    if (!teamNumber) {
+        console.error("Team number not found.");
+        return;
+    }
+
+    try {
+        // Fetch data from Statbotics API
+        const statboticsData = await fetchStatboticsData(teamNumber);
+
+        // Fetch data from The Blue Alliance API
+        const blueAllianceData = await fetchBlueAllianceData(teamNumber);
+
+        // Display the fetched data
+        displayResearchData(statboticsData, blueAllianceData);
+    } catch (error) {
+        console.error("Error fetching research data:", error);
+        alert("Failed to fetch research data. Please try again later.");
+    }
+});
+
+// Function to fetch data from Statbotics API
+async function fetchStatboticsData(teamNumber) {
+    const statboticsUrl = `https://api.statbotics.io/v3/team/${teamNumber}`;
+    const response = await fetch(statboticsUrl);
+    if (!response.ok) {
+        throw new Error(`Statbotics API error: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+// Function to fetch data from The Blue Alliance API
+async function fetchBlueAllianceData(teamNumber) {
+    const blueAllianceUrl = `https://www.thebluealliance.com/api/v3/team/frc${teamNumber}`;
+    const headers = {
+        "X-TBA-Auth-Key": "2ujRBcLLwzp008e9TxIrLYKG6PCt2maIpmyiWtfWGl2bT6ddpqGLoLM79o56mx3W" // Replace with your API key
+    };
+    const response = await fetch(blueAllianceUrl, { headers });
+    if (!response.ok) {
+        throw new Error(`The Blue Alliance API error: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+// Function to display the fetched research data
+function displayResearchData(statboticsData, blueAllianceData) {
+    const predictionsContainer = document.getElementById("predictions-container");
+
+    // Clear existing content
+    predictionsContainer.innerHTML = "";
+
+    // Display Statbotics data
+    const statboticsHtml = `
+        <div class="research-section">
+            <h4>Statbotics Data</h4>
+            <p><strong>Team:</strong> ${statboticsData.team_number}</p>
+            <p><strong>OPR:</strong> ${statboticsData.opr || "N/A"}</p>
+            <p><strong>DPR:</strong> ${statboticsData.dpr || "N/A"}</p>
+            <p><strong>CCWM:</strong> ${statboticsData.ccwm || "N/A"}</p>
+        </div>
+    `;
+
+    // Display The Blue Alliance data
+    const blueAllianceHtml = `
+        <div class="research-section">
+            <h4>The Blue Alliance Data</h4>
+            <p><strong>Nickname:</strong> ${blueAllianceData.nickname || "N/A"}</p>
+            <p><strong>Location:</strong> ${blueAllianceData.city || "N/A"}, ${blueAllianceData.state_prov || "N/A"}</p>
+            <p><strong>Rookie Year:</strong> ${blueAllianceData.rookie_year || "N/A"}</p>
+            <p><strong>Website:</strong> <a href="${blueAllianceData.website}" target="_blank">${blueAllianceData.website || "N/A"}</a></p>
+        </div>
+    `;
+
+    predictionsContainer.innerHTML = statboticsHtml + blueAllianceHtml;
 }
