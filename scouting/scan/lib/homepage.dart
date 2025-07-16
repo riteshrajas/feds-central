@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scout_ops_scan/main.dart';
 import 'navigator.dart';
-import 'scanner.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -57,7 +55,7 @@ class Homepage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: ScanQRCode(),
+       
       ),
     );
   }

@@ -1,63 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'dart:io';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
-class ScanQRCode extends StatefulWidget {
-  const ScanQRCode({Key? key}) : super(key: key);
+class Scanner extends StatefulWidget {
+  const Scanner({super.key});
 
   @override
-  State<ScanQRCode> createState() => _ScanQRCodeState();
+  State<Scanner> createState() => _ScannerState();
 }
 
-class _ScanQRCodeState extends State<ScanQRCode> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
-  String? _scanCode;
+class _ScannerState extends State<Scanner> {
+  Barcode? _barcode;
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller?.pauseCamera();
-    }
-    controller?.resumeCamera();
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+  void _handleBarcode(BarcodeCapture barcodes) {
+    if (mounted) {
       setState(() {
-        _scanCode = scanData.code;
+        _barcode =
+            barcodes.barcodes.isNotEmpty ? barcodes.barcodes.first : null;
       });
-    });
+    }
   }
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
+  Widget _buildBarcode(Barcode? value) {
+    if (value == null) {
+      return const Text(
+        'No barcode found',
+        overflow: TextOverflow.fade,
+        style: TextStyle(color: Colors.white),
+      );
+    }
+
+    return Text(
+      'Barcode: ${value.rawValue ?? 'Unknown'}',
+      style: const TextStyle(color: Colors.white),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('QR Code Scanner')),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(key: qrKey, onQRViewCreated: _onQRViewCreated),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child:
-                  _scanCode == null
-                      ? const SizedBox()
-                      : Text(
-                        'Scanned Code: $_scanCode',
-                        style: const TextStyle(color: Colors.red, fontSize: 18),
-                      ),
+      appBar: AppBar(title: const Text('Scanner')),
+      body: Stack(
+        children: [
+          MobileScanner(onDetect: _handleBarcode),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              color: Colors.black54,
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(child: Center(child: _buildBarcode(_barcode))),
+                ],
+              ),
             ),
           ),
         ],
