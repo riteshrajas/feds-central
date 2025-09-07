@@ -40,31 +40,8 @@ export default {
           name="google-site-verification"
           content="0LNTJPoseM_CflO4_VtHt5-HsjPSnKEunUGr7-APSZI"
         />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-N3TT9XBHV0"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-N3TT9XBHV0');
-            `,
-          }}
-        />
-        {/* Enhanced fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
+        {/* Google Analytics scripts moved to _app.js */}
+        {/* Enhanced fonts moved to _document.js */}
 
         {/* Custom CSS for enhanced theme */}
         <style jsx global>{`
