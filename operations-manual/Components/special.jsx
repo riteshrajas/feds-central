@@ -195,7 +195,7 @@ export const HeroSection = () => {
   )
 }
 
-export const ModernCard = ({ icon, title, description, link, gradient, delay = 0 }) => {
+export const ModernCard = ({ icon, title, description, href, gradient, delay = 0 }) => {
   const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -209,7 +209,7 @@ export const ModernCard = ({ icon, title, description, link, gradient, delay = 0
   const isDark = theme === 'dark'
   
   return (
-    <Link href={link}>
+    <Link href={href}>
       <div 
         className="modern-card"
         style={{
