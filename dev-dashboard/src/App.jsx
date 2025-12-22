@@ -12,6 +12,7 @@ import Credentials from '@/pages/Credentials'
 import Authenticator from '@/pages/Authenticator'
 import AuditLog from '@/pages/AuditLog'
 import Account from '@/pages/Account'
+import PasswordHealth from '@/pages/PasswordHealth'
 
 function AppRoutes() {
   const navigate = useNavigate()
@@ -71,6 +72,7 @@ function AppRoutes() {
               <Route path="/services" element={<Services session={session} />} />
               <Route path="/credentials" element={<Credentials session={session} />} />
               <Route path="/authenticator" element={<Authenticator session={session} />} />
+              <Route path="/password-health" element={<PasswordHealth session={session} />} />
               <Route path="/audit" element={<AuditLog session={session} />} />
               <Route path="/account" element={<Account session={session} />} />
               <Route path="/signout" element={<AuthView pathname="sign-out" />} />

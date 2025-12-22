@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Plus, Settings, BarChart3 } from 'lucide-react'
+import { Plus, Settings, BarChart3, Database } from 'lucide-react'
 
-export default function QuickActions() {
+export default function QuickActions({ onImportExport }) {
   const actions = [
     {
       label: 'Add Service',
@@ -58,6 +58,31 @@ export default function QuickActions() {
             </motion.div>
           )
         })}
+
+        {/* Import/Export Button */}
+        {onImportExport && (
+          <motion.div
+            whileHover={{ x: 4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: actions.length * 0.05 }}
+          >
+            <button
+              onClick={onImportExport}
+              className="card flex items-center gap-3 hover:border-slate-600 group w-full text-left"
+            >
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-600 to-pink-400">
+                <Database size={20} className="text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-slate-100 group-hover:text-white">
+                  Import / Export
+                </p>
+                <p className="text-xs text-slate-500">Backup or restore data</p>
+              </div>
+            </button>
+          </motion.div>
+        )}
       </div>
     </div>
   )

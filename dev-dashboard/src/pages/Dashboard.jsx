@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import StatCard from '@/components/dashboard/StatCard'
 import RecentActivity from '@/components/dashboard/RecentActivity'
 import QuickActions from '@/components/dashboard/QuickActions'
+import ImportExportModal from '@/components/common/ImportExportModal'
 import { Lock, Shield, KeyRound, Activity } from 'lucide-react'
 
 export default function Dashboard({ session }) {
@@ -14,6 +15,7 @@ export default function Dashboard({ session }) {
   })
   const [recentLogs, setRecentLogs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showImportExport, setShowImportExport] = useState(false)
 
   useEffect(() => {
     fetchDashboardData()
@@ -113,13 +115,25 @@ export default function Dashboard({ session }) {
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
       >
         {/* Quick Actions */}
-        <QuickActions />
+        <QuickActions onImportExport={() => setShowImportExport(true)} />
 
         {/* Recent Activity */}
         <div className="lg:col-span-2">
           <RecentActivity logs={recentLogs} />
         </div>
       </motion.div>
+
+      {/* Import/Export Modal */}
+      {showImportExport && (
+        <ImportExportModal
+          session={session}
+          onClose={() => setShowImportExport(false)}
+          onComplete={() => {
+            setShowImportExport(false)
+            fetchDashboardData()
+          }}
+        />
+      )}
     </motion.div>
   )
 }
