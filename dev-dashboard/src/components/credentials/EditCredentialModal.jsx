@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, Eye, EyeOff } from 'lucide-react'
+import PasswordGenerator from '@/components/common/PasswordGenerator'
 
 export default function EditCredentialModal({ credential, services, onUpdate, onClose }) {
   const [formData, setFormData] = useState({
@@ -105,6 +106,12 @@ export default function EditCredentialModal({ credential, services, onUpdate, on
               </button>
             </div>
           </div>
+
+          {/* Password Generator */}
+          <PasswordGenerator
+            inline
+            onGenerate={(pwd) => setFormData({ ...formData, password_encrypted: pwd })}
+          />
 
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Notes</label>

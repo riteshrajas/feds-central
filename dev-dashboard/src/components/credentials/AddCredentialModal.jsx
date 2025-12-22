@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { X } from 'lucide-react'
+import { X, Eye, EyeOff } from 'lucide-react'
+import PasswordGenerator from '@/components/common/PasswordGenerator'
 
 export default function AddCredentialModal({ services, onAdd, onClose }) {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export default function AddCredentialModal({ services, onAdd, onClose }) {
     password_encrypted: '',
     notes: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -74,15 +76,30 @@ export default function AddCredentialModal({ services, onAdd, onClose }) {
             <label className="block text-sm font-medium text-slate-300 mb-2">
               Password *
             </label>
-            <input
-              type="password"
-              required
-              value={formData.password_encrypted}
-              onChange={(e) => setFormData({ ...formData, password_encrypted: e.target.value })}
-              className="input-field"
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={formData.password_encrypted}
+                onChange={(e) => setFormData({ ...formData, password_encrypted: e.target.value })}
+                className="input-field pr-12"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
+
+          {/* Password Generator */}
+          <PasswordGenerator
+            inline
+            onGenerate={(pwd) => setFormData({ ...formData, password_encrypted: pwd })}
+          />
 
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">

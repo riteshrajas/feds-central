@@ -11,6 +11,7 @@ import {
   Activity,
   User,
   KeyRound,
+  ShieldCheck,
 } from 'lucide-react'
 import { authClient } from '@/auth'
 
@@ -19,6 +20,7 @@ const navItems = [
   { label: 'Services', path: '/services', icon: Lock },
   { label: 'Credentials', path: '/credentials', icon: Shield },
   { label: 'Authenticator', path: '/authenticator', icon: KeyRound },
+  { label: 'Password Health', path: '/password-health', icon: ShieldCheck },
   { label: 'Activity', path: '/audit', icon: Activity },
   { label: 'Account', path: '/account', icon: User },
 ]
