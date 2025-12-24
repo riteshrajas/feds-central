@@ -1,4 +1,4 @@
-import { Trash2, Copy } from 'lucide-react'
+import { Trash2, Copy, Check, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import * as OTPAuth from 'otpauth'
@@ -7,6 +7,9 @@ export default function TOTPEntry({ entry, onDelete }) {
   const [code, setCode] = useState('')
   const [timeLeft, setTimeLeft] = useState(30)
   const [copied, setCopied] = useState(false)
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [piAttempt, setPiAttempt] = useState('')
+  const PI_12 = "314159265358"
 
   const period = entry?.totp_period || 30
   const digits = entry?.digits || 6
@@ -26,7 +29,7 @@ export default function TOTPEntry({ entry, onDelete }) {
           setCode('INVALID')
           return null
         }
-        
+
         // Create TOTP instance with otpauth
         const totp = new OTPAuth.TOTP({
           issuer: entry.issuer || entry.service_name,
@@ -36,7 +39,7 @@ export default function TOTPEntry({ entry, onDelete }) {
           period: period,
           secret: secret,
         })
-        
+
         const newCode = totp.generate()
         setCode(newCode)
         return totp
@@ -53,9 +56,9 @@ export default function TOTPEntry({ entry, onDelete }) {
       const currentPeriod = Math.floor(now / period)
       const nextPeriodStart = (currentPeriod + 1) * period
       const remaining = nextPeriodStart - now
-      
+
       setTimeLeft(remaining)
-      
+
       // Regenerate code when period changes (when remaining === period)
       if (remaining === period) {
         totpInstance = generateCode()
@@ -76,6 +79,17 @@ export default function TOTPEntry({ entry, onDelete }) {
     navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleConfirmDelete = () => {
+    // Remove dots if the user included them
+    const cleanedAttempt = piAttempt.replace(/\./g, '')
+    if (cleanedAttempt === PI_12) {
+      onDelete(entry.id)
+    } else {
+      // Small shake effect or visual feedback could be added here
+      setPiAttempt('')
+    }
   }
 
   return (
@@ -146,13 +160,51 @@ export default function TOTPEntry({ entry, onDelete }) {
           <Copy size={18} />
         </button>
 
-        {/* Delete Button */}
-        <button
-          onClick={() => onDelete(entry.id)}
-          className="p-2 rounded-lg hover:bg-red-950/50 text-red-400 transition-colors"
-        >
-          <Trash2 size={18} />
-        </button>
+        {/* Delete Button / Challenge */}
+        {isConfirmingDelete ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex items-center gap-2 bg-red-950/20 p-1.5 rounded-xl border border-red-500/20"
+          >
+            <input
+              type="text"
+              placeholder="12 digits of π"
+              className="w-32 px-2 py-1 bg-slate-900/50 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-red-500 font-mono"
+              value={piAttempt}
+              onChange={(e) => setPiAttempt(e.target.value)}
+              autoFocus
+              onKeyDown={(e) => e.key === 'Enter' && handleConfirmDelete()}
+            />
+            <div className="flex gap-1">
+              <button
+                onClick={handleConfirmDelete}
+                className="p-1 hover:bg-emerald-950/50 text-emerald-400 rounded-md transition-colors"
+                title="Confirm"
+              >
+                <Check size={16} />
+              </button>
+              <button
+                onClick={() => {
+                  setIsConfirmingDelete(false)
+                  setPiAttempt('')
+                }}
+                className="p-1 hover:bg-red-950/50 text-red-400 rounded-md transition-colors"
+                title="Cancel"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <button
+            onClick={() => setIsConfirmingDelete(true)}
+            className="p-2 rounded-lg hover:bg-red-950/50 text-red-400 transition-colors"
+            title="Delete entry"
+          >
+            <Trash2 size={18} />
+          </button>
+        )}
       </div>
     </motion.div>
   )
