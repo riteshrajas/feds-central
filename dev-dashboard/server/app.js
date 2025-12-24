@@ -156,8 +156,8 @@ import {
 } from '@simplewebauthn/server';
 
 const rpName = 'FEDS Dev Console';
-const rpID = process.env.RP_ID || 'localhost';
-const origin = process.env.RP_ORIGIN || `http://${rpID}:5173`;
+const rpID = process.env.NODE_ENV === 'production' ? 'developer.feds201.com' : 'localhost';
+const origin = process.env.NODE_ENV === 'production' ? 'https://developer.feds201.com' : `http://${rpID}:5173`;
 
 // --- WebAuthn Routes ---
 
