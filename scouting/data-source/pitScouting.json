@@ -9,6 +9,8 @@
       "can_navigate_bumps": true       // True Or False
     },
 
+    "hopper_capacity": 48,
+
     "drivetrain_type": "swerve",       // Options: Tank, Mecanum, Swerve
 
     "autonomous": {
