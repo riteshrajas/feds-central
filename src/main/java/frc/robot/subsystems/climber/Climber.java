@@ -49,8 +49,6 @@ public class Climber extends SubsystemBase {
     }
   }
 
-  private final MotionMagicVoltage positionOut = new MotionMagicVoltage(Rotations.of(0));
-  
   public Climber() {
     currentState = turret_state.HOME;
     sampleMotor = new TalonFX(1);
@@ -59,14 +57,6 @@ public class Climber extends SubsystemBase {
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 40;
-    config.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    //Following values would need to be tuned.
-    config.Slot0.kG = 0.0; // Constant applied for gravity compensation
-    config.Slot0.kS = 0.0; // Constant applied for friction compensation (static gain)
-    config.Slot0.kP = 0.0; // Proportional gain 
-    config.Slot0.kD = 0.0; // Derivative gain
-    config.MotionMagic.MotionMagicCruiseVelocity = 0.0; // Max allowed velocity (Motor rot / sec)
-    config.MotionMagic.MotionMagicAcceleration = 0.0; // Max allowed acceleration (Motor rot / sec^2)
     // Apply config multiple times to ensure application
     for (int i = 0; i < 2; ++i){
       var status = sampleMotor.getConfigurator().apply(config);
@@ -81,15 +71,6 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     super.periodic();
-  }
-
-  public void setPosition(Angle position){
-    sampleMotor.setControl(positionOut.withPosition(position));
-  }
-
-  public void setState(turret_state state){
-    currentState = state;
-    setPosition(state.getTargetPosition());
   }
 
   public Angle getPosition(){
@@ -115,13 +96,6 @@ public class Climber extends SubsystemBase {
   public boolean isAtTarget(){
     return getPosition().isNear(getTargetPosition(), getTolerance());
   }
-
-  public Command setStateCommand(turret_state targetState){
-      return new InstantCommand(() -> {
-        setState(targetState);
-      });
-  }
-
   
 
 
