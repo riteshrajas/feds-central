@@ -19,75 +19,77 @@ A Discord bot for FEDS FRC Team 201 that listens for student questions and trigg
 
 ### Installation
 
-1. Clone the feds-central repository to your Ubuntu server:
+1. **Install Node.js** (if not already installed):
+   ```bash
+   apk add nodejs npm
+   ```
+
+2. Clone the feds-central repository:
    ```bash
    cd /root
    git clone https://github.com/feds201/feds-central.git
    ```
 
-2. Install dependencies:
+3. Install dependencies:
    ```bash
    cd /root/feds-central/discord/feds-bot
    npm install
    ```
 
-3. Create `.env` file from the example:
+4. Create `.env` file from the example:
    ```bash
    cp .env.example .env
-   nano .env  # Edit with your tokens
+   nano .env  # Edit with your tokens (install nano: apk add nano)
    ```
 
-4. Test the bot:
+5. Test the bot:
    ```bash
    npm start
    ```
    You should see: `✅ Discord bot logged in as YourBot#1234`
 
-## Systemd Setup (Ubuntu/Linode)
+## Service Setup
 
-1. Copy service file to systemd:
+1. Copy service file to OpenRC:
    ```bash
    cd /root/feds-central/discord/feds-bot
-   sudo cp feds-bot.service /etc/systemd/system/
+   cp feds-bot.openrc /etc/init.d/feds-bot
+   chmod +x /etc/init.d/feds-bot
    ```
 
-2. Reload systemd and enable the service:
+2. Start and enable the service:
    ```bash
-   sudo systemctl daemon-reload
-   sudo systemctl enable feds-bot
-   sudo systemctl start feds-bot
+   rc-service feds-bot start
+   rc-update add feds-bot default
    ```
 
 3. Check status:
    ```bash
-   sudo systemctl status feds-bot
+   rc-service feds-bot status
    ```
 
 4. View logs:
    ```bash
-   sudo journalctl -u feds-bot -f
+   tail -f /var/log/messages
    ```
 
 ## Management Commands
 
 ```bash
 # Start the bot
-sudo systemctl start feds-bot
+rc-service feds-bot start
 
 # Stop the bot
-sudo systemctl stop feds-bot
+rc-service feds-bot stop
 
 # Restart the bot (after code updates)
-sudo systemctl restart feds-bot
+rc-service feds-bot restart
 
 # View status
-sudo systemctl status feds-bot
+rc-service feds-bot status
 
-# View logs (live)
-sudo journalctl -u feds-bot -f
-
-# View last 100 lines of logs
-sudo journalctl -u feds-bot -n 100
+# View logs
+tail -f /var/log/messages
 ```
 
 ## Updating the Bot
@@ -106,15 +108,15 @@ sudo journalctl -u feds-bot -n 100
 
 3. Restart the service:
    ```bash
-   sudo systemctl restart feds-bot
+   rc-service feds-bot restart
    ```
 
 ## Troubleshooting
 
 ### Bot won't start
 - Check environment variables: `cat .env`
-- Check service status: `sudo systemctl status feds-bot`
-- View error logs: `sudo journalctl -u feds-bot -n 50`
+- Check service status: `rc-service feds-bot status`
+- View error logs: `tail -n 50 /var/log/messages`
 
 ### Bot can't read messages
 Make sure your Discord bot has the following intents enabled in the Discord Developer Portal:
