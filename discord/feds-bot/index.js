@@ -47,8 +47,8 @@ client.on('messageCreate', async (message) => {
   // Ignore bot messages
   if (message.author.bot) return;
 
-  // Only respond to @mentions of the bot
-  if (!message.mentions.has(client.user)) return;
+  // Only respond to direct @mentions of the bot
+  if (!message.mentions.users.has(client.user.id)) return;
 
   // Strip the mention from the message to get the question
   const question = message.content.replace(/<@!?\d+>/g, '').trim();
