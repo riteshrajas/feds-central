@@ -1,0 +1,21 @@
+# =============================================================================
+# Binary artifacts - DO NOT commit compiled binaries to this repo!
+#
+# These file types have caused massive repo bloat in the past (500MB+).
+# If you need to share builds with the team, use Google Drive or GitHub Releases.
+# =============================================================================
+*.exe
+*.apk
+*.aab
+*.msix
+*.dll
+*.msi
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.iml
