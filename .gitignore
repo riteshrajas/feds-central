@@ -19,3 +19,8 @@ Thumbs.db
 .idea/
 .vscode/
 *.iml
+
+
+# TEMP
+check-source-updates.sh
+sync-source-repos.sh
