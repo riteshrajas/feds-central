@@ -14,6 +14,7 @@ Here's what lives where:
 - **`dev-dashboard/`** - Dashboard for programmers, live at: [developer.feds201.com](https://developer.feds201.com/)
 - **`operations-manual/`** - Team documentation, live at [operational-manual.feds201.com](https://operational-manual.feds201.com/)
 - **`game-manuals/`** - FRC game manuals and resources (useful for AI bot/code review to understand this year's game)
+- **`discord/`** - Discord bots
 
 ---
 

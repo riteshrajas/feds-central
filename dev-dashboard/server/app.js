@@ -7,7 +7,6 @@ import { sql } from './db.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initDiscordBot, shutdownDiscordBot } from './discord-bot.js';
 
 // Load env
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -509,15 +508,11 @@ app.delete('/api/auth/passkey/:id', authenticateToken, async (req, res) => {
 if (process.env.NODE_ENV !== 'production' && process.argv[1] === fileURLToPath(import.meta.url)) {
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
-
-        // Start Discord bot
-        initDiscordBot();
     });
 
     // Graceful shutdown
-    process.on('SIGINT', async () => {
+    process.on('SIGINT', () => {
         console.log('\nShutting down gracefully...');
-        await shutdownDiscordBot();
         process.exit(0);
     });
 }
