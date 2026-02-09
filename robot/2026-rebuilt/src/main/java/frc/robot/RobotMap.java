@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.SwerveModuleStatusUtil;
@@ -31,5 +35,11 @@ public final class RobotMap {
         
             return TunerConstants.createDrivetrain();
         }
+    }
+
+    public static class VisionConstants{
+        public static final Matrix<N3, N1> MT1_STDDEV = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Math.PI/30);
+        public static final Matrix<N3, N1> MT2_STDDEV = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
+
     }
 }

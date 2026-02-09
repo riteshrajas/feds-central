@@ -4,45 +4,27 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-
-import java.util.Optional;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotMap.DrivetrainConstants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import limelight.networktables.AngularVelocity3d;
-import limelight.networktables.Orientation3d;
 import frc.robot.utils.LimelightWrapper;
 
 public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = DrivetrainConstants.createDrivetrain();
-  private final LimelightWrapper sampleLocalizationLimelight = new LimelightWrapper("limelight-localization");
+  private final LimelightWrapper ll4 = new LimelightWrapper("limelight-four-localization");
+  private final LimelightWrapper ll3 = new LimelightWrapper("limelight-three-localization");
 
   public RobotContainer() {
     configureBindings();
   }
 
   public void updateLocalization() {
-    sampleLocalizationLimelight.getSettings()
-        .withRobotOrientation(new Orientation3d(drivetrain.getRotation3d(),
-            new AngularVelocity3d(DegreesPerSecond.of(0),
-                DegreesPerSecond.of(0),
-                DegreesPerSecond.of(0))))
-        .save();
-
-    // Get MegaTag2 pose
-    Optional<limelight.networktables.PoseEstimate> visionEstimate = sampleLocalizationLimelight.getPoseEstimator(true)
-        .getPoseEstimate();
-    // If the pose is present
-    visionEstimate.ifPresent((limelight.networktables.PoseEstimate poseEstimate) -> {
-      // Add it to the pose estimator.
-      drivetrain.addVisionMeasurement(poseEstimate.pose.toPose2d(), poseEstimate.timestampSeconds);
-    });
-
+    LimelightWrapper.updateLocalizationLimelight(ll3, false, drivetrain);
+    LimelightWrapper.updateLocalizationLimelight(ll4, true, drivetrain);
   }
+  
   private void configureBindings() {}
 
   public Command getAutonomousCommand() {
