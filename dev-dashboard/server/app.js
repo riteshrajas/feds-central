@@ -504,6 +504,64 @@ app.delete('/api/auth/passkey/:id', authenticateToken, async (req, res) => {
     }
 });
 
+// --- Chat SSE Proxy ---
+
+const FEDSBOT_URL = process.env.FEDSBOT_URL;
+const FEDSBOT_API_KEY = process.env.FEDSBOT_API_KEY;
+
+app.post('/api/chat', authenticateToken, async (req, res) => {
+    if (!FEDSBOT_URL || !FEDSBOT_API_KEY) {
+        return res.status(503).json({ error: 'Chat service not configured' });
+    }
+
+    try {
+        const upstream = await fetch(`${FEDSBOT_URL}/api/chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': FEDSBOT_API_KEY,
+            },
+            body: JSON.stringify({
+                message: req.body.message,
+                sessionId: req.body.sessionId,
+            }),
+        });
+
+        if (!upstream.ok) {
+            const err = await upstream.text();
+            return res.status(upstream.status).json({ error: err });
+        }
+
+        // Pipe SSE back to client
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.flushHeaders();
+
+        const reader = upstream.body.getReader();
+        const decoder = new TextDecoder();
+
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                res.write(decoder.decode(value, { stream: true }));
+            }
+        } catch {
+            // Client disconnected or upstream closed
+        }
+
+        res.end();
+    } catch (err) {
+        console.error('Chat proxy error:', err);
+        if (!res.headersSent) {
+            res.status(502).json({ error: 'Failed to reach chat service' });
+        } else {
+            res.end();
+        }
+    }
+});
+
 // Only start server if run directly (local dev)
 if (process.env.NODE_ENV !== 'production' && process.argv[1] === fileURLToPath(import.meta.url)) {
     app.listen(PORT, () => {
