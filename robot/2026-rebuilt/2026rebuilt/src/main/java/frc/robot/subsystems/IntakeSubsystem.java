@@ -8,6 +8,16 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.DIOSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -15,6 +25,17 @@ public class IntakeSubsystem extends SubsystemBase {
   private final DigitalInput limit_switch_r;
   private final NetworkTable limelight;
   private final DigitalInput limit_switch_l;
+
+  // Simulation
+  private final DCMotorSim motorSim;
+  private final DIOSim limitSwitchRSim;
+  private final DIOSim limitSwitchLSim;
+  
+  // Visualization
+  private final Mechanism2d mech2d = new Mechanism2d(3, 3);
+  private final MechanismRoot2d mechRoot = mech2d.getRoot("IntakeRoot", 1.5, 1.5);
+  private final MechanismLigament2d intakeLigament = mechRoot.append(
+      new MechanismLigament2d("Intake", 1, 90, 6, new Color8Bit(Color.kOrange)));
 
   public enum IntakeState {
     EXTENDED, 
@@ -24,11 +45,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private IntakeState targetState = IntakeState.DEFAULT;
 
   public void setState(IntakeState targetState) { // -> Extended
+    this.targetState = targetState; 
     this.currentState = targetState;
-
-    
-
-
   }
 
   private void extendIntake(){
@@ -46,7 +64,6 @@ public class IntakeSubsystem extends SubsystemBase {
       else {
         stopmotor(); 
       }
-
     }
 
   
@@ -66,6 +83,18 @@ public class IntakeSubsystem extends SubsystemBase {
     limit_switch_r = new DigitalInput(RobotMap.IntakeSubsystemConstants.kLimit_switch_rID);
     limelight = NetworkTableInstance.getDefault().getTable("limelight");
     limit_switch_l = new DigitalInput(RobotMap.IntakeSubsystemConstants.kLimit_switch_lID);
+
+    // Simulation Setup
+    var intakePlant = LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.004, 100.0);
+    motorSim = new DCMotorSim(intakePlant, DCMotor.getKrakenX60(1)); 
+    limitSwitchRSim = new DIOSim(limit_switch_r);
+    limitSwitchLSim = new DIOSim(limit_switch_l);
+    
+    // Default limit switch state (True = Not Pressed for most switches)
+    limitSwitchRSim.setValue(true);
+    limitSwitchLSim.setValue(true);
+
+    SmartDashboard.putData("Intake Sim", mech2d);
   }
 
   @Override
@@ -80,10 +109,42 @@ public class IntakeSubsystem extends SubsystemBase {
       break; 
     }
 
-    System.out.println("Intake State: " + targetState); // -> Extended
 
     
     super.periodic();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // 1. Physics: Apply motor voltage to simulation
+    motorSim.setInput(motor.get() * 12.0);
+    motorSim.update(0.02);
+
+    // 2. Update CTRE device from physics
+    motor.getSimState().setRawRotorPosition(motorSim.getAngularPosition().in(Units.Rotations));
+    motor.getSimState().setRotorVelocity(motorSim.getAngularVelocity().in(Units.RotationsPerSecond));
+
+    // 3. Visualization
+    // Assume 0 is stowed (90 degrees up) and rotating moves it down
+    double angleDegrees = motorSim.getAngularPosition().in(Units.Degrees);
+    intakeLigament.setAngle(90 - angleDegrees);
+
+    // 4. Limit Switch Simulation
+    // Logic extracted from extendIntake/retractIntake usage:
+    // limit_switch_l seems to be the "Extended" limit.
+    // When > 45 degrees, we press limit_switch_l (make it false)
+    if (angleDegrees > 45) {
+      limitSwitchLSim.setValue(false); // Pressing switch
+    } else {
+      limitSwitchLSim.setValue(true);  // Released
+    }
+    
+    // Assume limit_switch_r is "Retracted" (stowed) limit
+    if (angleDegrees < 0) {
+      limitSwitchRSim.setValue(false);
+    } else {
+      limitSwitchRSim.setValue(true);
+    }
   }
 
 
