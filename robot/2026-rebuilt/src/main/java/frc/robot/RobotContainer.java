@@ -9,23 +9,33 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LedsSubsystem;
-
+import frc.robot.subsystems.RollersSubsystem;
+import frc.robot.subsystems.RollersSubsystem.RollerState;
 
 public class RobotContainer {
-CommandXboxController controller = new CommandXboxController(0);
-IntakeSubsystem intake = new IntakeSubsystem();
-LedsSubsystem leds = new LedsSubsystem();
+  CommandXboxController controller = new CommandXboxController(0);
+  RollersSubsystem rollers = RollersSubsystem.getInstance();
+  LedsSubsystem leds = LedsSubsystem.getInstance();
+  // IntakeSubsystem intake = new IntakeSubsystem();
+
   public RobotContainer() {
-      controller.x().onTrue(intake.runIntakeMotors().alongWith(leds.shootingSignal())).onFalse(intake.stopIntakeMotors());
-      controller.a().onTrue(intake.runIntakeMasterMotors().alongWith(leds.intakeSignal())).onFalse(intake.stopIntakeMotors());
-      controller.b().onTrue(leds.climbingSignal());
-       controller.y().onTrue(leds.hasGamePieceSignal());
-
-
+    configureBindings();
 
   }
 
+  private void configureBindings() {
+    controller.x()
+        .onTrue((leds.intakeSignal()))
+        .onFalse(leds.climbingSignal());
+      
 
+    controller.y()
+        .onTrue(rollers.RollersCommand(RollerState.ON).alongWith(leds.intakeSignal()))
+        .onFalse(rollers.RollersCommand(RollerState.OFF).alongWith(leds.climbingSignal()));
+        
+  }
+
+  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

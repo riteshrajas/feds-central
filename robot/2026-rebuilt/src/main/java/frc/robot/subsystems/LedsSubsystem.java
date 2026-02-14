@@ -20,7 +20,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LedsSubsystem extends SubsystemBase {
   public ConnectorXAnimate m_leds = new ConnectorXAnimate();
+  private static LedsSubsystem instance;
+
   
+  public static LedsSubsystem getInstance() { 
+  if (instance == null) {
+      instance = new LedsSubsystem();
+    }
+    return instance;
+  }
+
 
   public enum LEDState {
     OFF,
@@ -39,8 +48,9 @@ public class LedsSubsystem extends SubsystemBase {
   private boolean m_wasAuto = false;
 
   // Configuration
-  private static final String ZONE_ALL = "3";
-  private static final String ZONE_BACK67 = "heelo";
+  private static final String ZONE_ALL = "strip1"; 
+  
+
 
   // Colors
   private static final Color COLOR_ORANGE = new Color(new Color8Bit(255, 100, 0));
@@ -52,7 +62,7 @@ public class LedsSubsystem extends SubsystemBase {
 
   /** Creates a new LedsSubsystem. */
   public LedsSubsystem() {
-    // Connect to the device on USB port 1
+    // Connect to the device on USB port 2
     boolean connected = m_leds.Connect(USBPort.kUSB1);
     System.out.println("ConnectorX connected: " + connected);
     
@@ -102,8 +112,8 @@ public class LedsSubsystem extends SubsystemBase {
         
       case INTAKING:
         m_leds.leds.SetAnimation(Animation.Blink)
-            .ForZone(ZONE_BACK67)
-            .WithColor(COLOR_ORANGE)
+            .ForZone(ZONE_ALL)
+            .WithColor(COLOR_GREEN)
             .WithDelay(Units.Milliseconds.of(200))
             .RunOnce(false);
         break;
@@ -149,7 +159,7 @@ public class LedsSubsystem extends SubsystemBase {
         // Disabled: Breathe Red indicating standby/disabled
         m_leds.leds.SetAnimation(Animation.Breathe)
           .ForZone(ZONE_ALL)
-          .WithColor(COLOR_YELLOW)
+          .WithColor(COLOR_RED)
           .WithDelay(Units.Milliseconds.of(20))
           .RunOnce(false);
     } else if (DriverStation.isAutonomous()) {

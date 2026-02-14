@@ -6,8 +6,9 @@ package frc.robot;
  */
 public final class RobotMap {
     public static final class IntakeSubsystemConstants {
-        public static final int kIntakeMasterMotorID = 23;
-        public static final int kIntakeSlaveMotorID = 24;
-    }
+        public static final int kMotorID = 1;
+        public static final int kLimit_switch_rID = 2;
+        public static final int kLimit_switch_lID = 3; 
 
+    }
 }
