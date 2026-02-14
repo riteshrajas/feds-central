@@ -101,22 +101,30 @@ class _Checklist_recordState extends State<Checklist_record> {
   late bool gooseneck_wires;
   late List<String> gooseneck;
 
-  late bool shooter_Placeholder1;
-  late bool shooter_Placeholder2;
-  late bool shooter_Placeholder3;
-  late bool shooter_Placeholder4;
+  late bool shooter_hood;
+  late bool shooter_motors;
+  late bool shooter_gears;
+  late bool shooter_gearboxes;
+  late bool shooter_space;
+  late bool shooter_rollers;
+  late bool shooter_fuel_pusher;
+  late bool shooter_belts;
   late List<String> shooter;
 
-  late bool spindexerPH1;
-  late bool spindexerPH2;
-  late bool spindexerPH3;
-  late bool spindexerPH4;
+  late bool spinD_gears;
+  late bool spinD_belts;
+  late bool spinD_gearboxes;
+  late bool spinD_combinedWheels;
+  late bool spinD_motor;
+  late bool spinD_feederBar;
+  late bool spinD_nuts;
   late List<String> spinDexer;
 
-  late bool intakePH1;
-  late bool intakePH2;
-  late bool intakePH3;
-  late bool intakePH4;
+  late bool intake_rollers;
+  late bool intake_rollerMotor;
+  late bool intake_iMotors;
+  late bool intake_gears;
+  late bool intake_limelight;
   late List<String> intake;
 
   late double outgoing_number;
@@ -230,16 +238,24 @@ class _Checklist_recordState extends State<Checklist_record> {
     drivetrain = [];
     elevator = [];
 
-    shooter_Placeholder1 = false;
-    shooter_Placeholder2 = false;
-    shooter_Placeholder3 = false;
-    shooter_Placeholder4 = false;
+   shooter_hood = false;
+   shooter_motors = false;
+   shooter_gears = false;
+   shooter_gearboxes = false;
+   shooter_space = false;
+    shooter_rollers = false;
+    shooter_fuel_pusher = false;
+    shooter_belts = false;
     shooter = [];
 
-    spindexerPH1 = false;
-    spindexerPH2 = false;
-    spindexerPH3 = false;
-    spindexerPH4 = false;
+    spinD_gears = false;
+    spinD_belts = false;
+    spinD_gearboxes = false;
+    spinD_combinedWheels = false;
+    spinD_motor = false;
+    spinD_feederBar = false;
+    spinD_nuts = false;
+
     spinDexer = [];
 
     trapdoor_panels = false;
@@ -269,10 +285,11 @@ class _Checklist_recordState extends State<Checklist_record> {
     gooseneck_wires = false;
     gooseneck = [];
 
-    intakePH1 = false;
-    intakePH2 = false;
-    intakePH3 = false;
-    intakePH4 = false;
+    intake_rollers = false;
+    intake_rollerMotor = false;
+    intake_iMotors = false;
+    intake_gears = false;
+    intake_limelight = false;
     intake = [];
 
     returning_battery_voltage = 0;
@@ -476,20 +493,30 @@ class _Checklist_recordState extends State<Checklist_record> {
 
           // Shooter List
           shooter = [];
-          if (shooter_Placeholder1) shooter.add("value1");
-          if (shooter_Placeholder2) shooter.add("value2");
-          if (shooter_Placeholder3) shooter.add("value3");
-          if (shooter_Placeholder4) shooter.add("value4");
+          if (shooter_hood) shooter.add("Hood");
+          if (shooter_motors) shooter.add("Motors");
+          if (shooter_gears) shooter.add("Gears");
+          if (shooter_gearboxes) shooter.add("Gearboxes");
+          if(shooter_space) shooter.add("Space");
+          if(shooter_rollers) shooter.add("Rollers");
+          if(shooter_fuel_pusher) shooter.add("Fuelpusher");
+          if(shooter_belts) shooter.add("Belts");
 
-          if (spindexerPH1) spinDexer.add("spinD_value1");
-          if (spindexerPH2) spinDexer.add("spinD_value2");
-          if (spindexerPH3) spinDexer.add("spinD_value3");
-          if (spindexerPH4) spinDexer.add("spinD_value4");
+          // Spindexer List
+          if (spinD_gears) spinDexer.add("Gears");
+          if (spinD_belts) spinDexer.add("Belts");
+          if (spinD_gearboxes) spinDexer.add("Gearboxes");
+          if (spinD_combinedWheels) spinDexer.add("Combined Wheels");
+          if (spinD_motor) spinDexer.add("Motor");
+          if (spinD_feederBar) spinDexer.add("Feeder Bar");
+          if (spinD_nuts) spinDexer.add("Nuts");
 
-          if (intakePH1) intake.add("intake_value1");
-          if (intakePH2) intake.add("intake_value2");
-          if (intakePH3) intake.add("intake_value3");
-          if (intakePH4) intake.add("intake_value4");
+          // Intake List
+          if (intake_rollers) intake.add("Rollers");
+          if (intake_rollerMotor) intake.add("Roller Motors");
+          if (intake_iMotors) intake.add("Intake Motors");
+          if (intake_gears) intake.add("Gears");
+          if (intake_limelight) spinDexer.add("Limelight");
 
           // Set matchkey from existing record
           matchkey = existingRecord.matchkey;
@@ -640,10 +667,14 @@ class _Checklist_recordState extends State<Checklist_record> {
               "Shooter",
               Icon(Icons.star_outline, size: 30, color: Colors.blue),
               [
-                "shooterPlaceholder1",
-                "shooterPlaceholder2",
-                "shooterPlaceholder3",
-                "shooterPlaceholder4",
+                "Hood",
+                "Motors",
+                "Gears",
+                "Gearboxes",
+                "Space",
+                "Rollers",
+                "Fuel Pusher",
+                "Belts",
               ],
               shooter, (value) {
             setState(() {
@@ -654,10 +685,13 @@ class _Checklist_recordState extends State<Checklist_record> {
               "SpinDexer",
               Icon(Icons.star_outline, size: 30, color: Colors.blue),
               [
-                "spindexerValue1",
-                "spindexerValue2",
-                "spindexerValue3",
-                "spindexerValue4",
+                "Gears",
+                "Belts",
+                "Gearboxes",
+                "Combined Wheels",
+                "Motor",
+                "Feeder Bar",
+                "Nuts",
               ],
               carriage, (value) {
             setState(() {
@@ -668,10 +702,11 @@ class _Checklist_recordState extends State<Checklist_record> {
               "Intake",
               Icon(Icons.star_outline, size: 30, color: Colors.blue),
               [
-                "IntakeValue1",
-                "IntakeValue2",
-                "IntakeValue3",
-                "IntakeValue4",
+                "Rollers",
+                "Roller Motor",
+                "Intake Motors",
+                "Gears",
+                "Limelight",
               ],
               gooseneck, (value) {
             setState(() {
