@@ -1,11 +1,17 @@
 package frc.robot;
 
-import java.security.KeyStore.Entry;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
+import frc.robot.utils.FieldConstants;
 import frc.robot.utils.SwerveModuleStatusUtil;
 
 /**
@@ -13,6 +19,22 @@ import frc.robot.utils.SwerveModuleStatusUtil;
  * to a variable name. This provides flexibility changing wiring.
  */
 public final class RobotMap {
+
+    //Used for FieldConstants File
+    public class Constants {
+    public static boolean disableHAL = false;
+
+    public static void disableHAL() {
+        disableHAL = true;
+    }
+
+    public static final Mode currentMode = Mode.SIM;
+
+    public enum Mode {
+        REAL, SIM, REPLAY
+    }
+    }
+
     public static class DrivetrainConstants{
         private static final int kFrontLeftDriveMotorId = 11;
         private static final int kFrontLeftSteerMotorId = 12;
@@ -47,10 +69,35 @@ public final class RobotMap {
         public static final int kShooterFollower1Id = 1;
         public static final int kShooterFollower2Id = 2;
         public static final int kShooterFollower3Id = 3;
+        public static final int kHoodMotorId = 4;
+        public static final AngularVelocity velocityTolerance = RotationsPerSecond.of(3);
+         public static final Angle postionTolerance = Rotations.of(.05);
 
-        public static final InterpolatingDoubleTreeMap kVelocityMap = InterpolatingDoubleTreeMap.ofEntries(
+         public static final Angle maxHoodAngle = Rotations.of(0); //tune
+         public static final Angle minHoodAngle = Rotations.of(0); //tune
+
+
+        public static final Translation2d hubCenter = FieldConstants.Hub.innerCenterPoint.toTranslation2d();    
+        // This map is used to determine the velocity of the shooter based on the distance to the target. 
+        //The key is the distance to the target in meters, and the value is the velocity of the shooter in rotations per second.`
+        public static final InterpolatingDoubleTreeMap kShootingVelocityMap = InterpolatingDoubleTreeMap.ofEntries(
             Map.entry(0.0, 0.0)
         );
+
+        public static final InterpolatingDoubleTreeMap kPassingVelocityMap = InterpolatingDoubleTreeMap.ofEntries(
+            Map.entry(0.0, 0.0)
+        );
+
+
+         public static final InterpolatingDoubleTreeMap kPassingPositionMap = InterpolatingDoubleTreeMap.ofEntries(
+            Map.entry(0.0, 0.0)
+        );
+
+         public static final InterpolatingDoubleTreeMap kShootingPositionMap = InterpolatingDoubleTreeMap.ofEntries(
+            Map.entry(0.0, 0.0)
+        );
+
+        
 }
 }
 
