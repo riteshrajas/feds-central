@@ -27,7 +27,7 @@ public final class RobotMap {
     public static void disableHAL() {
         disableHAL = true;
     }
-
+    }
     public static final Mode currentMode = Mode.SIM;
 
     public enum Mode {
@@ -42,7 +42,7 @@ public final class RobotMap {
         public static final int kLimit_switch_lID = 3; 
 
     }
-
+    
     public static robotState getRobotMode() {
         return Robot.isReal() ? robotState.REAL : robotState.SIM;
     }
@@ -111,7 +111,7 @@ public final class RobotMap {
 
         
 }
+
+
 }
-
-
     
