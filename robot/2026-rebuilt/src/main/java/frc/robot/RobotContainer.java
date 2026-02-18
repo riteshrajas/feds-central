@@ -43,7 +43,15 @@ public class RobotContainer {
     });
 
   }
-  private void configureBindings() {}
+
+  private void configureBindings() {
+    controller.x()
+        .onTrue((leds.intakeSignal())).onFalse(leds.climbingSignal());
+      
+    // controller.y()
+    //     .onTrue(rollers.RollersCommand(RollerState.ON))
+    //     .onFalse(rollers.RollersCommand(RollerState.OFF));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
