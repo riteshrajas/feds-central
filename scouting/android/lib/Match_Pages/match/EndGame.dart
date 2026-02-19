@@ -316,7 +316,9 @@ class EndGameState extends State<EndGame> {
                             onRatingChanged: (rating) {
                               setState(() {
                                 shootingAccuracy = rating;
-                                print(shootingAccuracy);
+                                if (kDebugMode) {
+                                  log('shootingAccuracy: $shootingAccuracy');
+                                }
                               });
                             },
                           ),
