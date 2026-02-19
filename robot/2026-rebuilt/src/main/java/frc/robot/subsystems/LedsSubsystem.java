@@ -11,6 +11,7 @@ import com.lumynlabs.domain.led.Animation;
 import edu.wpi.first.hal.simulation.AnalogInDataJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,14 +31,21 @@ public class LedsSubsystem extends SubsystemBase {
   }
 
 
-  public enum LEDState {
-    OFF,
-    IDLE,           // Depends on Robot Mode (Disabled, Auto, Teleop)
-    INTAKING,       // Flashing Orange
-    HAS_GAME_PIECE, // Solid Green
-    SHOOTING,       // Fast Strobe White
-    CLIMBING,       // Rainbow
-    ERROR           // Strobe Red
+  public enum LEDState {              
+    FALCON_DRIVE,       // Flashing Orange at 200ms
+    AIMED,             // When aimed should be fill solid Red
+    SHOOTING,            // Shooting should be blue coment kinda fast
+    CLIMBING,           // Rainbow         
+    ERROR_LL,                //Error limelight should be blink Limelight green at 200ms
+    ERROR_CAN,                //Error: CAN blink green and yellow at 400ms and should be altrnate
+    ERROR_JAMMING,                //Error: jamming should be blink scarlett at 200ms
+    ERROR_OTHER,
+    IDLE,
+    OFF;
+
+
+               //Error: other should blink purple at 200ms
+                    
   }
 
   private LEDState m_currentState = LEDState.IDLE;
@@ -47,9 +55,16 @@ public class LedsSubsystem extends SubsystemBase {
   private boolean m_wasAuto = false;
 
   // Configuration
-  private static final String ZONE_ALL = "strip1"; 
-  
-
+  private static final String ZONE_1 = "ZONE_50_1"; 
+  private static final String ZONE_2 = "ZONE_50_2";
+  private static final String ZONE_3 = "ZONE_50_3";
+  private static final String ZONE_4 = "ZONE_50_4";
+  private static final String ZONE_5 = "ZONE_50_5";
+  private static final String ZONE_6 = "ZONE_50_6";
+  private static final String GR_300 = "GR_300";
+  private static final String GR_100_1 = "GR_100";
+  private static final String GR_200_2 = "GR_100_2";
+  private static final String GR_200_3 = "GR_100_3";
 
   // Colors
   private static final Color COLOR_ORANGE = new Color(new Color8Bit(255, 100, 0));
@@ -68,6 +83,7 @@ public class LedsSubsystem extends SubsystemBase {
     // Initial State application will happen in periodic loop or manually here
     // But periodic handles state change, so setting lastState to OFF calls applyState(IDLE) in first loop.
   }
+
 
   @Override
   public void periodic() {  
@@ -91,6 +107,8 @@ public class LedsSubsystem extends SubsystemBase {
     }
   }
 
+ 
+
   /**
    * Directly set the state of the LEDs.
    * @param state The target state
@@ -102,42 +120,34 @@ public class LedsSubsystem extends SubsystemBase {
   private void applyState(LEDState state) {
     switch (state) {
       case OFF:
-        m_leds.leds.SetColor(ZONE_ALL, new Color(0, 0, 0));
+        m_leds.leds.SetColor(GR_300, new Color(0, 0, 0));
         break;
         
       case IDLE:
         applyIdlePattern();
         break;
         
-      case INTAKING:
-        m_leds.leds.SetAnimation(Animation.Blink)
-            .ForZone(ZONE_ALL)
-            .WithColor(COLOR_ORANGE)
-            .WithDelay(Units.Milliseconds.of(200))
-            .RunOnce(false);
-        break;
-        
-      case HAS_GAME_PIECE:
+       case AIMED:
         m_leds.leds.SetAnimation(Animation.Fill)
-            .ForZone(ZONE_ALL)
-            .WithColor(COLOR_GREEN)
-            .WithDelay(Units.Milliseconds.of(2))
-            .Reverse(false)
-            .RunOnce(false);
-        break;
-        
-      case SHOOTING:
-        m_leds.leds.SetAnimation(Animation.Blink)
-            .ForZone(ZONE_ALL)
-            .WithColor(COLOR_WHITE)
+            .ForGroup(GR_300)
+            .WithColor(COLOR_RED)
             .WithDelay(Units.Milliseconds.of(50))
+            .RunOnce(false);
+        break; 
+
+
+      case SHOOTING:
+        m_leds.leds.SetAnimation(Animation.Comet)
+            .ForGroup(GR_300)
+            .WithColor(COLOR_FEDS_BLUE)
+            .WithDelay(Units.Milliseconds.of(20))
             .RunOnce(false);
         break;
         
       case CLIMBING:
-        m_leds.leds.SetAnimation(Animation.Heartbeat)
-            .ForZone(ZONE_ALL)
-            .WithColor(COLOR_YELLOW)
+        m_leds.leds.SetAnimation(Animation.RainbowRoll)
+            .ForGroup(GR_300)
+            .WithColor(COLOR_WHITE) // Color is ignored for Rainbow, but set it anyway
             .WithDelay(Units.Milliseconds.of(10))
             .Reverse(false)
             .RunOnce(false);
@@ -145,7 +155,7 @@ public class LedsSubsystem extends SubsystemBase {
         
       case ERROR:
           m_leds.leds.SetAnimation(Animation.Blink)
-            .ForZone(ZONE_ALL)
+            .ForGroup(GR_300)
             .WithColor(COLOR_RED)
             .WithDelay(Units.Milliseconds.of(100))
             .RunOnce(false);
@@ -153,32 +163,33 @@ public class LedsSubsystem extends SubsystemBase {
     }
   }
 
-  private void applyIdlePattern() {
-    if (DriverStation.isDisabled()) {
-        // Disabled: Breathe Red indicating standby/disabled
-        m_leds.leds.SetAnimation(Animation.Breathe)
-          .ForZone(ZONE_ALL)
-          .WithColor(COLOR_RED)
-          .WithDelay(Units.Milliseconds.of(20))
-          .RunOnce(false);
-    } else if (DriverStation.isAutonomous()) {
-        // Auto: Rainbow indicating Autonomous mode
-        m_leds.leds.SetAnimation(Animation.RainbowRoll)
-          .ForZone(ZONE_ALL)
-          .WithColor(COLOR_WHITE)
-          .WithDelay(Units.Milliseconds.of(10))
-          .Reverse(false)
-          .RunOnce(false);
-    } else {
-        // Teleop IDLE: Team Color Breathe
-        m_leds.leds.SetAnimation(Animation.Breathe)
-          .ForZone(ZONE_ALL)
-          .WithColor(COLOR_FEDS_BLUE)
-          .WithDelay(Units.Milliseconds.of(15))
-          .RunOnce(false);
-    }
-  }
+ private void applyIdlePattern() {
+  if (DriverStation.isDisabled()) {
+    // Disabled – turn LEDs off (or change if you prefer something else)
+    m_leds.leds.SetAnimation(Animation.Confetti)
+            .ForGroup(GR_300)
+            .WithColor(COLOR_YELLOW)
+            .WithDelay(Units.Milliseconds.of(10))
+            .RunOnce(false);
+    
+  } else if (DriverStation.isAutonomous()) {
+    //  AUTON – Solid Red
+    m_leds.leds.SetAnimation(Animation.Fill)//Auton should be Confettie fast
+      .ForGroup(GR_300)
+      .WithColor(COLOR_RED)
+      .WithDelay(Units.Milliseconds.of(1))
+      .Reverse(false)
+      .RunOnce(false);
 
+  } else {
+    //Teleop should be Fill solid blue
+    m_leds.leds.SetAnimation(Animation.Blink)
+      .ForGroup(GR_300)
+      .WithColor(COLOR_YELLOW)
+      .WithDelay(Units.Milliseconds.of(200))  // Adjust speed here
+      .RunOnce(false);
+  }
+}
   public Command setStateCommand(LEDState state) {
     return runOnce(() -> setState(state)).ignoringDisable(true);
   }
@@ -194,8 +205,6 @@ public class LedsSubsystem extends SubsystemBase {
     return runStateCommand(state).withTimeout(seconds);
   }
 
-  public Command intakeSignal() { return runStateCommand(LEDState.INTAKING); }
-  public Command hasGamePieceSignal() { return setStateCommand(LEDState.HAS_GAME_PIECE); } // Persist success
   public Command shootingSignal() { return runStateCommand(LEDState.SHOOTING); }
   public Command climbingSignal() { return runStateCommand(LEDState.CLIMBING); }
   public Command errorSignal() { return runStateCommand(LEDState.ERROR); }

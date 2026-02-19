@@ -53,7 +53,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private void extendIntake(){
     if (limit_switch_l.get() == true) { //-> If the limit switch is pressed, extend the intake
-      motor.set(0.1);
+      try {
+        motor.set(0.1);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
     } else {
       stopmotor();
     }

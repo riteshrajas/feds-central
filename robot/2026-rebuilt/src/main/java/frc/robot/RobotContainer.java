@@ -29,12 +29,12 @@ public class RobotContainer {
         .onFalse(leds.resetLEDS());
       
 
-    controller.y()
+    controller.y() 
         .onTrue(rollers.RollersCommand(RollerState.ON).alongWith(leds.intakeSignal()))
         .onFalse(rollers.RollersCommand(RollerState.OFF).alongWith(leds.resetLEDS()));
      
     controller.b()
-        .onTrue(leds.hasGamePieceSignal())
+        .onTrue(leds.hopperfull())
         .onFalse(leds.resetLEDS());
 
     controller.a()
