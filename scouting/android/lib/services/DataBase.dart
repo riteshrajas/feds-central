@@ -872,7 +872,7 @@ class TeleOpPoints {
   }
 
   String toCsv() {
-    return '${TotalShootingTime1},${TotalShootingTimeA1},${TotalShootingTimeA2},${ShootingI1 ? 1 : 0},${ShootingI2 ? 1 : 0},${TotalAmount1},${TotalAmountA1},${TotalAmountA2},${TotalAmountI1},${TotalAmountI2},${TripAmount1},${NeutralTrips},${NeutralTripsA1},${NeutralTripsA2},${NeutralTripsI1},${NeutralTripsI2},${Defense ? 1 : 0}${DefenseA1 ? 1 : 0}${DefenseA2 ? 1 : 0}${DefenseI1 ? 1 : 0}${DefenseI2 ? 1 : 0},${FeedToHPStation ? 1 : 0}${FeedToHPStationA1 ? 1 : 0}${FeedToHPStationA2 ? 1 : 0}${FeedToHPStationI1 ? 1 : 0}${FeedToHPStationI2 ? 1 : 0},${passing ? 1 : 0}${passingA1 ? 1 : 0}${passingA2 ? 1 : 0}${passingI1 ? 1 : 0}${passingI2 ? 1 : 0}';
+    return '${TotalShootingTime1},${TotalShootingTimeA1},${TotalShootingTimeA2},${ShootingI1 ? 1 : 0},${ShootingI2 ? 1 : 0},${TotalAmount1},${TotalAmountA1},${TotalAmountA2},${TotalAmountI1},${TotalAmountI2},${TripAmount1},${NeutralTrips},${NeutralTripsA1},${NeutralTripsA2},${NeutralTripsI1},${NeutralTripsI2},${Defense ? 1 : 0},${DefenseA1 ? 1 : 0},${DefenseA2 ? 1 : 0},${DefenseI1 ? 1 : 0},${DefenseI2 ? 1 : 0},${FeedToHPStation ? 1 : 0},${FeedToHPStationA1 ? 1 : 0},${FeedToHPStationA2 ? 1 : 0},${FeedToHPStationI1 ? 1 : 0},${FeedToHPStationI2 ? 1 : 0},${passing ? 1 : 0},${passingA1 ? 1 : 0},${passingA2 ? 1 : 0},${passingI1 ? 1 : 0},${passingI2 ? 1 : 0}';
   }
 
   static TeleOpPoints fromJson(Map<String, dynamic> json) {
@@ -1771,4 +1771,5 @@ class PitCheckListDatabase {
       return false;
     }
   }
+
 }
