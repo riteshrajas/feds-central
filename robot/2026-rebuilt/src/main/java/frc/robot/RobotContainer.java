@@ -24,6 +24,7 @@ import limelight.networktables.LimelightSettings.ImuMode;
 public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = DrivetrainConstants.createDrivetrain();
+  //Limelight naming conventions are based on physical inventory system, hence "limelight-two" and "limelight-five" represent our second and fifth limelights respectively.
   private final LimelightWrapper ll4 = new LimelightWrapper("limelight-two", true);
   private final LimelightWrapper ll3 = new LimelightWrapper("limelight-five", false);
 
