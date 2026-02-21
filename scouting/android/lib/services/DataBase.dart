@@ -5,9 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
+
 
 import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
@@ -1106,7 +1104,6 @@ class EndPoints {
 
   String _encodeDrawingData() {
     return DrawingBitmaskCodec.encode(drawingData);
->>>>>>> origin/main
   }
 
   @override
