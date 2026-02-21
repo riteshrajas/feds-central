@@ -11,7 +11,6 @@ import 'dart:io';
 
 import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
-
 class Settings {
   static void setApiKey(String key) {
     LocalDataBase.putData('Settings.apiKey', key);
@@ -1088,7 +1087,7 @@ class EndPoints {
       json['FeedToHP'] ?? false,
       json['Passing'] ?? false,
       json['Comments'] ?? '',
-      json['ShootingAccuracy'] ?? 3,
+      (json['ShootingAccuracy'] as int?) ?? 3,
       (json['endgameTime'] ?? 0.0).toDouble(),
       json['endgameActions'] ?? 0,
       // Handle both list and legacy string/migration
