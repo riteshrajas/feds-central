@@ -1111,6 +1111,7 @@ class EndPoints {
   String toCsv() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     return '$ClimbStatus,$Park,$FeedToHP,$Passing,$ShootingAccuracy,$endgameTime,$endgameActions,$Comments,$drawingData';
 =======
 <<<<<<< HEAD
@@ -1120,15 +1121,21 @@ class EndPoints {
 =======
     return '$ClimbStatus,${Park ? 1 : 0},${FeedToHP ? 1 : 0},${Passing ? 1 : 0},$ShootingAccuracy,$endgameTime,$endgameActions,$Comments,$drawingData';
 >>>>>>> origin/robot_intake
+=======
+    return '$ClimbStatus,${Park ? 1 : 0},${FeedToHP ? 1 : 0},${Passing ? 1 : 0},$ShootingAccuracy,$endgameTime,$endgameActions,$Comments,$drawingData';
+>>>>>>> origin/main
   }
 
   String _encodeDrawingData() {
     return DrawingBitmaskCodec.encode(drawingData);
 >>>>>>> origin/main
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> origin/main
 =======
 >>>>>>> origin/robot_intake
+=======
+>>>>>>> origin/main
   }
 
   @override
