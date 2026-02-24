@@ -50,7 +50,7 @@
         <div class="progress-container">
             <div class="progress-bar" id="progress-bar"></div>
         </div>
-        <<div class="question-card hidden">
+        <div class="question-card hidden">
     <span class="question-number">Question <span id="current-question-display">1</span>/<span id="total-questions-display">13</span></span>
     <h2 class="section-heading" id="section-heading"></h2>
     <h3 class="question-text" id="question"></h3>
@@ -168,7 +168,7 @@
             
             <div class="eco-impact">
                 <h3>Your Environmental Impact</h3>
-                <div class="impact-item">
+                <div class="impact-item" data-category="materials">
                     <div class="impact-icon"><i class="fas fa-box"></i></div>
                     <div class="impact-content">
                         <h4>Materials Usage</h4>
@@ -176,7 +176,7 @@
                     </div>
                 </div>
                 
-                <div class="impact-item">
+                <div class="impact-item" data-category="transport">
                     <div class="impact-icon"><i class="fas fa-car"></i></div>
                     <div class="impact-content">
                         <h4>Transportation Impact</h4>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
                 
-                <div class="impact-item">
+                <div class="impact-item" data-category="energy">
                     <div class="impact-icon"><i class="fas fa-bolt"></i></div>
                     <div class="impact-content">
                         <h4>Energy Consumption</h4>
@@ -222,6 +222,6 @@
     </div>
 
    
-    <script src="js/script.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
