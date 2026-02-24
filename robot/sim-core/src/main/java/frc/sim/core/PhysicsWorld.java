@@ -19,9 +19,11 @@ import static org.ode4j.ode.OdeHelper.*;
  * Provides gravity, ground plane, collision detection, stepping, and
  * field mesh loading.
  *
- * <p>Z-up coordinate system matching WPILib/AdvantageScope.
+ * <p>
+ * Z-up coordinate system matching WPILib/AdvantageScope.
  *
- * <p>Each simulation creates its own instance. However, the ODE4J native
+ * <p>
+ * Each simulation creates its own instance. However, the ODE4J native
  * library is initialized once globally via a static flag (ODE4J requires
  * exactly one {@code initODE2()} call per process).
  */
@@ -34,6 +36,7 @@ public class PhysicsWorld {
     // Default contact parameters
     private TerrainSurface defaultSurface = TerrainSurface.CARPET;
     private int maxContacts = 6;
+    private double timeMultiplier = 1.0;
 
     // Per-geom surface overrides
     private final Map<DGeom, TerrainSurface> geomSurfaces = new HashMap<>();
@@ -104,19 +107,23 @@ public class PhysicsWorld {
     /**
      * Step the physics world with adaptive sub-stepping.
      *
-     * <p><b>Why sub-stepping:</b> A fast-moving object (e.g., a ball shot at 30 m/s)
+     * <p>
+     * <b>Why sub-stepping:</b> A fast-moving object (e.g., a ball shot at 30 m/s)
      * travels 60 cm in one 20ms step. If a wall is only 10 cm thick, the ball
      * would pass clean through without ever registering a collision — this is
      * called "tunneling". Sub-stepping divides the timestep so that no body
      * moves more than {@code minCollisionThickness} per sub-step, giving the
      * collision detector a chance to catch every contact.
      *
-     * <p><b>Algorithm:</b> Scans all active bodies for the fastest one. If its
+     * <p>
+     * <b>Algorithm:</b> Scans all active bodies for the fastest one. If its
      * per-step displacement exceeds {@code minCollisionThickness} (default 0.1m,
      * matching the thinnest wall), the timestep is split into
-     * {@code ceil(displacement / thickness)} sub-steps, capped at {@code maxSubSteps}.
+     * {@code ceil(displacement / thickness)} sub-steps, capped at
+     * {@code maxSubSteps}.
      *
-     * <p>Most frames everything is slow and only 1 sub-step runs (zero overhead).
+     * <p>
+     * Most frames everything is slow and only 1 sub-step runs (zero overhead).
      * Extra sub-steps are only needed during fast events like shooter launches.
      *
      * @param dt timestep in seconds (typically 0.02 for 50Hz)
@@ -127,8 +134,11 @@ public class PhysicsWorld {
             contacts.clear();
         }
 
-        int subSteps = computeSubSteps(dt);
-        double subDt = dt / subSteps;
+        // Apply time multiplier for faster/slower simulation
+        double scaledDt = dt * timeMultiplier;
+
+        int subSteps = computeSubSteps(scaledDt);
+        double subDt = scaledDt / subSteps;
 
         for (int i = 0; i < subSteps; i++) {
             space.collide(null, this::nearCallback);
@@ -147,16 +157,19 @@ public class PhysicsWorld {
         for (int i = 0; i < numGeoms; i++) {
             DGeom geom = space.getGeom(i);
             DBody body = geom.getBody();
-            if (body == null || !body.isEnabled()) continue;
+            if (body == null || !body.isEnabled())
+                continue;
             DVector3C vel = body.getLinearVel();
             double speedSq = vel.get0() * vel.get0()
-                           + vel.get1() * vel.get1()
-                           + vel.get2() * vel.get2();
-            if (speedSq > maxSpeedSq) maxSpeedSq = speedSq;
+                    + vel.get1() * vel.get1()
+                    + vel.get2() * vel.get2();
+            if (speedSq > maxSpeedSq)
+                maxSpeedSq = speedSq;
         }
 
         double maxDisplacement = Math.sqrt(maxSpeedSq) * dt;
-        if (maxDisplacement <= minCollisionThickness) return 1;
+        if (maxDisplacement <= minCollisionThickness)
+            return 1;
         return Math.min(maxSubSteps, (int) Math.ceil(maxDisplacement / minCollisionThickness));
     }
 
@@ -165,7 +178,8 @@ public class PhysicsWorld {
         DBody b2 = o2.getBody();
 
         // Don't collide two static geoms
-        if (b1 == null && b2 == null) return;
+        if (b1 == null && b2 == null)
+            return;
 
         // Check if either geom is a sensor
         boolean o1Sensor = sensorGeoms.contains(o1);
@@ -203,9 +217,9 @@ public class PhysicsWorld {
 
         // Determine surface properties.
         // Tire-model geoms use near-zero friction against the ground plane only
-        // (the tire model already handles traction). Against walls/pieces, use normal friction.
-        boolean tireVsGround =
-                (o1 == groundPlane && tireModelGeoms.contains(o2)) ||
+        // (the tire model already handles traction). Against walls/pieces, use normal
+        // friction.
+        boolean tireVsGround = (o1 == groundPlane && tireModelGeoms.contains(o2)) ||
                 (o2 == groundPlane && tireModelGeoms.contains(o1));
 
         TerrainSurface surface = tireVsGround
@@ -231,6 +245,7 @@ public class PhysicsWorld {
 
     /**
      * Load an OBJ mesh file as a static trimesh geometry for field collision.
+     * 
      * @param objStream input stream of the OBJ file
      * @return the created trimesh geom
      */
@@ -270,6 +285,7 @@ public class PhysicsWorld {
 
     /**
      * Add a static box to the world (e.g., field walls).
+     * 
      * @return the created box geom
      */
     public DGeom addStaticBox(double lx, double ly, double lz, double px, double py, double pz) {
@@ -280,7 +296,9 @@ public class PhysicsWorld {
 
     // --- Sensor API ---
 
-    /** Register a geom as using a tire model (near-zero friction vs ground only). */
+    /**
+     * Register a geom as using a tire model (near-zero friction vs ground only).
+     */
     public void registerTireModelGeom(DGeom geom) {
         tireModelGeoms.add(geom);
     }
@@ -322,9 +340,33 @@ public class PhysicsWorld {
         this.maxSubSteps = max;
     }
 
+    /**
+     * Set the simulation time multiplier.
+     * <p>
+     * A multiplier of 2.0 will make the simulation run twice as fast
+     * relative to real-time (each dt step advances the physics by 2*dt).
+     * 
+     * @param multiplier speed multiplier (default 1.0)
+     */
+    public void setTimeMultiplier(double multiplier) {
+        this.timeMultiplier = multiplier;
+    }
+
+    public double getTimeMultiplier() {
+        return timeMultiplier;
+    }
+
     // --- Accessors ---
 
-    public DWorld getWorld() { return world; }
-    public DSpace getSpace() { return space; }
-    public DGeom getGroundPlane() { return groundPlane; }
+    public DWorld getWorld() {
+        return world;
+    }
+
+    public DSpace getSpace() {
+        return space;
+    }
+
+    public DGeom getGroundPlane() {
+        return groundPlane;
+    }
 }

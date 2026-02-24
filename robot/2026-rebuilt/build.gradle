@@ -123,3 +123,20 @@ gversion {
 }
 
 project.compileJava.dependsOn(createVersionFile)
+
+// ── Shooter Profiler Task ──────────────────────────────────────────────────────
+// Run with:  ./gradlew runProfiler
+// Output:    shooter_profile.csv  (in project root)
+// Then plot: python tools/shooter_profile_plotter.py
+tasks.register('runProfiler', JavaExec) {
+    group = 'FRC Tools'
+    description = 'Brute-force shooter profile sweep → shooter_profile.csv'
+    dependsOn compileJava
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'frc.robot.profiler.ShooterProfiler'
+    workingDir = projectDir
+    // Increase heap for large sweeps
+    jvmArgs = ['-Xmx512m']
+    // Disable HAL so it runs without WPILib native libs
+    jvmArgs += ['-Dfrc.robot.disableHAL=true']
+}

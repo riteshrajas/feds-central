@@ -97,7 +97,8 @@ class PhysicsWorldTest {
             world.step(0.02);
         }
 
-        // Create a moving ball heading toward the sleeping one (close, fast, no gravity)
+        // Create a moving ball heading toward the sleeping one (close, fast, no
+        // gravity)
         DBody movingBall = createBody(world.getWorld());
         movingBall.setPosition(1, 0, 1.0);
         movingBall.setLinearVel(5.0, 0, 0);
@@ -158,5 +159,44 @@ class PhysicsWorldTest {
         // World damping (5%/step) slows the ball, so it won't travel as far as v*t
         double finalX = ball.getPosition().get0();
         assertTrue(finalX > 2.0, "Ball should pass through sensor, got x=" + finalX);
+    }
+
+    @Test
+    void timeMultiplierAffectsDisplacement() {
+        // Run with 1x multiplier
+        world.setTimeMultiplier(1.0);
+        DBody ball1 = createBody(world.getWorld());
+        ball1.setLinearVel(1.0, 0, 0); // 1m/s
+        ball1.setAutoDisableFlag(false);
+        ball1.setGravityMode(false);
+        DGeom geom1 = createSphere(world.getSpace(), 0.1);
+        geom1.setBody(ball1);
+
+        for (int i = 0; i < 50; i++) {
+            world.step(0.02); // 1s total real-time
+        }
+        double x1 = ball1.getPosition().get0();
+
+        // Run with 2x multiplier (on a fresh world to keep it clean)
+        PhysicsWorld world2 = new PhysicsWorld();
+        world2.setTimeMultiplier(2.0);
+        DBody ball2 = createBody(world2.getWorld());
+        ball2.setLinearVel(1.0, 0, 0); // 1m/s
+        ball2.setAutoDisableFlag(false);
+        ball2.setGravityMode(false);
+        DGeom geom2 = createSphere(world2.getSpace(), 0.1);
+        geom2.setBody(ball2);
+
+        for (int i = 0; i < 50; i++) {
+            world2.step(0.02); // 1s total real-time, but 2s simulated-time
+        }
+        double x2 = ball2.getPosition().get0();
+
+        // With 2x multiplier, it should have traveled ~twice as far
+        // (Not exactly twice due to damping, but much further)
+        assertTrue(x2 > x1 * 1.5,
+                "Ball with 2x multiplier should travel much further than 1x. x1=" + x1 + ", x2=" + x2);
+        assertTrue(x2 > 1.0,
+                "Ball with 2x multiplier and 1m/s should travel more than 1m in 1s real-time with damping. x2=" + x2);
     }
 }

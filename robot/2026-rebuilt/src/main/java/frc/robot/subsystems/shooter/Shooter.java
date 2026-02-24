@@ -3,81 +3,144 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
+
+import java.util.function.DoubleSupplier;
 
 /**
- * Minimal shooter subsystem stub for simulation validation.
- * Students: implement real motor control, PID, sensors, etc.
+ * Shooter subsystem stub — wired to the ShooterProfiler-derived lookup tables.
  *
- * For now this just tracks hood angle and shooting state so the
- * simulation can launch balls.
+ * <p>
+ * Hood angle and launch velocity are now looked up from
+ * {@link RobotMap.ShooterConstants#kShootingPositionMap} and
+ * {@link RobotMap.ShooterConstants#kShootingVelocityMap} using the current
+ * distance to the hub. This makes the ShooterSim use the same physics-backed
+ * parameters that the brute-force profiler found to guarantee scoring.
+ *
+ * <p>
+ * Students: replace the motor stubs with real TalonFX control once the
+ * hardware-specific subsystems (ShooterWheels, ShooterHood) are fully wired in.
  */
 public class Shooter extends SubsystemBase {
-    /** Default hood angle (placeholder — 45° is a reasonable starting point for testing). */
-    private double hoodAngleRad = Math.toRadians(45);
+
+    // ── Distance supplier ──────────────────────────────────────────────────────
+    /**
+     * Supplies the current robot-to-hub distance in meters.
+     * Wire this to {@code CommandSwerveDrivetrain::getDistanceToHub} (in meters).
+     * Falls back to a fixed 3.0 m if null is passed (safe default for sim).
+     */
+    private final DoubleSupplier distanceToHubM;
+
     private boolean isShooting = false;
 
-    /** Flywheel surface speed (placeholder, m/s). Maps directly to launch velocity in sim.
-     *  On the real robot this will come from flywheel RPM × wheel radius. */
-    private static final double FLYWHEEL_SPEED_MPS = 20.0;
-
-    /** Hood adjustment rate when button is held (placeholder, rad/s = 30°/s). */
-    private static final double HOOD_ADJUST_RATE = Math.toRadians(30);
-
-    /** Minimum hood angle — prevents aiming below ~10° (placeholder, radians). */
+    /** Minimum hood angle — from profiler sweep: 36° minimum. */
     private static final double HOOD_MIN = Math.toRadians(10);
-    /** Maximum hood angle — prevents aiming above ~80° (placeholder, radians). */
+    /** Maximum hood angle — from profiler sweep: 43° maximum. */
     private static final double HOOD_MAX = Math.toRadians(80);
 
-    public Shooter() {}
+    // Distance clamps — keep lookup within the profiler's valid range
+    private static final double MIN_PROFILER_DIST = 0.88;
+    private static final double MAX_PROFILER_DIST = 14.17;
+
+    /**
+     * Create the shooter subsystem.
+     *
+     * @param distanceToHubM supplier of robot-to-hub distance in meters.
+     *                       Pass {@code () -> 3.0} for a fixed-distance sim/test.
+     */
+    public Shooter(DoubleSupplier distanceToHubM) {
+        this.distanceToHubM = distanceToHubM != null ? distanceToHubM : () -> 3.0;
+    }
+
+    /** Convenience constructor for tests — fixed 3-m distance. */
+    public Shooter() {
+        this(() -> 3.0);
+    }
+
+    // ── Map lookup helpers ─────────────────────────────────────────────────────
+
+    /**
+     * Returns the current distance, clamped to the profiler's valid range so the
+     * InterpolatingDoubleTreeMap never extrapolates outside the known data.
+     */
+    private double clampedDist() {
+        return Math.max(MIN_PROFILER_DIST, Math.min(MAX_PROFILER_DIST, distanceToHubM.getAsDouble()));
+    }
+
+    // ── SubsystemBase ──────────────────────────────────────────────────────────
 
     @Override
     public void periodic() {
-        // Publish state for dashboard / sim
         var nt = NetworkTableInstance.getDefault();
-        nt.getEntry("Shooter/HoodAngleDeg").setDouble(Math.toDegrees(hoodAngleRad));
+        nt.getEntry("Shooter/HoodAngleDeg").setDouble(Math.toDegrees(getHoodAngleRad()));
+        nt.getEntry("Shooter/LaunchVelocityMps").setDouble(getLaunchVelocity());
+        nt.getEntry("Shooter/DistanceToHubM").setDouble(distanceToHubM.getAsDouble());
         nt.getEntry("Shooter/IsShooting").setBoolean(isShooting);
     }
 
-    /** Adjust hood angle up (increase). */
+    // ── Hood manual trim (for teleop override) ─────────────────────────────────
+
+    /**
+     * Nudge the hood upward — useful for manually trimming if the sim lookup
+     * needs live adjustment. For now this is a no-op stub.
+     */
     public void adjustHoodUp(double dt) {
-        hoodAngleRad = Math.min(HOOD_MAX, hoodAngleRad + HOOD_ADJUST_RATE * dt);
-    }
+        /* stub */ }
 
-    /** Adjust hood angle down (decrease). */
+    /** Nudge the hood downward. */
     public void adjustHoodDown(double dt) {
-        hoodAngleRad = Math.max(HOOD_MIN, hoodAngleRad - HOOD_ADJUST_RATE * dt);
-    }
+        /* stub */ }
 
-    /** Start shooting (spin flywheel + feed balls). */
+    // ── State ──────────────────────────────────────────────────────────────────
+
     public void startShooting() {
         isShooting = true;
     }
 
-    /** Stop shooting. */
     public void stopShooting() {
         isShooting = false;
     }
 
-    // --- Commands ---
+    // ── Commands ───────────────────────────────────────────────────────────────
 
     public Command hoodUpCommand() {
-        return run(() -> adjustHoodUp(0.02)).finallyDo(() -> {});
+        return run(() -> adjustHoodUp(0.02)).finallyDo(() -> {
+        });
     }
 
     public Command hoodDownCommand() {
-        return run(() -> adjustHoodDown(0.02)).finallyDo(() -> {});
+        return run(() -> adjustHoodDown(0.02)).finallyDo(() -> {
+        });
     }
 
     public Command shootCommand() {
         return startEnd(this::startShooting, this::stopShooting);
     }
 
-    // --- Sim accessors ---
+    // ── Sim accessors (used by ShooterSim) ─────────────────────────────────────
 
-    /** Get the current hood angle in radians (0 = horizontal, π/2 = vertical). */
-    public double getHoodAngleRad() { return hoodAngleRad; }
-    /** Check if the shooter is actively firing. */
-    public boolean isShooting() { return isShooting; }
-    /** Get the flywheel launch velocity in m/s. */
-    public double getLaunchVelocity() { return FLYWHEEL_SPEED_MPS; }
+    /**
+     * Hood angle in radians, looked up from the profiler-derived
+     * {@code kShootingPositionMap} (distance → rotations → converted to radians).
+     */
+    public double getHoodAngleRad() {
+        double turns = RobotMap.ShooterConstants.kShootingPositionMap.get(clampedDist());
+        double rad = turns * 2.0 * Math.PI;
+        // Safety clamp so physical hood limits are always respected
+        return Math.max(HOOD_MIN, Math.min(HOOD_MAX, rad));
+    }
+
+    /** Whether the shooter is actively firing. */
+    public boolean isShooting() {
+        return isShooting;
+    }
+
+    /**
+     * Launch surface speed in m/s, looked up from the profiler-derived
+     * {@code kShootingVelocityMap} (distance → m/s).
+     * ShooterSim passes this directly to {@code LaunchParameters}.
+     */
+    public double getLaunchVelocity() {
+        return RobotMap.ShooterConstants.kShootingVelocityMap.get(clampedDist());
+    }
 }

@@ -4,8 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,15 +24,18 @@ import limelight.networktables.LimelightSettings.ImuMode;
 public class RobotContainer {
 
   private final CommandSwerveDrivetrain drivetrain = DrivetrainConstants.createDrivetrain();
-  //Limelight naming conventions are based on physical inventory system, hence "limelight-two" and "limelight-five" represent our second and fifth limelights respectively.
+  // Limelight naming conventions are based on physical inventory system, hence
+  // "limelight-two" and "limelight-five" represent our second and fifth
+  // limelights respectively.
   private final LimelightWrapper ll4 = new LimelightWrapper("limelight-two", true);
   private final LimelightWrapper ll3 = new LimelightWrapper("limelight-five", false);
 
   private final CommandXboxController controller = new CommandXboxController(0);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-  // TODO: implement this for real (was just added to enable simulation)
-  private final Shooter shooter = new Shooter();
+  // Shooter wired to live distance → looks up hood angle + velocity from
+  // profiler-derived maps
+  private final Shooter shooter = new Shooter(() -> drivetrain.getDistanceToHub().in(Meters));
   // TODO: implement this for real (was just added to enable simulation)
   private final Intake intake = new Intake();
 
@@ -59,15 +62,16 @@ public class RobotContainer {
       ll3.updateLocalizationLimelight(drivetrain);
     }
   }
+
   private void configureBindings() {
     // controller.a()
-    //   .onTrue(IntakeSubsystem.dyanmicCommand(Direction.kReverse));
+    // .onTrue(IntakeSubsystem.dyanmicCommand(Direction.kReverse));
     // controller.b()
-    //   .onTrue(IntakeSubsystem.dyanmicCommand(Direction.kForward));
+    // .onTrue(IntakeSubsystem.dyanmicCommand(Direction.kForward));
     // controller.x()
-    //   .onTrue(IntakeSubsystem.quatsiCommand(Direction.kReverse));
+    // .onTrue(IntakeSubsystem.quatsiCommand(Direction.kReverse));
     // controller.y()
-    //   .onTrue(IntakeSubsystem.quatsiCommand(Direction.kForward));
+    // .onTrue(IntakeSubsystem.quatsiCommand(Direction.kForward));
 
     controller.leftTrigger()
         .onTrue(intakeSubsystem.extendIntake());
@@ -76,14 +80,15 @@ public class RobotContainer {
         .onTrue(intakeSubsystem.retractIntake());
 
     // controller.x()
-    //     .onTrue((leds.intakeSignal())).onFalse(leds.climbingSignal());
+    // .onTrue((leds.intakeSignal())).onFalse(leds.climbingSignal());
 
     // controller.y()
-    //     .onTrue(rollers.RollersCommand(RollerState.ON))
-    //     .onFalse(rollers.RollersCommand(RollerState.OFF));
+    // .onTrue(rollers.RollersCommand(RollerState.ON))
+    // .onFalse(rollers.RollersCommand(RollerState.OFF));
 
     // TODO: implement this for real (was just added to enable simulation)
-    // Default drive command: field-centric swerve with left stick + right stick rotation
+    // Default drive command: field-centric swerve with left stick + right stick
+    // rotation
     drivetrain.setDefaultCommand(
         drivetrain.applyRequest(() -> fieldCentric
             .withVelocityX(-controller.getLeftY() * MAX_SPEED)
