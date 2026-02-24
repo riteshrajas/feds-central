@@ -33,6 +33,10 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
     Logger.recordMetadata("ProjectName", "2026-Rebuilt");
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("GitDirty", BuildConstants.DIRTY == 1 ? "UNCOMMITTED CHANGES" : "clean");
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
 
       switch (RobotMap.getRobotMode()) {
       case REAL:
@@ -133,10 +137,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.runRootTests();
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_robotContainer.updateRootTests();
+  }
 
   @Override
   public void testExit() {}
