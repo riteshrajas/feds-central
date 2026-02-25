@@ -32,7 +32,7 @@ public class RobotContainer {
    
 
 
-    controller.a()
+    controller.y()
       .onTrue(leds.shootingSignal())
       .onFalse(leds.resetLEDS());
 

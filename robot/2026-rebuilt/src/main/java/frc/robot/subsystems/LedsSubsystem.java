@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import java.lang.ModuleLayer.Controller;
+
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.lumynlabs.connection.usb.USBPort;
 import com.lumynlabs.devices.ConnectorXAnimate;
 import com.lumynlabs.domain.led.Animation;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.LimelightHelpers;
 
 
 public class LedsSubsystem extends SubsystemBase {
@@ -41,7 +44,8 @@ public class LedsSubsystem extends SubsystemBase {
     ERROR_JAMMING,                //Error: jamming should be blink scarlett at 200ms
     ERROR_OTHER,
     IDLE,
-    OFF;
+    OFF,
+    STARTUP;
 
 
                //Error: other should blink purple at 200ms
@@ -85,8 +89,36 @@ public class LedsSubsystem extends SubsystemBase {
   }
 
 
+  private LEDState checkForErrors() {
+    // CAN errors
+    if (RobotController.getCANStatus().percentBusUtilization > 0.8) {
+        return LEDState.ERROR_CAN;
+    }
+
+    else {
+
+      return LEDState.IDLE;
+    }
+
+
+
+  }
+  
+
   @Override
   public void periodic() {  
+
+    LEDState errorState = checkForErrors();
+
+    if (errorState != null) {
+      if (m_currentState != errorState) {
+        m_currentState = errorState;
+        applyState(m_currentState);
+        m_lastState = m_currentState; // Update last state to prevent immediate override
+      }
+      return; // Skip normal state handling if we're in an error state
+    }
+
     // Handle IDLE state dynamic changes based on Robot Mode (Disabled/Enabled/Auto)
     if (m_currentState == LEDState.IDLE) {
       boolean isDisabled = DriverStation.isDisabled();
@@ -105,6 +137,7 @@ public class LedsSubsystem extends SubsystemBase {
       applyState(m_currentState);
       m_lastState = m_currentState;
     }
+
   }
 
  
@@ -198,7 +231,7 @@ public class LedsSubsystem extends SubsystemBase {
     return startEnd(
       () -> setState(state),
       () -> setState(LEDState.IDLE)
-    ).ignoringDisable(true);
+    ).ignoringDisable(false);
   }
   
   public Command tempStateCommand(LEDState state, double seconds) {
