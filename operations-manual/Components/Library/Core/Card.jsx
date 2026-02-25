@@ -1,5 +1,3 @@
-"use client";
-"use client";
 import { useState, useEffect } from 'react';
 import { useTheme } from 'nextra-theme-docs';
 import Link from 'next/link';

@@ -11,21 +11,6 @@ import 'package:scouting_app/main.dart';
 import '../Match_Pages/match_page.dart';
 import '../Plugins/plugin_state_manager.dart';
 import '../services/DataBase.dart';
-import 'package:archive/archive.dart';
-import 'dart:io';
-import 'dart:convert';
-
-String compressToBase64(String data) {
-  final bytes = utf8.encode(data);
-  final compressed = GZipEncoder().encode(bytes)!;
-  return base64Url.encode(compressed);
-}
-
-String decompressFromBase64(String encoded) {
-  final compressed = base64Url.decode(encoded);
-  final bytes = GZipDecoder().decodeBytes(compressed);
-  return utf8.decode(bytes);
-}
 
 class Qrgenerator extends StatefulWidget {
   final MatchRecord matchRecord;
@@ -39,9 +24,6 @@ class QrCoder extends State<Qrgenerator> {
   final PluginStateManager pluginStateManager = PluginStateManager();
   @override
   Widget build(BuildContext context) {
-    final qrData = compressToBase64(widget.matchRecord.toCsv());
-    print('Raw CSV length: ${widget.matchRecord.toCsv().length} chars');
-    print('Compressed length: ${qrData.length} chars');
     // bool isJson = Hive.box('settings').get('isJson');
     // log('Building QR Code with isJson: $isJson');
 
@@ -59,11 +41,10 @@ class QrCoder extends State<Qrgenerator> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: <Widget>[
             QrImageView(
               backgroundColor: Colors.white,
-              data: qrData,
+              data: json.encode(widget.matchRecord.toCsv()),
               // data: json.encode(widget.matchRecord.toJson()),
               version: QrVersions.auto,
               size: MediaQuery.of(context).size.width - 40,

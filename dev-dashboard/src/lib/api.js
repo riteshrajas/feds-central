@@ -2,45 +2,16 @@ import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
 
 const API_Base = '/api/auth';
 
-// Try to refresh the access token using the httpOnly refresh cookie
-const refreshAccessToken = async () => {
-    const res = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include',
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (data.token) {
-        localStorage.setItem('token', data.token);
-    }
-    return data.token;
-};
-
-// Helper for authorized requests (auto-refreshes on 401/403)
+// Helper for authorized requests
 const authFetch = async (url, options = {}) => {
-    const makeRequest = (token) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            ...options.headers,
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        };
-        return fetch(url, { ...options, headers, credentials: 'include' });
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     };
 
-    let token = localStorage.getItem('token');
-    let res = await makeRequest(token);
-
-    if (res.status === 401 || res.status === 403) {
-        const newToken = await refreshAccessToken();
-        if (newToken) {
-            res = await makeRequest(newToken);
-        } else {
-            // Refresh failed — force logout
-            api.signOut();
-            throw new Error('Session expired');
-        }
-    }
-
+    const res = await fetch(url, { ...options, headers });
     if (!res.ok) {
         const error = await res.json().catch(() => ({ error: 'Request failed' }));
         throw new Error(error.error || `Error ${res.status}`);
@@ -54,7 +25,6 @@ export const api = {
         const res = await fetch(`${API_Base}/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
             body: JSON.stringify({ email, password, full_name: fullName }),
         });
 
@@ -76,7 +46,6 @@ export const api = {
         const res = await fetch(`${API_Base}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
             body: JSON.stringify({ email, password }),
         });
 
@@ -97,7 +66,7 @@ export const api = {
     signOut: () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/sign-in';
+        window.location.reload();
     },
 
     // Get Session
@@ -144,7 +113,6 @@ export const api = {
             const res = await fetch(`${API_Base}/passkey/auth-options`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify({ email }),
             });
 
@@ -167,7 +135,6 @@ export const api = {
             const verifyRes = await fetch(`${API_Base}/passkey/auth-verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify(verifyPayload),
             });
 

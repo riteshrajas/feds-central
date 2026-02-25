@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 Widget ShowInsults() {
   return Card(
@@ -26,7 +27,7 @@ Widget ShowInsults() {
         children: [
           Row(
             children: [
-              Icon(Icons.emoji_emotions, color: Colors.white, size: 24),
+              Icon(Symbols.taunt, color: Colors.white, size: 24),
               const SizedBox(width: 10),
               Text(
                 'Every Second Insult',
@@ -88,7 +89,7 @@ Widget ShowInsults() {
 
 String _getRandomInsult() {
   List<String> facts = [
-    "No more...",
+   "No more...",
   ];
   return facts[DateTime.now().second % facts.length];
 }

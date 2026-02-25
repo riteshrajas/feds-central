@@ -1,5 +1,3 @@
-"use client";
-"use client";
 import { useState, useEffect } from 'react';
 import { useTheme } from 'nextra-theme-docs';
 
@@ -92,19 +90,6 @@ export const GenericCard = ({
       background: isDark 
         ? 'linear-gradient(145deg, #1e293b 0%, #0f172a 100%)'
         : 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)'
-    },
-    glass: {
-      borderRadius: '24px',
-      shadow: isDark
-        ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-        : '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-      background: isDark
-        ? 'rgba(255, 255, 255, 0.05)'
-        : 'rgba(255, 255, 255, 0.25)',
-      backdropFilter: 'blur(4px)',
-      border: isDark
-        ? '1px solid rgba(255, 255, 255, 0.1)'
-        : '1px solid rgba(255, 255, 255, 0.18)'
     }
   };
   
@@ -116,7 +101,7 @@ export const GenericCard = ({
     none: 'none'
   };
   
-  const currentVariant = variants[variant] || variants.default;
+  const currentVariant = variants[variant];
   const currentSize = sizeConfig[size];
   
   const cardStyle = {
@@ -124,9 +109,6 @@ export const GenericCard = ({
     borderRadius: currentVariant.borderRadius,
     padding: currentSize.padding,
     boxShadow: currentVariant.shadow,
-    border: currentVariant.border || 'none',
-    backdropFilter: currentVariant.backdropFilter || 'none',
-    WebkitBackdropFilter: currentVariant.backdropFilter || 'none',
     cursor: (href || onClick) ? 'pointer' : 'default',
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     height: '100%',

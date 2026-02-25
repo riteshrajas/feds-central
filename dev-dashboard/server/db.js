@@ -10,17 +10,10 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const databaseUrl = process.env.VITE_DATABASE_URL;
 
-let sql;
-
-if (process.env.NODE_ENV !== 'production') {
-    console.warn('⚠️  Running with mock database (dev mode)');
-    // Mock sql tagged template that returns empty arrays
-    sql = () => Promise.resolve([]);
-} else if (!databaseUrl) {
+if (!databaseUrl) {
     console.error('❌ VITE_DATABASE_URL is not set in .env file!');
-    process.exit(1);
-} else {
-    sql = neon(databaseUrl);
 }
+
+const sql = neon(databaseUrl);
 
 export { sql };

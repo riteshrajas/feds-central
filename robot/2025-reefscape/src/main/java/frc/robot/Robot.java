@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -13,10 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -33,9 +30,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.commands.swerve.ConfigureHologenicDrive;
 import frc.robot.constants.ComandCenter;
 import frc.robot.constants.RobotMap;
-import frc.robot.sim.SimulationManager;
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.Arena2025Reefscape;
 import frc.robot.utils.AutonTester;
 import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.LocalADStarAK;
@@ -49,12 +43,11 @@ import frc.robot.utils.SystemCheckUp;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends LoggedRobot
+public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
     private boolean voltageBelow10 = false;
-    private SimulationManager simulationManager;
 
     public Robot(){
         CameraServer.startAutomaticCapture();
@@ -83,16 +76,6 @@ public class Robot extends LoggedRobot
     @Override
     public void robotInit()
     {
-        // AdvantageKit Logger setup — must be first
-        Logger.recordMetadata("ProjectName", "2025-Reefscape");
-        Logger.addDataReceiver(new NT4Publisher());       // publish to NT for AdvantageScope live view
-        Logger.addDataReceiver(new WPILOGWriter());       // save .wpilog files for replay
-        Logger.start();
-
-        // Override arena BEFORE drivetrain creation (which registers with the arena)
-        if (com.ctre.phoenix6.Utils.isSimulation()) {
-            SimulatedArena.overrideInstance(new Arena2025Reefscape());
-        }
 
         Pathfinding.setPathfinder(new LocalADStarAK());
 
@@ -225,15 +208,10 @@ public class Robot extends LoggedRobot
 
     /** This method is called once when the robot is first started up. */
     @Override
-    public void simulationInit() {
-        simulationManager = new SimulationManager();
-    }
+    public void simulationInit() {}
+
 
     /** This method is called periodically whilst in simulation. */
     @Override
-    public void simulationPeriodic() {
-        if (simulationManager != null) {
-            simulationManager.periodic();
-        }
-    }
+    public void simulationPeriodic() {}
 }

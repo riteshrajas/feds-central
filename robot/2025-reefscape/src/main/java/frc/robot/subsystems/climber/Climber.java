@@ -11,7 +11,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.constants.RobotMap.ClimberMap;
@@ -39,7 +38,7 @@ public class Climber extends SubsystemABS {
     climberMotorFollower = new TalonFX(ClimberMap.CLIMBER_FOLLOWER_MOTOR);
     climberMotorFollower.getConfigurator()
         .apply(CurrentLimiter.getCurrentLimitConfiguration(ClimberMap.CLIMBER_CURRENT_LIMIT));
-    climberMotorFollower.setControl(new Follower(climberMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+    climberMotorFollower.setControl(new Follower(climberMotorLeader.getDeviceID(), false));
     climberCANCoder = new CANcoder(ClimberMap.CLIMBER_CANCODER);
     m_Servo = new Servo(ClimberMap.CLIMBER_SERVO);
     m_climberAtMax = ()-> climberPastMax();

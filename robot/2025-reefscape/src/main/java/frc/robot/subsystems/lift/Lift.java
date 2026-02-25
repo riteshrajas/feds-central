@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
@@ -49,7 +48,7 @@ public class Lift extends SubsystemABS {
         // elevatorEncoder.setPosition(0);
 
         // Configure follower motor
-        elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+        elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), false));
 
         // Configure current limits
         elevatorMotorLeader.getConfigurator().apply(
