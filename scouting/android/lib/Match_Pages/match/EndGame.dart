@@ -73,7 +73,7 @@ class EndGameState extends State<EndGame> {
     passing = widget.matchRecord.endPoints.Passing;
 
     commentController.text = widget.matchRecord.endPoints.Comments;
-    neutralTrips = 0;
+    neutralTrips = widget.matchRecord.endPoints.EndNeutralTrips;
     shootingAccuracy = widget.matchRecord.endPoints.ShootingAccuracy;
     endgameTime = widget.matchRecord.endPoints.endgameTime;
     endgameActions = widget.matchRecord.endPoints.endgameActions;
@@ -85,6 +85,8 @@ class EndGameState extends State<EndGame> {
     widget.matchRecord.endPoints.ClimbStatus = selectedLevel ?? 0;
 
     // Park is explicitly tracked, usually triggered if level is null and user leaves blank
+    widget.matchRecord.endPoints.EndNeutralTrips = neutralTrips;
+    widget.matchRecord.endPoints.ShootingAccuracy = shootingAccuracy;
     widget.matchRecord.endPoints.Park = park;
     widget.matchRecord.endPoints.FeedToHP = feedToHP;
     widget.matchRecord.endPoints.Passing = passing;
