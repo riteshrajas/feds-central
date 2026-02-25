@@ -30,15 +30,17 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.generated.TunerConstants;
-import frc.sim.chassis.ChassisConfig;
-import frc.sim.chassis.ChassisSimulation;
 import frc.sim.core.PhysicsWorld;
+import frc.sim.chassis.ChassisSimulation;
+import frc.sim.chassis.ChassisConfig;
+import frc.robot.RobotMap;
 import frc.sim.gamepiece.GamePiece;
 import frc.sim.gamepiece.GamePieceManager;
 import frc.sim.gamepiece.IntakeZone;
 import frc.sim.scoring.ScoringTracker;
 import frc.sim.telemetry.GroundClearance;
 import frc.sim.telemetry.SimTelemetry;
+import frc.sim.gamepiece.LaunchParameters;
 
 import java.util.List;
 import java.util.Set;
@@ -46,12 +48,16 @@ import java.util.Set;
 /**
  * Orchestrates the full simulation for the 2026 REBUILT game.
  *
- * MapleSim owns the entire drivetrain (motor physics, tire model, chassis dynamics).
- * The ODE4J chassis is a kinematic follower that exists only for game piece collisions.
+ * MapleSim owns the entire drivetrain (motor physics, tire model, chassis
+ * dynamics).
+ * The ODE4J chassis is a kinematic follower that exists only for game piece
+ * collisions.
  *
  * Architecture:
- * - MapleSim: steps drivetrain, computes pose and velocities, writes encoder state
- * - ODE4J chassis: kinematically follows MapleSim pose, provides collision body for game pieces
+ * - MapleSim: steps drivetrain, computes pose and velocities, writes encoder
+ * state
+ * - ODE4J chassis: kinematically follows MapleSim pose, provides collision body
+ * for game pieces
  */
 public class RebuiltSimManager {
     /** Simulation timestep — 50 Hz to match robot periodic. */
@@ -59,7 +65,10 @@ public class RebuiltSimManager {
 
     // ── Placeholder robot parameters (tune to match actual robot) ──────────
 
-    /** Swerve module center offset from robot center (placeholder: 10.5in = 0.2667m). */
+    /**
+     * Swerve module center offset from robot center (placeholder: 10.5in =
+     * 0.2667m).
+     */
     private static final double MODULE_OFFSET_M = 0.2667;
 
     /** Wheel coefficient of friction against carpet (placeholder). */
@@ -97,7 +106,9 @@ public class RebuiltSimManager {
 
     /** Wake sleeping game pieces within this distance of the robot (meters). */
     private static final double PROXIMITY_WAKE_RADIUS = 1.5;
-    /** Put game pieces to sleep beyond this distance from all wake zones (meters). */
+    /**
+     * Put game pieces to sleep beyond this distance from all wake zones (meters).
+     */
     private static final double PROXIMITY_SLEEP_RADIUS = 3.0;
 
     // ── Component animation speeds (rad/s) ─────────────────────────────────
@@ -139,11 +150,13 @@ public class RebuiltSimManager {
     /**
      * Create the simulation manager and initialize both physics engines.
      *
-     * <p>Sets up MapleSim for drivetrain physics and ODE4J for game piece physics,
+     * <p>
+     * Sets up MapleSim for drivetrain physics and ODE4J for game piece physics,
      * wires motor controller adapters, spawns starting fuel, and configures
      * intake/shooter/scoring systems.
      *
-     * @param drivetrain the swerve drivetrain subsystem (motor and encoder references)
+     * @param drivetrain the swerve drivetrain subsystem (motor and encoder
+     *                   references)
      * @param shooter    the shooter subsystem (hood angle and shooting state)
      * @param intake     the intake subsystem (roller active state)
      */
@@ -161,10 +174,10 @@ public class RebuiltSimManager {
 
         // --- MapleSim swerve drive simulation ---
         Translation2d[] modulePositions = new Translation2d[] {
-            new Translation2d(MODULE_OFFSET_M, MODULE_OFFSET_M),   // FL
-            new Translation2d(MODULE_OFFSET_M, -MODULE_OFFSET_M),  // FR
-            new Translation2d(-MODULE_OFFSET_M, MODULE_OFFSET_M),  // BL
-            new Translation2d(-MODULE_OFFSET_M, -MODULE_OFFSET_M)  // BR
+                new Translation2d(MODULE_OFFSET_M, MODULE_OFFSET_M), // FL
+                new Translation2d(MODULE_OFFSET_M, -MODULE_OFFSET_M), // FR
+                new Translation2d(-MODULE_OFFSET_M, MODULE_OFFSET_M), // BL
+                new Translation2d(-MODULE_OFFSET_M, -MODULE_OFFSET_M) // BR
         };
 
         SwerveModuleSimulationConfig moduleSimConfig = new SwerveModuleSimulationConfig(
@@ -205,6 +218,7 @@ public class RebuiltSimManager {
 
         // --- Physics World (ODE4J) ---
         physicsWorld = new PhysicsWorld();
+        physicsWorld.setTimeMultiplier(RobotMap.Constants.Sim.TIME_MULTIPLIER);
 
         // --- Chassis (ODE4J body for collisions) ---
         ChassisConfig chassisConfig = new ChassisConfig.Builder()
@@ -253,12 +267,17 @@ public class RebuiltSimManager {
     /**
      * Run one simulation tick. Called from {@code Robot.simulationPeriodic()}.
      *
-     * <p>Sequence: MapleSim steps drivetrain → read pose/speeds → convert to world frame
-     * → set ODE4J chassis velocity → proximity activation → intake check → physics step
-     * → gyro sync → piece state update → scoring check → shooter update → telemetry.
+     * <p>
+     * Sequence: MapleSim steps drivetrain → read pose/speeds → convert to world
+     * frame
+     * → set ODE4J chassis velocity → proximity activation → intake check → physics
+     * step
+     * → gyro sync → piece state update → scoring check → shooter update →
+     * telemetry.
      */
     public void periodic() {
-        // 1. MapleSim steps the drivetrain (motor physics, tire model, encoder feedback)
+        // 1. MapleSim steps the drivetrain (motor physics, tire model, encoder
+        // feedback)
         SimulatedArena.getInstance().simulationPeriodic();
 
         // 2. Read pose and speeds from MapleSim
@@ -268,8 +287,8 @@ public class RebuiltSimManager {
         // 3. Convert robot-relative chassis speeds to world-frame velocities for ODE4J.
         // MapleSim reports speeds in the robot's local frame (+X = forward, +Y = left).
         // ODE4J needs world-frame velocities, so we rotate by the robot's heading:
-        //   worldVx = vx*cos(θ) - vy*sin(θ)
-        //   worldVy = vx*sin(θ) + vy*cos(θ)
+        // worldVx = vx*cos(θ) - vy*sin(θ)
+        // worldVy = vx*sin(θ) + vy*cos(θ)
         double yaw = pose.getRotation().getRadians();
         double cos = Math.cos(yaw);
         double sin = Math.sin(yaw);
@@ -280,7 +299,8 @@ public class RebuiltSimManager {
         // setPose() overrides X every tick, which fights the ODE4J contact solver
         // and prevents the chassis from riding up ramps/bumps.
         // Velocity-only lets ODE4J integrate position naturally with ramp deflection.
-        chassis.setVelocity(worldVx, worldVy, robotSpeeds.omegaRadiansPerSecond, DT);
+        double simulatedDt = DT * RobotMap.Constants.Sim.TIME_MULTIPLIER;
+        chassis.setVelocity(worldVx, worldVy, robotSpeeds.omegaRadiansPerSecond, simulatedDt);
 
         // 5. Proximity activation — only wake balls near the robot
         gamePieceManager.updateProximity(
@@ -321,7 +341,7 @@ public class RebuiltSimManager {
         }
 
         // 11. Update shooter
-        shooterSim.update(DT);
+        shooterSim.update(simulatedDt);
 
         // 12. Publish telemetry to NetworkTables
         publishTelemetry();
@@ -355,19 +375,22 @@ public class RebuiltSimManager {
                 ORIGIN,
                 new Rotation3d(hoodAngle - Math.PI / 4, 0, 0));
 
-        if (intaking) rollerAngleAccum += INTAKE_ROLLER_SPEED * DT;
+        if (intaking)
+            rollerAngleAccum += INTAKE_ROLLER_SPEED * DT;
         double rollerAngle = intaking ? (rollerAngleAccum % (2 * Math.PI)) : 0;
         Pose3d intakeRollerPose = new Pose3d(
                 ORIGIN,
                 new Rotation3d(rollerAngle, 0, 0));
 
-        if (shooting) feederAngleAccum += FEEDER_ROLLER_SPEED * DT;
+        if (shooting)
+            feederAngleAccum += FEEDER_ROLLER_SPEED * DT;
         double feederAngle = shooting ? (feederAngleAccum % (2 * Math.PI)) : 0;
         Pose3d feederRollerPose = new Pose3d(
                 ORIGIN,
                 new Rotation3d(feederAngle, 0, 0));
 
-        if (shooting) shooterRollerAngleAccum += SHOOTER_ROLLER_SPEED * DT;
+        if (shooting)
+            shooterRollerAngleAccum += SHOOTER_ROLLER_SPEED * DT;
         double shooterRollerAngle = shooting ? (shooterRollerAngleAccum % (2 * Math.PI)) : 0;
         Pose3d shooterRollerPose = new Pose3d(
                 ORIGIN,
@@ -380,49 +403,67 @@ public class RebuiltSimManager {
         Pose3d climberPose = new Pose3d();
 
         Logger.recordOutput("Sim/Robot/ComponentPoses",
-                new Pose3d[]{
-                    shooterHoodPose,
-                    intakeRollerPose,
-                    feederRollerPose,
-                    feederRollerPose,
-                    verticalFeederPose,
-                    verticalFeederPose,
-                    shooterRollerPose,
-                    climberPose
+                new Pose3d[] {
+                        shooterHoodPose,
+                        intakeRollerPose,
+                        feederRollerPose,
+                        feederRollerPose,
+                        verticalFeederPose,
+                        verticalFeederPose,
+                        shooterRollerPose,
+                        climberPose
                 });
     }
 
     /** Get the chassis simulation. */
-    public ChassisSimulation getChassis() { return chassis; }
+    public ChassisSimulation getChassis() {
+        return chassis;
+    }
 
     /** Get the physics world. */
-    public PhysicsWorld getPhysicsWorld() { return physicsWorld; }
+    public PhysicsWorld getPhysicsWorld() {
+        return physicsWorld;
+    }
 
     /** Get the game piece manager. */
-    public GamePieceManager getGamePieceManager() { return gamePieceManager; }
+    public GamePieceManager getGamePieceManager() {
+        return gamePieceManager;
+    }
 
     /** Get the scoring tracker. */
-    public ScoringTracker getScoringTracker() { return scoringTracker; }
+    public ScoringTracker getScoringTracker() {
+        return scoringTracker;
+    }
 
     // --- MapleSim motor controller adapters ---
     //
-    // MapleSim owns the motor physics (voltage -> torque -> mechanism state) but has
-    // no knowledge of CTRE's TalonFX/CANcoder sim APIs. These adapters close the loop:
+    // MapleSim owns the motor physics (voltage -> torque -> mechanism state) but
+    // has
+    // no knowledge of CTRE's TalonFX/CANcoder sim APIs. These adapters close the
+    // loop:
     //
-    //   MapleSim  ---(position, velocity)--->  Adapter  ---(setRawRotorPosition, etc.)--->  TalonFX SimState
-    //   MapleSim  <---(commanded voltage)---   Adapter  <---(getMotorVoltageMeasure)----   TalonFX SimState
+    // MapleSim ---(position, velocity)---> Adapter ---(setRawRotorPosition,
+    // etc.)---> TalonFX SimState
+    // MapleSim <---(commanded voltage)--- Adapter <---(getMotorVoltageMeasure)----
+    // TalonFX SimState
     //
-    // This lets robot code read realistic encoder values while MapleSim computes the physics.
+    // This lets robot code read realistic encoder values while MapleSim computes
+    // the physics.
 
     /**
-     * Adapter that bridges MapleSim's motor simulation API to a single CTRE TalonFX.
+     * Adapter that bridges MapleSim's motor simulation API to a single CTRE
+     * TalonFX.
      *
-     * <p>Each tick, MapleSim calls {@link #updateControlSignal} with the mechanism state
-     * it computed (position and velocity). This adapter writes those values into the
+     * <p>
+     * Each tick, MapleSim calls {@link #updateControlSignal} with the mechanism
+     * state
+     * it computed (position and velocity). This adapter writes those values into
+     * the
      * TalonFX's sim state so that robot code sees realistic encoder readings, then
      * returns the motor's commanded voltage back to MapleSim for force computation.
      *
-     * <p>Battery voltage is sourced from {@link SimulatedBattery} so brownout effects
+     * <p>
+     * Battery voltage is sourced from {@link SimulatedBattery} so brownout effects
      * propagate through to the motor controller.
      */
     private static class TalonFXMotorControllerSim implements SimulatedMotorController {
@@ -448,8 +489,10 @@ public class RebuiltSimManager {
     /**
      * Extends the TalonFX adapter to also sync a remote CANcoder's sim state.
      *
-     * <p>Used for swerve steer modules where the TalonFX uses a fused/remote CANcoder
-     * for absolute position feedback. MapleSim provides the mechanism angle (steering
+     * <p>
+     * Used for swerve steer modules where the TalonFX uses a fused/remote CANcoder
+     * for absolute position feedback. MapleSim provides the mechanism angle
+     * (steering
      * position), which this adapter writes to both the TalonFX rotor state and the
      * CANcoder's raw position so that both sensors agree.
      */

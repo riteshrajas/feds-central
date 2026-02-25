@@ -3,7 +3,6 @@ package frc.sim.core;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
 import de.javagl.obj.ObjUtils;
-import org.ode4j.math.DVector3;
 import org.ode4j.math.DVector3C;
 import org.ode4j.ode.*;
 
@@ -61,6 +60,13 @@ public class PhysicsWorld {
     // triggers sub-stepping so that each sub-step stays under the threshold.
     private double minCollisionThickness = 0.1; // meters (match thinnest wall)
     private int maxSubSteps = 10;
+
+    private double simulatedTime = 0.0;
+    private final List<SubStepListener> subStepListeners = new ArrayList<>();
+
+    public interface SubStepListener {
+        void onSubStep(double subDt, double totalSimulatedTime);
+    }
 
     // ODE4J native library requires exactly one initODE2() call per process.
     // This static flag ensures it runs once regardless of how many PhysicsWorld
@@ -141,6 +147,11 @@ public class PhysicsWorld {
         double subDt = scaledDt / subSteps;
 
         for (int i = 0; i < subSteps; i++) {
+            simulatedTime += subDt;
+            for (SubStepListener listener : subStepListeners) {
+                listener.onSubStep(subDt, simulatedTime);
+            }
+            
             space.collide(null, this::nearCallback);
             world.quickStep(subDt);
             contactGroup.empty();
@@ -314,6 +325,11 @@ public class PhysicsWorld {
         return sensorContacts.getOrDefault(sensorGeom, Collections.emptySet());
     }
 
+    /** Register a listener that runs before every internal ODE4J sub-step. */
+    public void registerSubStepListener(SubStepListener listener) {
+        subStepListeners.add(listener);
+    }
+
     // --- Configuration ---
 
     public void setDefaultSurface(TerrainSurface surface) {
@@ -340,6 +356,14 @@ public class PhysicsWorld {
         this.maxSubSteps = max;
     }
 
+    public void setLinearDamping(double damping) {
+        world.setLinearDamping(damping);
+    }
+
+    public void setAngularDamping(double damping) {
+        world.setAngularDamping(damping);
+    }
+
     /**
      * Set the simulation time multiplier.
      * <p>
@@ -354,6 +378,13 @@ public class PhysicsWorld {
 
     public double getTimeMultiplier() {
         return timeMultiplier;
+    }
+
+    /**
+     * Gets the total simulated time advanced since world creation.
+     */
+    public double getSimulatedTime() {
+        return simulatedTime;
     }
 
     // --- Accessors ---

@@ -30,16 +30,16 @@ public class IntakeSubsystem extends SubsystemBase {
   private TalonFX motor;
   private final DigitalInput limit_switch_r;
   private final DigitalInput limit_switch_l;
-  private final RollersSubsystem rollers; 
-  private final double wheelRadius = 2.0; 
-  private final double extendedLength = 14.43; 
+  private final RollersSubsystem rollers;
+  private final double wheelRadius = 2.0;
+  private final double extendedLength = 14.43;
 
   // Simulation
   private final DCMotorSim motorSim;
   private final DIOSim limitSwitchRSim;
   private final DIOSim limitSwitchLSim;
-   private SysIdRoutine sysID;
-  
+  private SysIdRoutine sysID;
+
   // Visualization
   private final Mechanism2d mech2d = new Mechanism2d(3, 3);
   private final MechanismRoot2d mechRoot = mech2d.getRoot("IntakeRoot", 1.5, 1.5);
@@ -47,39 +47,37 @@ public class IntakeSubsystem extends SubsystemBase {
       new MechanismLigament2d("Intake", 1, 90, 6, new Color8Bit(Color.kOrange)));
 
   public enum IntakeState {
-    EXTENDED, 
+    EXTENDED,
     DEFAULT
   }
+
   private IntakeState currentState = IntakeState.DEFAULT;
   private IntakeState targetState = IntakeState.DEFAULT;
 
   public void setState(IntakeState targetState) { // -> Extended
-    this.targetState = targetState; 
+    this.targetState = targetState;
     this.currentState = targetState;
   }
 
-  public Command extendIntake(){
-    return run(()-> motor.setControl(new PositionVoltage(0).withPosition(extendedLength/(wheelRadius*2*Math.PI))));
+  public Command extendIntake() {
+    return run(
+        () -> motor.setControl(new PositionVoltage(0).withPosition(extendedLength / (wheelRadius * 2 * Math.PI))));
   }
 
   public Command retractIntake() {
-     return run(()-> motor.setControl(new PositionVoltage(0).withPosition(0)));
-    }
-
-  
+    return run(() -> motor.setControl(new PositionVoltage(0).withPosition(0)));
+  }
 
   public IntakeState getState() {
     return this.currentState;
   }
 
-  public Command setIntakeStateCommand(IntakeState targState){ // -> Extended 
+  public Command setIntakeStateCommand(IntakeState targState) { // -> Extended
     return run(() -> setState(targState)); // -> Extended
   }
 
-
-
   public IntakeSubsystem() {
-    motor = new TalonFX(RobotMap.IntakeSubsystemConstants.kMotorID, "rio");
+    motor = new TalonFX(RobotMap.IntakeSubsystemConstants.kMotorID);
     limit_switch_r = new DigitalInput(RobotMap.IntakeSubsystemConstants.kLimit_switch_rID);
     limit_switch_l = new DigitalInput(RobotMap.IntakeSubsystemConstants.kLimit_switch_lID);
     rollers = RollersSubsystem.getInstance();
@@ -91,19 +89,20 @@ public class IntakeSubsystem extends SubsystemBase {
     motor.getConfigurator().apply(config);
 
     sysID = new SysIdRoutine(
-      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism((voltage)-> motor.setControl(new VoltageOut(0).withOutput(voltage)), (log)-> {
-        log.motor("motor1")
-        .voltage(motor.getMotorVoltage().asSupplier().get())
-        .angularVelocity(motor.getVelocity().asSupplier().get())
-        .angularPosition(motor.getPosition().asSupplier().get());
-      }, this));
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism((voltage) -> motor.setControl(new VoltageOut(0).withOutput(voltage)), (log) -> {
+          log.motor("motor1")
+              .voltage(motor.getMotorVoltage().asSupplier().get())
+              .angularVelocity(motor.getVelocity().asSupplier().get())
+              .angularPosition(motor.getPosition().asSupplier().get());
+        }, this));
 
     // Simulation Setup
     var intakePlant = LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.004, 100.0);
-    motorSim = new DCMotorSim(intakePlant, DCMotor.getKrakenX60(1)); 
+    motorSim = new DCMotorSim(intakePlant, DCMotor.getKrakenX60(1));
     limitSwitchRSim = new DIOSim(limit_switch_r);
     limitSwitchLSim = new DIOSim(limit_switch_l);
-    
+
     // Default limit switch state (True = Not Pressed for most switches)
     limitSwitchRSim.setValue(true);
     limitSwitchLSim.setValue(true);
@@ -123,17 +122,16 @@ public class IntakeSubsystem extends SubsystemBase {
       rollers.setState(RollerState.OFF);
     }
 
-    switch(targetState) { // -> Extended
-      case EXTENDED: extendIntake();
+    switch (targetState) { // -> Extended
+      case EXTENDED:
+        extendIntake();
         break;
-      
-        
-      case DEFAULT: retractIntake();
-      break; 
+
+      case DEFAULT:
+        retractIntake();
+        break;
     }
 
-
-    
     super.periodic();
   }
 
@@ -159,9 +157,9 @@ public class IntakeSubsystem extends SubsystemBase {
     if (angleDegrees > 45) {
       limitSwitchLSim.setValue(false); // Pressing switch
     } else {
-      limitSwitchLSim.setValue(true);  // Released
+      limitSwitchLSim.setValue(true); // Released
     }
-    
+
     // Assume limit_switch_r is "Retracted" (stowed) limit
     if (angleDegrees < 0) {
       limitSwitchRSim.setValue(false);
@@ -169,8 +167,6 @@ public class IntakeSubsystem extends SubsystemBase {
       limitSwitchRSim.setValue(true);
     }
   }
-
-
 
   public void stopmotor() {
     motor.stopMotor();
@@ -181,13 +177,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean testIntakeExtend() {
-     extendIntake();
+    extendIntake();
 
-     if (limit_switch_l.get()) {
+    if (limit_switch_l.get()) {
       return true;
-     }
-    return false; 
     }
+    return false;
+  }
 
 }
-

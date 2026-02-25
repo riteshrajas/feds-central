@@ -163,40 +163,63 @@ class PhysicsWorldTest {
 
     @Test
     void timeMultiplierAffectsDisplacement() {
-        // Run with 1x multiplier
+        // Disable damping for this test to get clean linear motion
+        world.setLinearDamping(0);
+        
+        // --- 1x Multiplier ---
         world.setTimeMultiplier(1.0);
+        
         DBody ball1 = createBody(world.getWorld());
-        ball1.setLinearVel(1.0, 0, 0); // 1m/s
-        ball1.setAutoDisableFlag(false);
         ball1.setGravityMode(false);
+        ball1.setPosition(0, 0, 10.0); // High up to avoid ground
+        ball1.setLinearVel(1.0, 0, 0); // 1m/s
+        
+        DMass m1 = createMass();
+        m1.setSphereTotal(1.0, 0.1);
+        ball1.setMass(m1);
+
         DGeom geom1 = createSphere(world.getSpace(), 0.1);
         geom1.setBody(ball1);
 
         for (int i = 0; i < 50; i++) {
             world.step(0.02); // 1s total real-time
         }
+        double t1 = world.getSimulatedTime();
         double x1 = ball1.getPosition().get0();
 
-        // Run with 2x multiplier (on a fresh world to keep it clean)
+        // --- 2x Multiplier ---
         PhysicsWorld world2 = new PhysicsWorld();
+        world2.setLinearDamping(0);
         world2.setTimeMultiplier(2.0);
+        
         DBody ball2 = createBody(world2.getWorld());
-        ball2.setLinearVel(1.0, 0, 0); // 1m/s
-        ball2.setAutoDisableFlag(false);
         ball2.setGravityMode(false);
+        ball2.setPosition(0, 0, 10.0);
+        ball2.setLinearVel(1.0, 0, 0); // 1m/s
+        
+        DMass m2 = createMass();
+        m2.setSphereTotal(1.0, 0.1);
+        ball2.setMass(m2);
+
         DGeom geom2 = createSphere(world2.getSpace(), 0.1);
         geom2.setBody(ball2);
 
         for (int i = 0; i < 50; i++) {
-            world2.step(0.02); // 1s total real-time, but 2s simulated-time
+            world2.step(0.02); // 1s total real-time, but should be 2s simulated-time
         }
+        double t2 = world2.getSimulatedTime();
         double x2 = ball2.getPosition().get0();
 
-        // With 2x multiplier, it should have traveled ~twice as far
-        // (Not exactly twice due to damping, but much further)
-        assertTrue(x2 > x1 * 1.5,
-                "Ball with 2x multiplier should travel much further than 1x. x1=" + x1 + ", x2=" + x2);
-        assertTrue(x2 > 1.0,
-                "Ball with 2x multiplier and 1m/s should travel more than 1m in 1s real-time with damping. x2=" + x2);
+        // Verify timing
+        assertEquals(1.0, t1, 1e-6, "Simulated time at 1x should be 1.0s after 50x0.02s steps");
+        assertEquals(2.0, t2, 1e-6, "Simulated time at 2x should be 2.0s after 50x0.02s steps");
+
+        // Verify displacement
+        // At 1x, 1m/s for 1s = 1m displacement.
+        // At 2x, 1m/s for 2s = 2m displacement.
+        System.out.println("x1: " + x1 + ", x2: " + x2 + ", ratio: " + (x2 / x1));
+        assertEquals(1.0, x1, 0.01, "Ball 1 should have moved 1m (1s at 1m/s)");
+        assertEquals(2.0, x2, 0.01, "Ball 2 should have moved 2m (2s at 1m/s)");
+        assertEquals(2.0, x2 / x1, 0.01, "Displacement at 2x should be double that of 1x");
     }
 }

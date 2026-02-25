@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.led.LedsSubsystem;
 import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2  ;
+import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -34,8 +34,8 @@ public class RollersSubsystem extends SubsystemBase {
   private final MechanismLigament2d rollerLigament = mechRoot.append(
       new MechanismLigament2d("Roller", 1, 0, 6, new Color8Bit(Color.kBlue)));
 
-  public static RollersSubsystem getInstance() { 
-  if (instance == null) {
+  public static RollersSubsystem getInstance() {
+    if (instance == null) {
       instance = new RollersSubsystem();
     }
     return instance;
@@ -46,10 +46,10 @@ public class RollersSubsystem extends SubsystemBase {
   }
 
   private RollersSubsystem() {
-    motor = new TalonFX(23, "rio");
+    motor = new TalonFX(23);
     plant = LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.001, 1.0);
     motorSim = new DCMotorSim(plant, DCMotor.getKrakenX60(1));
-    
+
     // Publish mechanism to SmartDashboard
     SmartDashboard.putData("Rollers Sim", mech2d);
   }
@@ -69,15 +69,12 @@ public class RollersSubsystem extends SubsystemBase {
     }
   }
 
-  
-  
   public RollerState getState() {
     return this.currentState;
   }
 
-
   public Command RollersCommand(RollerState desiredState) {
-      return run(() -> setState(desiredState));
+    return run(() -> setState(desiredState));
   }
 
   @Override
@@ -93,7 +90,8 @@ public class RollersSubsystem extends SubsystemBase {
 
     // Update the visualizer
     // Convert to degrees for the dashboard.
-    // getAngularPosition() returns an Angle object in 2026+, so we use .in(Units.Degrees)
+    // getAngularPosition() returns an Angle object in 2026+, so we use
+    // .in(Units.Degrees)
     rollerLigament.setAngle(motorSim.getAngularPosition().in(Units.Degrees));
 
     // Update the CTRE simulated device so other simulation-aware code works

@@ -47,6 +47,10 @@ public final class RobotMap {
         public static void disableHAL() {
             disableHAL = true;
         }
+
+        public static class Sim {
+            public static double TIME_MULTIPLIER = 1.0;
+        }
     }
 
     public enum robotState {

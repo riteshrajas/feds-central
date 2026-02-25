@@ -128,15 +128,18 @@ project.compileJava.dependsOn(createVersionFile)
 // Run with:  ./gradlew runProfiler
 // Output:    shooter_profile.csv  (in project root)
 // Then plot: python tools/shooter_profile_plotter.py
-tasks.register('runProfiler', JavaExec) {
+tasks.register('runProfiler', Test) {
     group = 'FRC Tools'
     description = 'Brute-force shooter profile sweep → shooter_profile.csv'
-    dependsOn compileJava
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'frc.robot.profiler.ShooterProfiler'
-    workingDir = projectDir
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+    filter {
+        includeTestsMatching "frc.robot.profiler.ShooterProfiler.runProfilerSweep"
+    }
     // Increase heap for large sweeps
-    jvmArgs = ['-Xmx512m']
-    // Disable HAL so it runs without WPILib native libs
-    jvmArgs += ['-Dfrc.robot.disableHAL=true']
+    maxHeapSize = "512m"
 }
+
+wpi.java.configureTestTasks(tasks.named('runProfiler').get())

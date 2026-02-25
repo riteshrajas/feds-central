@@ -122,4 +122,33 @@ class ChassisSimulationTest {
         assertEquals(4.0, pose.getY(), 0.01);
         assertTrue(pose.getZ() > 0, "Chassis should be above ground");
     }
+
+    @Test
+    void velocityConsistencyWithTimeMultiplier() {
+        // Run with 1x multiplier
+        ChassisSimulation chassis1 = new ChassisSimulation(world, config, new Pose2d(0, 0, Rotation2d.kZero));
+        world.setTimeMultiplier(1.0);
+        for (int i = 0; i < 50; i++) {
+            chassis1.setVelocity(2.0, 0, 0, 0.02);
+            world.step(0.02); // 1s total real-time
+        }
+        double x1 = chassis1.getPose2d().getX();
+
+        // Run with 2x multiplier
+        PhysicsWorld world2 = new PhysicsWorld();
+        world2.setTimeMultiplier(2.0);
+        ChassisSimulation chassis2 = new ChassisSimulation(world2, config, new Pose2d(0, 0, Rotation2d.kZero));
+        for (int i = 0; i < 50; i++) {
+            chassis2.setVelocity(2.0, 0, 0, 0.02);
+            world2.step(0.02); // 1s total real-time, but 2s simulated-time
+        }
+        double x2 = chassis2.getPose2d().getX();
+
+        // At 1x, 2m/s for 1s = 2m
+        // At 2x, 2m/s for 2s = 4m
+        System.out.println("Chassis x1: " + x1 + ", x2: " + x2 + ", ratio: " + (x2 / x1));
+        assertEquals(2.0, x1, 0.05, "Chassis 1 should have moved 2m");
+        assertEquals(4.0, x2, 0.05, "Chassis 2 should have moved 4m");
+        assertEquals(2.0, x2 / x1, 0.05, "Chassis displacement should scale exactly with time multiplier");
+    }
 }

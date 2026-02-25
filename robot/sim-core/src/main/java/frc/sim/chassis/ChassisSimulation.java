@@ -28,6 +28,11 @@ public class ChassisSimulation {
     private final DBody chassisBody;
     private final DGeom chassisGeom;
 
+    private double targetVx = 0;
+    private double targetVy = 0;
+    private double targetOmega = 0;
+    private double currentDt = 0.02;
+
     public ChassisSimulation(PhysicsWorld physicsWorld, ChassisConfig config, Pose2d startingPose) {
         this.physicsWorld = physicsWorld;
         this.config = config;
@@ -71,6 +76,32 @@ public class ChassisSimulation {
         // when driven by forces (applyForces) or kinematic velocity (setVelocity).
         // Normal friction against walls/game pieces is preserved.
         physicsWorld.registerTireModelGeom(chassisGeom);
+
+        // Register sub-step listener to apply corrective forces consistently
+        physicsWorld.registerSubStepListener(this::applySubStepCorrectiveForces);
+    }
+
+    private void applySubStepCorrectiveForces(double subDt, double totalTime) {
+        if (currentDt <= 0) return;
+
+        double mass = config.getRobotMassKg();
+        double moi = config.getRobotMOI();
+
+        // Corrective force: F = m * (v_target - v_current) / (time_until_next_tick)
+        // Since we want to reach target by the end of the step, and we are in a sub-step,
+        // we scale the force so it works over the remaining sub-steps.
+        // Actually, the simplest stable model for kinematic following is to treat the 
+        // target as an "instant" goal for the current sub-step too.
+        
+        double currentVx = chassisBody.getLinearVel().get0();
+        double currentVy = chassisBody.getLinearVel().get1();
+        chassisBody.addForce(
+                mass * (targetVx - currentVx) / subDt,
+                mass * (targetVy - currentVy) / subDt,
+                0);
+
+        double currentOmega = chassisBody.getAngularVel().get2();
+        chassisBody.addTorque(0, 0, moi * (targetOmega - currentOmega) / subDt);
     }
 
     /**
@@ -155,18 +186,10 @@ public class ChassisSimulation {
      * @param dt    physics timestep (seconds)
      */
     public void setVelocity(double vx, double vy, double omega, double dt) {
-        double mass = config.getRobotMassKg();
-        double moi = config.getRobotMOI();
-
-        double currentVx = chassisBody.getLinearVel().get0();
-        double currentVy = chassisBody.getLinearVel().get1();
-        chassisBody.addForce(
-                mass * (vx - currentVx) / dt,
-                mass * (vy - currentVy) / dt,
-                0);
-
-        double currentOmega = chassisBody.getAngularVel().get2();
-        chassisBody.addTorque(0, 0, moi * (omega - currentOmega) / dt);
+        this.targetVx = vx;
+        this.targetVy = vy;
+        this.targetOmega = omega;
+        this.currentDt = dt;
     }
 
     // --- Accessors ---
