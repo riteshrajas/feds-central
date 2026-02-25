@@ -7,7 +7,6 @@ import 'package:scouting_app/components/CounterShelf.dart';
 import 'package:scouting_app/components/QrGenerator.dart';
 import 'package:scouting_app/components/gameSpecifics/MultiPointSelector.dart';
 import 'package:scouting_app/components/gameSpecifics/climb.dart';
-import 'package:scouting_app/components/ratings.dart';
 import 'package:scouting_app/main.dart';
 
 import '../../components/TeamInfo.dart';

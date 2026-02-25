@@ -6,9 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
 
-
-import 'package:flutter/painting.dart';
-import 'package:hive/hive.dart';
 class Settings {
   static void setApiKey(String key) {
     LocalDataBase.putData('Settings.apiKey', key);
