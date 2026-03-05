@@ -177,7 +177,7 @@ public class ShooterWheels extends SubsystemBase {
 
   public Command setStateCommand(shooter_state state) {
     return runOnce(() -> setState(state));
-  } 
+  }
 
   public double velocityMultiplier = 1.0;
 

@@ -95,7 +95,7 @@ public class RobotContainer {
     controller.povUp()
        .whileTrue(new PathfindToPose(drivetrain, new Pose2d(2.0, 2.0, new Rotation2d())));
     
-    // -------- INTAKE CONTROLS --------- 
+    // -------- INTAKE CONTROLS ---------
 
     controller.leftTrigger()
         .onTrue(intakeSubsystem.setIntakeStateCommand(IntakeState.EXTENDED)
@@ -108,7 +108,7 @@ public class RobotContainer {
     operaterController.rightBumper()
         .onTrue(intakeSubsystem.setMotorPower(0.1))
         .onFalse(intakeSubsystem.setMotorPower( 0.0));
-    
+
     operaterController.rightBumper()
         .onTrue(intakeSubsystem.setMotorPower(-0.1))
         .onFalse(intakeSubsystem.setMotorPower( 0.0));
@@ -138,7 +138,7 @@ public class RobotContainer {
 
     controller.b()
         .onTrue(shooterHood.setStateCommand(shooterhood_state.AIMING_UP))
-        .onFalse(shooterHood.setStateCommand(shooterhood_state.IN)); 
+        .onFalse(shooterHood.setStateCommand(shooterhood_state.IN));
 
     // Manual way to change the angle of the shooter hood
     operaterController.a()
